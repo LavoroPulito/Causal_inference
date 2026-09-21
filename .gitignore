@@ -1,0 +1,28 @@
+# Virtualenv — mai versionato, si ricrea con le istruzioni nel README
+env_tigramite/
+.venv/
+
+# Dipendenza esterna, non contenuto di questo progetto
+tigramite/
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# LaTeX: si rigenera compilando il .tex. Il PDF invece è versionato,
+# perché è il documento che si condivide.
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.fls
+report/*.fdb_latexmk
+report/*.synctex.gz
+
+# macOS
+.DS_Store
+
+# Configurazione locale dell'editor
+pyrightconfig.json
+.envrc

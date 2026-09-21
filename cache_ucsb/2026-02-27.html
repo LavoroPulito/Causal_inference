@@ -1,0 +1,1359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+  "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/ dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ og: http://ogp.me/ns# rdfs: http://www.w3.org/2000/01/rdf-schema# sioc: http://rdfs.org/sioc/ns# sioct: http://rdfs.org/sioc/types# skos: http://www.w3.org/2004/02/skos/core# xsd: http://www.w3.org/2001/XMLSchema#">
+<head profile="http://www.w3.org/1999/xhtml/vocab">
+  <meta charset="utf-8"><script type="text/javascript">(window.NREUM||(NREUM={})).init={ajax:{deny_list:["bam.nr-data.net"]}};(window.NREUM||(NREUM={})).loader_config={licenseKey:"dee899de70",applicationID:"80106271",browserID:"133825811"};;/*! For license information please see nr-loader-rum-1.322.0.min.js.LICENSE.txt */
+(()=>{var e={8122(e,t,r){"use strict";r.d(t,{a:()=>i});var n=r(944);function i(e,t){try{if(!e||"object"!=typeof e)return(0,n.R)(3);if(!t||"object"!=typeof t)return(0,n.R)(4);const r=Object.create(Object.getPrototypeOf(t),Object.getOwnPropertyDescriptors(t)),a=0===Object.keys(r).length?e:r;for(let s in a)if(void 0!==e[s])try{if(null===e[s]){r[s]=null;continue}Array.isArray(e[s])&&Array.isArray(t[s])?r[s]=Array.from(new Set([...e[s],...t[s]])):e[s]instanceof Map||e[s]instanceof Set||e[s]instanceof Date||e[s]instanceof RegExp?r[s]=e[s]:"object"==typeof e[s]&&null!==t[s]&&"object"==typeof t[s]?r[s]=i(e[s],t[s]):r[s]=e[s]}catch(e){r[s]||(0,n.R)(1,e)}return r}catch(e){(0,n.R)(2,e)}}},2555(e,t,r){"use strict";r.d(t,{f:()=>s});var n=r(384),i=r(8122);const a={beacon:n.NT.beacon,errorBeacon:n.NT.errorBeacon,licenseKey:void 0,applicationID:void 0,sa:void 0,queueTime:void 0,applicationTime:void 0,ttGuid:void 0,user:void 0,account:void 0,product:void 0,extra:void 0,jsAttributes:{},userAttributes:void 0,atts:void 0,transactionName:void 0,tNamePlain:void 0};function s(e){try{return!!e.licenseKey&&!!e.errorBeacon&&!!e.applicationID}catch(e){return!1}}r.d(t,["D",0,e=>(0,i.a)(e,a)])},7699(e,t,r){"use strict";var n=r(860);const i={[n.K7.logging]:!0,[n.K7.genericEvents]:!0,[n.K7.jserrors]:!0,[n.K7.ajax]:!0};r.d(t,["It",0,1e6,"KC",0,i,"qh",0,"SESSION_ERROR"])},9324(e,t,r){"use strict";r.d(t,["xv",0,"1.322.0"])},981(e,t,r){"use strict";r.d(t,["R",0,{AJAX:"AjaxRequest",PA:"PageAction",UA:"UserAction",BP:"BrowserPerformance",WS:"WebSocket",SPV:"SecurityPolicyViolation",JSE:"JavaScriptError",LOG:"Log",PVE:"PageView",PVT:"PageViewTiming",SR:"SessionReplay",ST:"SessionTrace",BI:"BrowserInteraction"}])},6154(e,t,r){"use strict";var n=r(1863);const i="undefined"!=typeof window&&!!window.document,a="undefined"!=typeof WorkerGlobalScope&&("undefined"!=typeof self&&self instanceof WorkerGlobalScope&&self.navigator instanceof WorkerNavigator||"undefined"!=typeof globalThis&&globalThis instanceof WorkerGlobalScope&&globalThis.navigator instanceof WorkerNavigator),s=i?window:"undefined"!=typeof WorkerGlobalScope&&("undefined"!=typeof self&&self instanceof WorkerGlobalScope&&self||"undefined"!=typeof globalThis&&globalThis instanceof WorkerGlobalScope&&globalThis),o=Boolean("hidden"===s?.document?.visibilityState),c=""+s?.location,u=/iPad|iPhone|iPod/.test(s.navigator?.userAgent),d=u&&"undefined"==typeof SharedWorker,l=((()=>{const e=s.navigator?.userAgent?.match(/Firefox[/\s](\d+\.\d+)/);Array.isArray(e)&&e.length>=2&&e[1]})(),Date.now()-(0,n.t)());r.d(t,["OF",0,u,"RI",0,i,"WN",0,l,"bv",0,a,"gm",0,s,"m",0,c,"mw",0,o,"sb",0,d,"zk",0,()=>{const e=s?.performance?.getEntriesByType?.("navigation")?.[0];if(e&&e.responseStart>0&&e.responseStart<s.performance.now())return e}])},3241(e,t,r){"use strict";r.d(t,{W:()=>i});var n=r(6154);function i(e={}){try{n.gm.dispatchEvent(new CustomEvent("newrelic",{detail:e}))}catch(e){}}},1687(e,t,r){"use strict";r.d(t,{Ak:()=>o,Ze:()=>u,x3:()=>c});var n=r(3241),i=r(3606),a=r(860),s=r(2646);function o(e,t){if(!e)return;const r={staged:!1,priority:a.P3[t]||0};e.runtime.drainRegistry.get(t)||e.runtime.drainRegistry.set(t,r)}function c(e,t){if(!e)return;const r=e.runtime.drainRegistry;r&&(r.get(t)&&r.delete(t),l(e,t,!1),r.size&&d(e))}function u(e,t="feature",r=!1){if(e){if(!e.runtime.drainRegistry.get(t)||r)return l(e,t);e.runtime.drainRegistry.get(t).staged=!0,d(e)}}function d(e){if(!e)return;const t=Array.from(e.runtime.drainRegistry);t.every(([e,t])=>t.staged)&&(t.sort((e,t)=>e[1].priority-t[1].priority),t.forEach(([t])=>{e.runtime.drainRegistry.delete(t),l(e,t)}))}function l(e,t,r=!0){if(!e)return;const a=e.ee,o=i.i.handlers;if(a&&!a.aborted&&a.backlog&&o){if((0,n.W)({type:"lifecycle",name:"drain",feature:t}),r){const e=a.backlog[t],r=o[t];if(r){for(let t=0;e&&t<e.length;++t)f(e[t],r);Object.entries(r).forEach(([e,t])=>{Object.values(t||{}).forEach(t=>{t[0]?.on&&t[0].context()instanceof s.y&&!t[0].listeners(e).includes(t[1])&&t[0].on(e,t[1])})})}}a.isolatedBacklog||delete o[t],a.backlog[t]=null,a.emit("drain-"+t,[])}}function f(e,t){var r=e[1];Object.values(t[r]||{}).forEach(t=>{var r=e[0];if(t[0]===r){var n=t[1],i=e[3],a=e[2];n.apply(i,a)}})}},7836(e,t,r){"use strict";var n=r(384),i=r(8990),a=r(2646),s=r(5607);const o="nr@context:".concat(s.W),c=function e(t,r){var n={},s={},d={},l=!1;try{l=16===r.length&&u.initializedAgents?.[r]?.runtime.isolatedBacklog}catch(e){}var f={on:p,addEventListener:p,removeEventListener:function(e,t){var r=n[e];if(!r)return;for(var i=0;i<r.length;i++)r[i]===t&&r.splice(i,1)},emit:function(e,r,n,i,a){!1!==a&&(a=!0);if(c.aborted&&!i)return;t&&a&&t.emit(e,r,n);var o=g(n);m(e).forEach(e=>{e.apply(o,r)});var u=v()[s[e]];u&&u.push([f,e,r,o]);return o},get:h,listeners:m,context:g,buffer:function(e,t){const r=v();if(t=t||"feature",f.aborted)return;Object.entries(e||{}).forEach(([e,n])=>{s[n]=t,t in r||(r[t]=[])})},abort:function(){f._aborted=!0,Object.keys(f.backlog).forEach(e=>{delete f.backlog[e]})},isBuffering:function(e){return!!v()[s[e]]},debugId:r,backlog:l?{}:t&&"object"==typeof t.backlog?t.backlog:{},isolatedBacklog:l};return Object.defineProperty(f,"aborted",{get:()=>{let e=f._aborted||!1;return e||(t&&(e=t.aborted),e)}}),f;function g(e){return e&&e instanceof a.y?e:e?(0,i.I)(e,o,()=>new a.y(o)):new a.y(o)}function p(e,t){n[e]=m(e).concat(t)}function m(e){return n[e]||[]}function h(t){return d[t]=d[t]||e(f,t)}function v(){return f.backlog}}(void 0,"globalEE"),u=(0,n.Zm)();u.ee||(u.ee=c),r.d(t,["P",0,o,"ee",0,c])},2646(e,t,r){"use strict";r.d(t,{y:()=>n});class n{constructor(e){this.contextId=e}}},9908(e,t,r){"use strict";r.d(t,{d:()=>n,p:()=>i});var n=r(7836).ee.get("handle");function i(e,t,r,i,a){a?(a.buffer([e],i),a.emit(e,t,r)):(n.buffer([e],i),n.emit(e,t,r))}},3606(e,t,r){"use strict";r.d(t,{i:()=>a});var n=r(9908);a.on=s;var i=a.handlers={};function a(e,t,r,a){s(a||n.d,i,e,t,r)}function s(e,t,r,i,a){a||(a="feature"),e||(e=n.d);var s=t[a]=t[a]||{};(s[r]=s[r]||[]).push([e,i])}},3878(e,t,r){"use strict";function n(e,t){return{capture:e,passive:!1,signal:t}}function i(e,t,r=!1,i){window.addEventListener(e,t,n(r,i))}function a(e,t,r=!1,i){document.addEventListener(e,t,n(r,i))}r.d(t,{DD:()=>a,jT:()=>n,sp:()=>i})},5607(e,t,r){"use strict";const n=(0,r(9566).bz)();r.d(t,["W",0,n])},9566(e,t,r){"use strict";r.d(t,{LA:()=>s,bz:()=>a});var n=r(6154);function i(e,t){return e?15&e[t]:16*Math.random()|0}function a(){const e=n.gm?.crypto||n.gm?.msCrypto;let t,r=0;return e&&e.getRandomValues&&(t=e.getRandomValues(new Uint8Array(30))),"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split("").map(e=>"x"===e?i(t,r++).toString(16):"y"===e?(3&i()|8).toString(16):e).join("")}function s(e){const t=n.gm?.crypto||n.gm?.msCrypto;let r,a=0;t&&t.getRandomValues&&(r=t.getRandomValues(new Uint8Array(e)));const s=[];for(var o=0;o<e;o++)s.push(i(r,a++).toString(16));return s.join("")}},2614(e,t,r){"use strict";r.d(t,["BB",0,18e5,"Wt",0,"NRBA_SESSION::","iL",0,{SAME_TAB:"same-tab",CROSS_TAB:"cross-tab"},"tS",0,{STARTED:"session-started",PAUSE:"session-pause",RESET:"session-reset",RESUME:"session-resume",UPDATE:"session-update"},"wk",0,144e5])},1863(e,t,r){"use strict";function n(){return Math.floor(performance.now())}r.d(t,{t:()=>n})},944(e,t,r){"use strict";r.d(t,{R:()=>i});var n=r(3241);function i(e,t){"function"==typeof console.debug&&(console.debug("New Relic Warning: https://github.com/newrelic/newrelic-browser-agent/blob/main/docs/warning-codes.md#".concat(e),t),(0,n.W)({drained:null,type:"data",name:"warn",feature:"warn",data:{code:e,secondary:t}}))}},8990(e,t,r){"use strict";r.d(t,{I:()=>i});var n=Object.prototype.hasOwnProperty;function i(e,t,r){if(n.call(e,t))return e[t];var i=r();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,t,{value:i,writable:!0,enumerable:!1}),i}catch(e){}return e[t]=i,i}},6389(e,t,r){"use strict";function n(e,t=500,r={}){const n=r?.leading||!1;let i;return(...r)=>{n&&void 0===i&&(e.apply(this,r),i=setTimeout(()=>{i=clearTimeout(i)},t)),n||(clearTimeout(i),i=setTimeout(()=>{e.apply(this,r)},t))}}function i(e){let t=!1;return(...r)=>{t||(t=!0,e.apply(this,r))}}r.d(t,{J:()=>i,s:()=>n})},1910(e,t,r){"use strict";r.d(t,{i:()=>a});var n=r(944);const i=new Map;function a(...e){return e.every(e=>{if(i.has(e))return i.get(e);const t="function"==typeof e?e.toString():"",r=t.includes("[native code]"),a=t.includes("nrWrapper");return r||a||(0,n.R)(64,e?.name||t),i.set(e,r),r})}},5289(e,t,r){"use strict";r.d(t,{GG:()=>s,Qr:()=>c,sB:()=>o});var n=r(3878),i=r(6389);function a(){return"undefined"==typeof document||"complete"===document.readyState}function s(e,t){if(a())return e();const r=(0,i.J)(e),s=setInterval(()=>{a()&&(clearInterval(s),r())},500);(0,n.sp)("load",r,t)}function o(e){if(a())return e();(0,n.DD)("DOMContentLoaded",e)}function c(e){if(a())return e();(0,n.sp)("popstate",e)}},384(e,t,r){"use strict";r.d(t,{Zm:()=>c,bQ:()=>d,dV:()=>u,pV:()=>l});var n=r(6154),i=r(1863),a=r(944),s=r(1910);const o={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net"};function c(){return n.gm.NREUM||(n.gm.NREUM={}),void 0===n.gm.newrelic&&(n.gm.newrelic=n.gm.NREUM),n.gm.NREUM}function u(){let e=c();return e.o||(e.o={ST:n.gm.setTimeout,SI:n.gm.setImmediate||n.gm.setInterval,CT:n.gm.clearTimeout,XHR:n.gm.XMLHttpRequest,REQ:n.gm.Request,EV:n.gm.Event,PR:n.gm.Promise,MO:n.gm.MutationObserver,FETCH:n.gm.fetch,WS:n.gm.WebSocket},(0,s.i)(...Object.values(e.o))),e}function d(e,t){let r=c();r.initializedAgents??={},t.initializedAt={ms:(0,i.t)(),date:new Date},r.initializedAgents[e]=t,2===Object.keys(r.initializedAgents).length&&(0,a.R)(69)}function l(){return function(){let e=c();const t=e.info||{};e.info={beacon:o.beacon,errorBeacon:o.errorBeacon,...t}}(),function(){let e=c();const t=e.init||{};e.init={...t}}(),u(),function(){let e=c();const t=e.loader_config||{};e.loader_config={...t}}(),c()}r.d(t,["NT",0,o])},2843(e,t,r){"use strict";r.d(t,{G:()=>a,u:()=>i});var n=r(3878);function i(e,t=!1,r,i){(0,n.DD)("visibilitychange",function(){if(t)return void("hidden"===document.visibilityState&&e());e(document.visibilityState)},r,i)}function a(e,t,r){(0,n.sp)("pagehide",e,t,r)}},9300(e,t,r){"use strict";r(860).K7.ajax;r.d(t,["mo",0,{NONE:"none",FAILURES:"failures",ALL:"all"}])},3969(e,t,r){"use strict";const n=r(860).K7.metrics;r.d(t,["TZ",0,n,"XG",0,"storeEventMetrics","xV",0,"storeSupportabilityMetrics"])},6630(e,t,r){"use strict";const n=r(860).K7.pageViewEvent;r.d(t,["T",0,n])},782(e,t,r){"use strict";const n=r(860).K7.pageViewTiming;r.d(t,["T",0,n])},4234(e,t,r){"use strict";r.d(t,{W:()=>i});var n=r(1687);class i{constructor(e,t){this.agentRef=e,this.ee=e?.ee,this.featureName=t,this.blocked=!1}deregisterDrain(){(0,n.x3)(this.agentRef,this.featureName)}}},7767(e,t,r){"use strict";var n=r(6154);r.d(t,["V",0,e=>n.RI&&!0===e?.privacy.cookies_enabled])},8362(e,t,r){"use strict";r.d(t,{d:()=>a});var n=r(9566),i=r(1741);class a extends i.W{agentIdentifier=(0,n.LA)(16)}},1741(e,t,r){"use strict";r.d(t,{W:()=>a});var n=r(944),i=r(4261);class a{#e(e,...t){if(this[e]!==a.prototype[e])return this[e](...t);(0,n.R)(35,e)}addPageAction(e,t){return this.#e(i.hG,e,t)}register(e){return this.#e(i.eY,e)}recordCustomEvent(e,t){return this.#e(i.fF,e,t)}setPageViewName(e,t){return this.#e(i.Fw,e,t)}setCustomAttribute(e,t,r){return this.#e(i.cD,e,t,r)}noticeError(e,t){return this.#e(i.o5,e,t)}setUserId(e,t=!1){return this.#e(i.Dl,e,t)}setApplicationVersion(e){return this.#e(i.nb,e)}setErrorHandler(e){return this.#e(i.bt,e)}addRelease(e,t){return this.#e(i.k6,e,t)}log(e,t){return this.#e("log",e,t)}start(){return this.#e("start")}finished(e){return this.#e(i.BL,e)}recordReplay(){return this.#e(i.CH)}pauseReplay(){return this.#e(i.Tb)}addToTrace(e){return this.#e(i.U2,e)}setCurrentRouteName(e){return this.#e(i.PA,e)}interaction(e){return this.#e(i.dT,e)}wrapLogger(e,t,r){return this.#e(i.Wb,e,t,r)}measure(e,t){return this.#e(i.V1,e,t)}consent(e){return this.#e(i.Pv,e)}}},4261(e,t,r){"use strict";r.d(t,["BL",0,"finished","CH",0,"recordReplay","Dl",0,"setUserId","Fw",0,"setPageViewName","PA",0,"setCurrentRouteName","Pv",0,"consent","Tb",0,"pauseReplay","U2",0,"addToTrace","V1",0,"measure","Wb",0,"wrapLogger","bt",0,"setErrorHandler","cD",0,"setCustomAttribute","dT",0,"interaction","eY",0,"register","fF",0,"recordCustomEvent","hG",0,"addPageAction","k6",0,"addRelease","nb",0,"setApplicationVersion","o5",0,"noticeError"])},1738(e,t,r){"use strict";r.d(t,{U:()=>l,Y:()=>d});var n=r(3241),i=r(9908),a=r(1863),s=r(944),o=r(3969),c=r(8362),u=r(860);function d(e,t,r,a){const d=a||r;!d||d[e]&&d[e]!==c.d.prototype[e]||(d[e]=function(){(0,i.p)(o.xV,["API/"+e+"/called"],void 0,u.K7.metrics,r.ee),(0,n.W)({drained:!!r.runtime?.activatedFeatures,type:"data",name:"api",feature:"api-"+e,data:{}});try{return t.apply(this,arguments)}catch(e){(0,s.R)(23,e)}})}function l(e,t,r,n,s){const o=e.info;null===r?delete o.jsAttributes[t]:o.jsAttributes[t]=r,(s||null===r)&&(0,i.p)("api-"+n,[(0,a.t)(),t,r],void 0,"session",e.ee)}},8374(e,t,r){r.nc=(()=>{try{return document?.currentScript?.nonce}catch(e){}return""})()},860(e,t,r){"use strict";const n="events",i="jserrors",a="browser/blobs",s="browser/logs",o={ajax:"ajax",genericEvents:"generic_events",jserrors:i,logging:"logging",metrics:"metrics",pageAction:"page_action",pageViewEvent:"page_view_event",pageViewTiming:"page_view_timing",sessionReplay:"session_replay",sessionTrace:"session_trace",softNav:"soft_navigations"},c={[o.pageViewEvent]:1,[o.pageViewTiming]:2,[o.metrics]:3,[o.jserrors]:4,[o.softNav]:5,[o.ajax]:6,[o.sessionTrace]:7,[o.sessionReplay]:8,[o.logging]:9,[o.genericEvents]:10},u={[o.pageViewEvent]:"rum",[o.pageViewTiming]:n,[o.ajax]:n,[o.softNav]:n,[o.metrics]:i,[o.jserrors]:i,[o.sessionTrace]:a,[o.sessionReplay]:a,[o.logging]:s,[o.genericEvents]:"ins"};r.d(t,["$J",0,u,"K7",0,o,"P3",0,c,"XX",0,i,"Yy",0,s,"df",0,a,"hg",0,"connect"])}};const t={};function r(n){const i=t[n];if(void 0!==i)return i.exports;const a=t[n]={exports:{}};return e[n](a,a.exports,r),a.exports}r.m=e,r.d=(e,t)=>{if(Array.isArray(t))for(var n=0;n<t.length;){var i=t[n++],a=t[n++];r.o(e,i)?0===a&&n++:0===a?Object.defineProperty(e,i,{enumerable:!0,value:t[n++]}):Object.defineProperty(e,i,{enumerable:!0,get:a})}else for(var i in t)r.o(t,i)&&!r.o(e,i)&&Object.defineProperty(e,i,{enumerable:!0,get:t[i]})},r.f={},r.e=e=>Promise.all(Object.keys(r.f).reduce((t,n)=>(r.f[n](e,t),t),[])),r.u=e=>"nr-rum-1.322.0.min.js",r.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{const e={},t="NRBA-1.322.0.PROD:";r.l=(n,i,a,s)=>{if(e[n])return void e[n].push(i);let o,c;if(void 0!==a){const e=document.getElementsByTagName("script");for(var u=0;u<e.length;u++){const r=e[u];if(r.getAttribute("src")==n||r.getAttribute("data-webpack")==t+a){o=r;break}}}if(!o){c=!0;var d={296:"sha512-/59P7qAoMYQDJAZerTRPChdYcdrlcoEAw2TwA1wz6Y0/XLmt3sblLI5JCXAuxG0YxsW7iqJzgrcO7NJWO58EfQ=="};o=document.createElement("script"),o.charset="utf-8",r.nc&&o.setAttribute("nonce",r.nc),o.setAttribute("data-webpack",t+a),o.src=n,0!==o.src.indexOf(window.location.origin+"/")&&(o.crossOrigin="anonymous"),d[s]&&(o.integrity=d[s])}e[n]=[i];const l=(t,r)=>{o.onerror=o.onload=null,clearTimeout(f);const i=e[n];if(delete e[n],o.parentNode?.removeChild(o),i?.forEach(e=>e(r)),t)return t(r)},f=setTimeout(l.bind(null,void 0,{type:"timeout",target:o}),12e4);o.onerror=l.bind(null,o.onerror),o.onload=l.bind(null,o.onload),c&&document.head.appendChild(o)}})(),r.r=e=>{Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.p="https://js-agent.newrelic.com/",(()=>{const e={374:0,840:0};r.f.j=(t,n)=>{let i=r.o(e,t)?e[t]:void 0;if(0!==i)if(i)n.push(i[2]);else{const a=new Promise((r,n)=>i=e[t]=[r,n]);n.push(i[2]=a);const s=r.p+r.u(t),o=new Error,c=n=>{if(r.o(e,t)&&(i=e[t],0!==i&&(e[t]=void 0),i)){const e=n&&("load"===n.type?"missing":n.type),r=n&&n.target&&n.target.src;o.message="Loading chunk "+t+" failed: ("+e+": "+r+")",o.name="ChunkLoadError",o.type=e,o.request=r,i[1](o)}};r.l(s,c,"chunk-"+t,t)}};const t=(t,n)=>{let[i,a,s]=n;var o,c,u=0;if(i.some(t=>0!==e[t])){for(o in a)r.o(a,o)&&(r.m[o]=a[o]);if(s)s(r)}for(t&&t(n);u<i.length;u++)c=i[u],r.o(e,c)&&e[c]&&e[c][0](),e[c]=0},n=self["webpackChunk:NRBA-1.322.0.PROD"]=self["webpackChunk:NRBA-1.322.0.PROD"]||[];n.forEach(t.bind(null,0)),n.push=t.bind(null,n.push.bind(n))})(),(()=>{"use strict";r(8374);var e=r(8362),t=r(860);const n=Object.values(t.K7);var i=r(384),a=r(1741);var s=r(2555),o=r(981);t.K7.genericEvents,o.R.PA,o.R.UA,o.R.BP;const c={RESOURCES:"experimental.resources",REGISTER:"register"};var u=r(9300);const d=e=>{if(!e||"string"!=typeof e)return!1;try{document.createDocumentFragment().querySelector(e)}catch{return!1}return!0};var l=r(2614),f=r(944),g=r(8122);const p="[data-nr-mask]",m=e=>(0,g.a)(e,(()=>{const e={feature_flags:[],experimental:{register:!1,resources:!1,iframe_bridge:!1,iframe_domains:[]},mask_selector:"*",block_selector:"[data-nr-block]",mask_input_options:{color:!1,date:!1,"datetime-local":!1,email:!1,month:!1,number:!1,range:!1,search:!1,tel:!1,text:!1,time:!1,url:!1,week:!1,textarea:!1,select:!1,password:!0}};return{ajax:{deny_list:void 0,block_internal:!0,enabled:!0,autoStart:!0,capture_payloads:u.mo.NONE},api:{register:{get enabled(){return e.feature_flags.includes(c.REGISTER)||e.experimental.register},set enabled(t){e.experimental.register=t},duplicate_data_to_container:!1,get allow_iframe_bridge(){return e.feature_flags.includes(c.IFRAME_BRIDGE)||e.experimental.iframe_bridge},set allow_iframe_bridge(t){e.experimental.iframe_bridge=t},get iframe_domains(){return e.experimental.iframe_domains},set iframe_domains(t){Array.isArray(t)?e.experimental.iframe_domains=t:(0,f.R)(1,t)}}},browser_consent_mode:{enabled:!1},distributed_tracing:{enabled:void 0,exclude_newrelic_header:void 0,cors_use_newrelic_header:void 0,cors_use_tracecontext_headers:void 0,allowed_origins:void 0},get feature_flags(){return e.feature_flags},set feature_flags(t){e.feature_flags=t},generic_events:{enabled:!0,autoStart:!0},harvest:{interval:30},jserrors:{enabled:!0,autoStart:!0},logging:{enabled:!0,autoStart:!0},metrics:{enabled:!0,autoStart:!0},obfuscate:void 0,page_action:{enabled:!0},page_view_event:{enabled:!0,autoStart:!0},page_view_timing:{enabled:!0,autoStart:!0},performance:{capture_marks:!1,capture_measures:!1,capture_detail:!0,resources:{get enabled(){return e.feature_flags.includes(c.RESOURCES)||e.experimental.resources},set enabled(t){e.experimental.resources=t},asset_types:[],first_party_domains:[],ignore_newrelic:!0}},privacy:{cookies_enabled:!0},proxy:{assets:void 0,beacon:void 0},session:{expiresMs:l.wk,inactiveMs:l.BB},session_replay:{autoStart:!0,enabled:!1,preload:!1,sampling_rate:10,error_sampling_rate:100,collect_fonts:!1,inline_images:!1,fix_stylesheets:!0,mask_all_inputs:!0,get mask_text_selector(){return e.mask_selector},set mask_text_selector(t){d(t)?e.mask_selector="".concat(t,",").concat(p):""===t||null===t?e.mask_selector=p:(0,f.R)(5,t)},get block_class(){return"nr-block"},get ignore_class(){return"nr-ignore"},get mask_text_class(){return"nr-mask"},get block_selector(){return e.block_selector},set block_selector(t){d(t)?e.block_selector+=",".concat(t):""!==t&&(0,f.R)(6,t)},get mask_input_options(){return e.mask_input_options},set mask_input_options(t){t&&"object"==typeof t?e.mask_input_options={...t,password:!0}:(0,f.R)(7,t)}},session_trace:{enabled:!0,autoStart:!0},soft_navigations:{enabled:!0,autoStart:!0},ssl:void 0,user_actions:{enabled:!0,elementAttributes:["id","className","tagName","type"]},web_sockets:{enabled:!1}}})());var h=r(6154),v=r(9324);let b=0;const y={buildEnv:"PROD",distMethod:"CDN",version:v.xv,originTime:h.WN},_={consented:!1},w={activatedFeatures:void 0,appMetadata:{},configured:!1,get consented(){return this.session?.state?.consent||_.consented},set consented(e){_.consented=e},customTransaction:void 0,denyList:[],disabled:!1,drainRegistry:new Map,connector:void 0,harvester:void 0,v2Target:void 0,isolatedBacklog:!1,isRecording:!1,loaderType:void 0,maxBytes:3e4,obfuscator:void 0,onerror:void 0,ptid:void 0,releaseIds:{},session:void 0,timeKeeper:void 0,registeredEntities:[],jsAttributesMetadata:{bytes:0},get harvestCount(){return++b},listeningForIframeMessages:!1},R="BA";var A=r(7836),x=r(3241);const E={accountID:void 0,trustKey:void 0,agentID:void 0,licenseKey:void 0,applicationID:void 0,xpid:void 0};var S=r(9908);const k="newrelic-iframe-";function T(e,t={},n,o){let{init:c,info:u,loader_config:d,runtime:l={},exposed:f=!0}=t;if(!u){const e=(0,i.pV)();c=e.init,u=e.info,d=e.loader_config}var p;e.init=m(c||{}),e.loader_config=(p=d||{},(0,g.a)(p,E)),u.jsAttributes??={},h.bv&&(u.jsAttributes.isWorker=!0),e.info=(0,s.D)(u);const v=e.init;e.runtime??=(e=>{const t=(0,g.a)(e,w),r=Object.keys(y).reduce((e,t)=>(e[t]={value:y[t],writable:!1,configurable:!0,enumerable:!0},e),{});return Object.defineProperties(t,r)})(l),e.runtime.v2Target??={type:R,instance:e.agentIdentifier,get id(){return e.runtime.appMetadata?.agents?.[0]?.entityGuid},get attributes(){return{"entity.guid":this.id,appId:e.info.applicationID}}},v.proxy.assets&&(e=>{const t=e.startsWith("http");e+="/",r.p=t?e:"https://"+e})(v.proxy.assets),e.runtime.configured||(Object.defineProperty(e,"beacons",{get:()=>[e.info.beacon,e.info.errorBeacon,e.init.proxy.assets,e.init.proxy.beacon].filter(Boolean)}),Object.defineProperty(e.runtime,"denyList",{get:()=>[...e.init.ajax.deny_list||[],...e.init.ajax.block_internal?e.beacons:[]]}),e.runtime.ptid=e.agentIdentifier,function(e){const t=(0,i.pV)();Object.getOwnPropertyNames(a.W.prototype).forEach(r=>{const n=a.W.prototype[r];if("function"!=typeof n||"constructor"===n)return;let i=t[r];e[r]&&!1!==e.exposed&&"micro-agent"!==e.runtime?.loaderType&&(t[r]=(...t)=>{const n=e[r](...t);return i?i(...t):n})})}(e),e.runtime.loaderType=n,e.ee=A.ee.get(e.agentIdentifier),e.exposed=f,(0,x.W)({drained:!!e.runtime.activatedFeatures,type:"lifecycle",name:"initialize",feature:void 0,data:e.config}),e.init.api.register.allow_iframe_bridge&&h.gm.addEventListener("message",t=>{"string"==typeof t.data?.type&&t.data.type.startsWith(k)&&(0,S.p)("iframe-message",[t],void 0,"IFRAME",e.ee)}),e.runtime.configured=!0)}var j=r(1863),P=r(4261),N=r(1738);var O=r(1687),M=r(4234),I=r(5289),D=r(7767);function V(e){return!!(0,i.dV)().o.MO&&(0,D.V)(e)&&!0===e?.session_trace.enabled}var W=r(6389),B=r(7699);const C=new WeakSet,K=new WeakMap;class U extends M.W{constructor(e,t){super(e,t),this.abortHandler=void 0,this.featAggregate=void 0,this.loadedSuccessfully=void 0,this.onAggregateImported=new Promise(e=>{this.loadedSuccessfully=e}),this.deferred=Promise.resolve(),!1===e.init[this.featureName].autoStart?this.deferred=new Promise((t,r)=>{this.ee.on("manual-start-all",(0,W.J)(()=>{(0,O.Ak)(e,this.featureName),t()}))}):(0,O.Ak)(e,t)}importAggregator(e,t,n={}){if(this.featAggregate)return;const i=async()=>{if(await this.deferred,this.#t(e),!(0,s.f)(e.info))return(0,f.R)(43),e.ee.abort(),void this.loadedSuccessfully(!1);try{await async function(e,t,n){if(K.has(e))return K.get(e);const i=(async()=>{if((0,D.V)(e.init))try{const{setupAgentSession:t}=await r.e(296).then(r.bind(r,1768));t(e)}catch(e){(0,f.R)(20,e),t.emit("internal-error",[e]),(0,S.p)(B.qh,[e],void 0,n,t)}if(e.init.api.register.allow_iframe_bridge)try{const{setupIframeMFEMessageListener:t}=await Promise.resolve().then(function(){const e=new Error("Cannot find module '../../loaders/configure/iframe-message-handler'");throw e.code="MODULE_NOT_FOUND",e});t(e)}catch(e){(0,f.R)(23,e)}const[{Connector:i},{Harvester:a}]=await Promise.all([r.e(296).then(r.bind(r,6589)),r.e(296).then(r.bind(r,5237))]);e.runtime.connector=new i(e),e.runtime.harvester=new a(e);const s=Object.values(e.features).filter(t=>e.runtime.drainRegistry.has(t.featureName));Promise.all(s.map(e=>e.onAggregateImported)).then(()=>e.runtime.harvester.startTimer())})();K.set(e,i),await i}(e,this.ee,this.featureName)}catch(e){return(0,f.R)(79,e),this.ee.abort(),void this.loadedSuccessfully(!1)}try{if(!this.#r(this.featureName,e.runtime.session,e.init))return this.abortHandler?.(),(0,O.Ze)(this.agentRef,this.featureName),void this.loadedSuccessfully(!1);const{Aggregate:r}=await t();this.featAggregate=new r(e,n),e.runtime.harvester.initializedAggregates.push(this.featAggregate),this.loadedSuccessfully(!0)}catch(e){(0,f.R)(34,e),this.abortHandler?.(),(0,O.Ze)(this.agentRef,this.featureName,!0),this.loadedSuccessfully(!1)}};h.RI?(0,I.GG)(()=>i(),!0):i()}#r(e,r,n){if(this.blocked)return!1;switch(e){case t.K7.sessionReplay:return V(n)&&!!r;case t.K7.sessionTrace:return!!r;default:return!0}}#t(e){if(!C.has(e)&&(C.add(e),!(0,s.f)(e.info))){const t=(0,i.pV)();let r={...t.info?.jsAttributes};try{r={...r,...e.info?.jsAttributes}}catch(e){}T(e,{...t,info:{...t.info,jsAttributes:r},runtime:e.runtime},e.runtime.loaderType)}}}var L=r(6630);class F extends U{static featureName=L.T;constructor(e){var t;super(e,L.T),this.setupInspectionEvents(),t=e,(0,N.Y)(P.Fw,function(e,r){"string"==typeof e&&("/"!==e.charAt(0)&&(e="/"+e),t.runtime.customTransaction=(r||"http://custom.transaction")+e,(0,S.p)("api-"+P.Fw,[(0,j.t)()],void 0,void 0,t.ee))},t),this.importAggregator(e,()=>e.init.feature_flags.includes("rum_v2")?r.e(296).then(r.bind(r,908)):r.e(296).then(r.bind(r,7927)))}setupInspectionEvents(){const e=(e,t)=>{e&&(0,x.W)({timeStamp:e.timeStamp,loaded:"complete"===e.target.readyState,type:"window",name:t,data:e.target.location+""})};(0,I.sB)(t=>{e(t,"DOMContentLoaded")}),(0,I.GG)(t=>{e(t,"load")}),(0,I.Qr)(t=>{e(t,"navigate")}),this.ee.on(l.tS.UPDATE,(e,t)=>{(0,x.W)({type:"lifecycle",name:"session",data:t})})}}class G extends e.d{constructor(e){var t;(super(),h.gm)?(this.features={},(0,i.bQ)(this.agentIdentifier,this),this.desiredFeatures=new Set(e.features||[]),this.desiredFeatures.add(F),T(this,e,e.loaderType||"agent"),t=this,(0,N.Y)(P.cD,function(e,r,n=!1){if("string"==typeof e){if(["string","number","boolean"].includes(typeof r)||null===r)return(0,N.U)(t,e,r,P.cD,n);(0,f.R)(40,typeof r)}else(0,f.R)(39,typeof e)},t),function(e){(0,N.Y)(P.Dl,function(t,r=!1){if("string"!=typeof t&&null!==t)return void(0,f.R)(41,typeof t);const n=e.info.jsAttributes["enduser.id"];r&&null!=n&&n!==t?(0,S.p)("api-setUserIdAndResetSession",[t],void 0,"session",e.ee):(0,N.U)(e,"enduser.id",t,P.Dl,!0)},e)}(this),function(e){(0,N.Y)(P.nb,function(t){if("string"==typeof t||null===t)return(0,N.U)(e,"application.version",t,P.nb,!1);(0,f.R)(42,typeof t)},e)}(this),function(e){(0,N.Y)("start",function(){e.ee.emit("manual-start-all")},e)}(this),function(e){(0,N.Y)(P.Pv,function(t=!0){if("boolean"==typeof t){if((0,S.p)("api-"+P.Pv,[t],void 0,"session",e.ee),e.runtime.consented=t,t){const t=e.features.page_view_event;t.onAggregateImported.then(e=>{const r=t.featAggregate;e&&!r.sentRum&&r.sendRum?.()})}}else(0,f.R)(65,typeof t)},e)}(this),this.run()):(0,f.R)(21)}get config(){return{info:this.info,init:this.init,loader_config:this.loader_config,runtime:this.runtime}}get api(){return this}run(){try{const e=function(e){const t={};return n.forEach(r=>{t[r]=!!e[r]?.enabled}),t}(this.init),r=[...this.desiredFeatures],i=this.init.feature_flags.includes("rum_v2");r.sort((e,r)=>t.P3[e.featureName]-t.P3[r.featureName]),r.forEach(r=>{if(!e[r.featureName]&&(i||r.featureName!==t.K7.pageViewEvent))return;const n=function(e){switch(e){case t.K7.ajax:return[t.K7.jserrors];case t.K7.sessionTrace:return[t.K7.ajax,t.K7.pageViewEvent];case t.K7.sessionReplay:return[t.K7.sessionTrace];case t.K7.pageViewTiming:return[t.K7.pageViewEvent];default:return[]}}(r.featureName).filter(e=>!(e in this.features));n.length>0&&(0,f.R)(36,{targetFeature:r.featureName,missingDependencies:n}),this.features[r.featureName]=new r(this)})}catch(e){(0,f.R)(22,e);for(const e in this.features)this.features[e].abortHandler?.();const t=(0,i.Zm)();delete t.initializedAgents[this.agentIdentifier]?.features,delete this.sharedAggregator;return t.ee.get(this.agentIdentifier).abort(),!1}}}var H=r(2843),z=r(782);class Y extends U{static featureName=z.T;constructor(e){super(e,z.T),h.RI&&((0,H.u)(()=>(0,S.p)("docHidden",[(0,j.t)()],void 0,z.T,this.ee),!0),(0,H.G)(()=>(0,S.p)("winPagehide",[(0,j.t)()],void 0,z.T,this.ee)),this.importAggregator(e,()=>r.e(296).then(r.bind(r,9981))))}}var Z=r(3969);class q extends U{static featureName=Z.TZ;constructor(e){super(e,Z.TZ),this.importAggregator(e,()=>r.e(296).then(r.bind(r,9623)))}}new G({features:[F,Y,q],loaderType:"lite"})})()})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
+<link rel="canonical" href="/documents/truth-social-posts-february-27-2026" />
+<link rel="shortlink" href="/node/395483" />
+<link rel="shortcut icon" href="https://www.presidency.ucsb.edu/sites/default/files/favicon-app_0.png" type="image/png" />
+  <title>Truth Social Posts of February 27, 2026 | The American Presidency Project</title>
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,400italic,800,700,600,300|Dosis:400,200,300,500,600,700,800' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="https://www.presidency.ucsb.edu/sites/default/files/css/css_lQaZfjVpwP_oGNqdtWCSpJT1EMqXdMiU84ekLLxQnc4.css" media="all" />
+<link type="text/css" rel="stylesheet" href="https://www.presidency.ucsb.edu/sites/default/files/css/css_uuQd0L7qawhKpY0MHO8pVG2W6LSQqS5w9XHZMk3vO2U.css" media="all" />
+<link type="text/css" rel="stylesheet" href="https://www.presidency.ucsb.edu/sites/default/files/css/css_vbEgx2XLR7Zv4cooqCR003JQm8ctJxS8MDvX_FsFGUs.css" media="all" />
+<link type="text/css" rel="stylesheet" href="https://www.presidency.ucsb.edu/sites/default/files/css/css_oeHWMYUNGpyVpvA5OI5WFwKyBOcHdcrAoQuKZFMe0ng.css" media="all" />
+<link type="text/css" rel="stylesheet" href="https://www.presidency.ucsb.edu/sites/default/files/css/css_1cMLkzIU-HroF2SDTi9FvBd5lDl10ohMXkEVkqMZYXY.css" media="all" />
+<link type="text/css" rel="stylesheet" href="https://www.presidency.ucsb.edu/sites/default/files/css/css_DW59q6nX-P3-D4cA08_V2iLlMJIaFdPFYT8X6nSFpV8.css" media="print" />
+  <!-- HTML5 element support for IE6-8 -->
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+<script>window.jQuery || document.write("<script src='/sites/default/modules/contrib/jquery_update/replace/jquery/1.12/jquery.min.js'>\x3C/script>")</script>
+<script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_GOikDsJOX04Aww72M-XK1hkq4qiL_1XgGsRdkL0XlDo.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.3/jquery-ui.min.js"></script>
+<script>window.jQuery.ui || document.write("<script src='/sites/default/modules/contrib/jquery_update/replace/ui/ui/minified/jquery-ui.min.js'>\x3C/script>")</script>
+<script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_onbE0n0cQY6KTDQtHO_E27UBymFC-RuqypZZ6Zxez-o.js"></script>
+<script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_gHk2gWJ_Qw_jU2qRiUmSl7d8oly1Cx7lQFrqcp3RXcI.js"></script>
+<script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_OnsvYlQ_LTosJ-SxmHIq3Rw7eH2XmXi69Q68wgclccA.js"></script>
+<script src="https://www.googletagmanager.com/gtag/js?id=UA-86410002-1"></script>
+<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments)};gtag("js", new Date());gtag("set", "developer_id.dMDhkMT", true);gtag("config", "UA-86410002-1", {"groups":"default","linker":{"domains":["dev-wwwpresidencyucsbedu.pantheonsite.io","www.presidency.ucsb.edu"]},"anonymize_ip":true});gtag("config", "G-86B9KEYGFJ", {"groups":"default","linker":{"domains":["dev-wwwpresidencyucsbedu.pantheonsite.io","www.presidency.ucsb.edu"]},"anonymize_ip":true});</script>
+<script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_lcTf447kIisJfwJMjtPrAFuGvKNH6t_RbNx-yD768P0.js"></script>
+<script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_gvpxcPEErmaiJn8qGSGx2O87lReivTR09hs10gIG3Yg.js"></script>
+<script>jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","setHasJsCookie":0,"ajaxPageState":{"theme":"app","theme_token":"u73znTfw6Mm91_xRkdWgxaugbow7mpGF9IfJIjuLxTs","js":{"sites\/default\/libraries\/jquery-ui-multiselect-widget\/src\/jquery.multiselect.js":1,"sites\/default\/libraries\/jquery-ui-multiselect-widget\/src\/jquery.multiselect.filter.js":1,"sites\/default\/modules\/contrib\/jquery_ui_multiselect_widget\/jquery_ui_multiselect_widget.js":1,"modules\/statistics\/statistics.js":1,"sites\/default\/themes\/bootstrap\/js\/bootstrap.js":1,"\/\/ajax.aspnetcdn.com\/ajax\/jQuery\/jquery-1.12.4.min.js":1,"0":1,"misc\/jquery-extend-3.4.0.js":1,"misc\/jquery-html-prefilter-3.5.0-backport.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"sites\/default\/modules\/contrib\/jquery_update\/js\/jquery_browser.js":1,"\/\/ajax.aspnetcdn.com\/ajax\/jquery.ui\/1.13.3\/jquery-ui.min.js":1,"1":1,"misc\/form-single-submit.js":1,"sites\/default\/modules\/contrib\/entityreference\/js\/entityreference.js":1,"sites\/default\/modules\/contrib\/better_exposed_filters\/better_exposed_filters.js":1,"sites\/default\/modules\/contrib\/google_analytics\/googleanalytics.js":1,"https:\/\/www.googletagmanager.com\/gtag\/js?id=UA-86410002-1":1,"2":1,"sites\/default\/modules\/contrib\/field_group\/field_group.js":1,"sites\/default\/modules\/contrib\/rrssb\/rrssb.init.js":1,"sites\/default\/libraries\/rrssb-plus\/js\/rrssb.min.js":1,"sites\/default\/modules\/contrib\/extlink\/js\/extlink.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/affix.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/alert.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/button.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/carousel.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/collapse.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/dropdown.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/modal.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/tooltip.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/popover.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/scrollspy.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/tab.js":1,"sites\/default\/themes\/app\/bootstrap\/js\/transition.js":1,"sites\/default\/themes\/app\/scripts\/scripts.js":1},"css":{"modules\/system\/system.base.css":1,"misc\/ui\/jquery.ui.core.css":1,"misc\/ui\/jquery.ui.theme.css":1,"misc\/ui\/jquery.ui.accordion.css":1,"sites\/default\/modules\/contrib\/date\/date_repeat_field\/date_repeat_field.css":1,"modules\/field\/theme\/field.css":1,"modules\/node\/node.css":1,"sites\/default\/modules\/contrib\/extlink\/css\/extlink.css":1,"sites\/default\/modules\/contrib\/views\/css\/views.css":1,"sites\/default\/modules\/contrib\/ctools\/css\/ctools.css":1,"sites\/default\/libraries\/jquery-ui-multiselect-widget\/jquery.multiselect.css":1,"sites\/default\/libraries\/jquery-ui-multiselect-widget\/jquery.multiselect.filter.css":1,"sites\/default\/modules\/contrib\/jquery_ui_multiselect_widget\/jquery_ui_multiselect_widget.css":1,"sites\/default\/modules\/contrib\/vefl\/css\/vefl-layouts.css":1,"sites\/default\/modules\/contrib\/date\/date_api\/date.css":1,"public:\/\/rrssb\/rrssb.6f69c00b.css":1,"sites\/default\/libraries\/rrssb-plus\/css\/rrssb.css":1,"sites\/default\/themes\/app\/css\/style.css":1,"sites\/default\/themes\/app\/css\/oog.css":1,"sites\/default\/themes\/app\/css\/print.css":1}},"jquery_ui_multiselect_widget":{"module_path":"sites\/default\/modules\/contrib\/jquery_ui_multiselect_widget","multiple":1,"filter":1,"subselector":"#edit-category2","selectedlist":"4","autoOpen":0,"header":1,"height":"auto","classes":"app-uberselect","filter_auto_reset":1,"filter_width":"auto","jquery_ui_multiselect_widget_path_match_exclude":"admin\/*\r\nmedia\/*\r\nfile\/*\r\nsystem\/ajax"},"better_exposed_filters":{"datepicker":false,"slider":false,"settings":[],"autosubmit":false,"views":{"dpg_docs_media":{"displays":{"block_2":{"filters":[]}}},"report_a_typo":{"displays":{"block":{"filters":[]}}},"document_attached_files":{"displays":{"block":{"filters":[]},"block_1":{"filters":[]}}}}},"urlIsAjaxTrusted":{"\/advanced-search":true},"googleanalytics":{"account":["UA-86410002-1","G-86B9KEYGFJ"],"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip","trackDomainMode":2,"trackCrossDomains":["dev-wwwpresidencyucsbedu.pantheonsite.io","www.presidency.ucsb.edu"]},"statistics":{"data":{"nid":"395483"},"url":"\/modules\/statistics\/statistics.php"},"field_group":{"div":"full"},"rrssb":{"size":"1","shrink":"1","regrow":"","minRows":"1","maxRows":"1","prefixReserve":"1em","prefixHide":"1em","alignRight":0},"extlink":{"extTarget":"_blank","extClass":0,"extLabel":"(link is external)","extImgClass":0,"extIconPlacement":"append","extSubdomains":1,"extExclude":"","extInclude":"","extCssExclude":"","extCssExplicit":"","extAlert":0,"extAlertText":"This link will take you to an external web site.","mailtoClass":0,"mailtoLabel":"(link sends e-mail)","extUseFontAwesome":false},"bootstrap":{"anchorsFix":1,"anchorsSmoothScrolling":1,"formHasError":1,"popoverEnabled":0,"popoverOptions":{"animation":1,"html":0,"placement":"right","selector":"","trigger":"click","triggerAutoclose":1,"title":"","content":"","delay":0,"container":"body"},"tooltipEnabled":1,"tooltipOptions":{"animation":1,"html":0,"placement":"auto left","selector":"","trigger":"hover focus","delay":0,"container":"body"}}});</script>
+</head>
+<body class="html not-front not-logged-in one-sidebar sidebar-first page-node page-node- page-node-395483 node-type-documents" >
+  <div id="skip-link">
+    <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+  </div>
+    <div class="wrapper"> <!-- Wrapper for Sticky Footer -->
+
+      <div class="branding-region">
+      <div class="container">
+                  <div class="region region-branding">
+    <section id="block-block-1" class="block block-block site-title-block clearfix">
+
+      
+  <div class="site-title"><a href="https://www.presidency.ucsb.edu/">The American Presidency Project</a></div>
+
+</section>
+<section id="block-block-2" class="block block-block top-link-buttons clearfix">
+
+      
+  <p><a class="btn btn-default" href="https://www.presidency.ucsb.edu/about">About</a><a class="btn btn-default" href="/advanced-search"><span class="glyphicon glyphicon-search"></span> Search</a></p>
+<p id="ucScript"><a href="https://www.ucsb.edu/" target="_blank"><img alt="ucsb wordmark black" src="https://www.presidency.ucsb.edu/sites/default/files/pictures/uc_santa_barbara_wordmark_black_rgb.svg" style="width: 175px; height: 13px;" /></a></p>
+
+</section>
+  </div>
+      </div>
+    </div>
+  
+  <div id="navbar" role="banner" class="navbar navbar-default"><!-- Only way to remove "container" class -->
+    <div class="container">
+      <div class="navbar-header">
+
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+              <div class="navbar-collapse collapse">
+          <nav role="navigation">
+                          <ul class="menu nav navbar-nav"><li class="first expanded active-trail active dropdown"><a href="/documents" class="active-trail dropdown-toggle" data-toggle="dropdown">Documents <span class="caret"></span></a><ul class="dropdown-menu"><li class="first leaf"><a href="/documents/presidential-documents-archive-guidebook">Guidebook</a></li>
+<li class="last leaf"><a href="/documents/category-attributes">Category Attributes</a></li>
+</ul></li>
+<li class="collapsed"><a href="/statistics">Statistics</a></li>
+<li class="leaf"><a href="/media" title="">Media Archive</a></li>
+<li class="leaf"><a href="/presidents" title="">Presidents</a></li>
+<li class="leaf"><a href="/analyses" title="">Analyses</a></li>
+<li class="last leaf"><a href="https://give.ucsb.edu/campaigns/58728/donations/new" title="">GIVE</a></li>
+</ul>                                              </nav>
+        </div>
+          </div>
+  </div>
+
+  <div role="banner" id="page-header" class="site-header">
+      </div>
+
+  <div class="main-container container">
+    <div class="row">
+
+          <aside class="col-sm-3 no-print" role="complementary">
+            <div class="region region-sidebar-first well">
+    <section id="block-menu-block-8" class="block block-menu-block doc-sub clearfix">
+
+        <h2 class="block-title">Documents</h2>
+    
+  <div class="menu-block-wrapper menu-block-8 menu-name-menu-documents parent-mlid-0 menu-level-1">
+  <ul class="menu nav"><li class="first leaf menu-mlid-10329"><a href="/documents/presidential-documents-archive-guidebook" title="">Archive Guidebook</a></li>
+<li class="leaf active-trail menu-mlid-10330 active"><a href="/documents" title="" class="active-trail">Categories</a></li>
+<li class="last leaf menu-mlid-10791"><a href="/documents/category-attributes" title="">Attributes</a></li>
+</ul></div>
+
+</section>
+<section id="block-menu-block-7" class="block block-menu-block dropdown clearfix">
+
+        <h2 class="block-title">Categories</h2>
+    
+  <div class="menu-block-wrapper menu-block-7 menu-name-menu-doc-cat-menu parent-mlid-0 menu-level-1">
+    <ul class="menu nav"><li class="first expanded menu-mlid-10954 dropdown"><a href="/documents/app-categories/presidential" title="Presidential (73842)" class="dropdown-toggle" data-toggle="dropdown">Presidential (255506) <span class="caret"></span></a><ul class="dropdown-menu"><li class="first leaf menu-mlid-10910"><a href="/documents/app-categories/spoken-addresses-and-remarks/presidential/eulogies" title="Eulogies (55)">Eulogies (71)</a></li>
+<li class="leaf menu-mlid-10930"><a href="/documents/app-categories/written-presidential-orders/presidential/executive-orders" title="Executive Orders (5885)">Executive Orders (10868)</a></li>
+<li class="leaf menu-mlid-10912"><a href="/documents/app-categories/spoken-addresses-and-remarks/presidential/fireside-chats" title="Fireside Chats (27)">Fireside Chats (27)</a></li>
+<li class="leaf menu-mlid-10906"><a href="/documents/app-categories/presidential/interviews" title="Interviews (950)">Interviews (1038)</a></li>
+<li class="leaf menu-mlid-10894"><a href="/documents/app-categories/presidential/letters" title="Letters (4363)">Letters (4795)</a></li>
+<li class="leaf menu-mlid-10899"><a href="/documents/app-categories/presidential/miscellaneous-written" title="Miscellaneous Written (741)">Miscellaneous Written (112)</a></li>
+<li class="leaf menu-mlid-10907"><a href="/documents/app-categories/presidential/news-conferences" title="News Conferences (2096)">News Conferences (2530)</a></li>
+<li class="collapsed menu-mlid-10909"><a href="/documents/app-categories/presidential/spoken-addresses-and-remarks" title="Spoken Addresses and Remarks (5428)">Spoken Addresses and Remarks (35580)</a></li>
+<li class="leaf menu-mlid-10911"><a href="/documents/app-categories/spoken-addresses-and-remarks/presidential/farewell-addresses" title="Farewell Address (10)">Farewell Addresses (12)</a></li>
+<li class="leaf menu-mlid-10913"><a href="/documents/app-categories/spoken-addresses-and-remarks/presidential/inaugural-addresses" title="Inaugural Addresses (61)">Inaugural Addresses (63)</a></li>
+<li class="leaf menu-mlid-10895"><a href="/documents/app-categories/presidential/memoranda" title="Memoranda (1828)">Memoranda (3499)</a></li>
+<li class="leaf menu-mlid-10927"><a href="/documents/app-categories/citations/presidential/messages" title="Messages (11049)">Messages (12850)</a></li>
+<li class="leaf menu-mlid-10931"><a href="/documents/app-categories/written-presidential-orders/presidential/proclamations" title="Proclamations (7974)">Proclamations (11153)</a></li>
+<li class="leaf menu-mlid-10919"><a href="/documents/app-categories/spoken-addresses-and-remarks/presidential/saturday-weekly-addresses" title="Saturday Addresses (Radio and Webcast) (1629)">Saturday Weekly Addresses (1639)</a></li>
+<li class="leaf menu-mlid-10920"><a href="/documents/app-categories/spoken-addresses-and-remarks/presidential/state-dinners" title="State Dinners (953)">State Dinners (266)</a></li>
+<li class="leaf menu-mlid-10921"><a href="/documents/app-categories/spoken-addresses-and-remarks/presidential/state-the-union-addresses" title="State of the Union Addresses (98)">State of the Union Addresses (101)</a></li>
+<li class="leaf menu-mlid-10928"><a href="/documents/app-categories/citations/presidential/state-the-union-written-messages" title="State of the Union Messages (1)">State of the Union Written Messages (140)</a></li>
+<li class="expanded menu-mlid-10934"><a href="/documents/app-categories/statements" title="Statements (8647)">Statements (14723)</a></li>
+<li class="leaf menu-mlid-10924"><a href="/documents/app-categories/presidential/vetoes" title="Vetoes (266)">Vetoes (1230)</a></li>
+<li class="collapsed menu-mlid-10925"><a href="/documents/app-categories/presidential/citations" title="Written Messages (11021)">Citations (13218)</a></li>
+<li class="last expanded menu-mlid-10929"><a href="/documents/app-categories/presidential/written-presidential-orders" title="Written Presidential Orders (13858)">Written Presidential Orders (50822)</a></li>
+</ul></li>
+<li class="leaf menu-mlid-10897"><a href="/documents/app-categories/remarks-administration-officials" title="Miscellaneous Press Secretary (23298)">Remarks by Administration Officials (189)</a></li>
+<li class="expanded menu-mlid-10887 dropdown"><a href="/documents/app-categories/elections-and-transitions" title="Elections and Transitions (16448)" class="dropdown-toggle" data-toggle="dropdown">Elections and Transitions (50266) <span class="caret"></span></a><ul class="dropdown-menu"><li class="first leaf menu-mlid-10888"><a href="/documents/app-categories/elections-and-transitions/campaign-documents" title="Campaign Documents (2747)">Campaign Documents (23622)</a></li>
+<li class="expanded menu-mlid-10889"><a href="/documents/app-categories/elections-and-transitions/convention-speeches" title="Convention Speeches (50)">Convention Speeches (128)</a></li>
+<li class="expanded menu-mlid-10890"><a href="/documents/app-categories/elections-and-transitions/debates" title="Debates (152)">Debates (191)</a></li>
+<li class="leaf menu-mlid-10892"><a href="/documents/app-categories/elections-and-transitions/party-platforms" title="Party Platforms (98)">Party Platforms (105)</a></li>
+<li class="last leaf menu-mlid-10893"><a href="/documents/app-categories/elections-and-transitions/transition-documents" title="Transition Documents (346)">Transition Documents (744)</a></li>
+</ul></li>
+<li class="last leaf menu-mlid-10883"><a href="/documents/app-categories/congressional" title="Congressional (3)">Congressional (13)</a></li>
+</ul></div>
+
+</section>
+  </div>
+        </aside>  <!-- /#sidebar-first -->
+      
+      <section class="col-sm-9">
+                        <a id="main-content"></a>
+                
+                          
+                          <div class="region region-content">
+    <section id="block-system-main" class="block block-system clearfix">
+
+      
+  
+
+<div  about="/documents/truth-social-posts-february-27-2026" typeof="sioc:Item foaf:Document" class="node node-documents view-mode-full ">
+    <div class="row">
+    <div class="col-sm-8 ">
+      
+  <div class="field-docs-person">
+    <div  about="/people/president/donald-j-trump-2nd-term" typeof="sioc:Item foaf:Document" class="ds-1col node node-prez-diet view-mode-for_documents  clearfix">
+
+  
+  
+  <div class="field-diet-pictures">
+    <img typeof="foaf:Image" class="img-responsive" src="https://www.presidency.ucsb.edu/sites/default/files/styles/doc_img/public/people/donald-j-trump-2nd-term.jpg?itok=art4cp6c" width="170" height="230" alt="Photo of Donald Trump" />  </div>
+
+  <div class="field-title">
+    <h3 class="diet-title"><a href="/people/president/donald-j-trump-2nd-term">Donald J. Trump (2nd Term)</a></h3>  </div>
+
+  <div class="field-ds-byline">
+    
+  <div class="field-resuable-byline">
+    <div class="diet-by-line president">47th President of the United States: 2025—present</div>
+  </div>
+  </div>
+
+  <div class="field-ds-doc-title">
+    <h1>Truth Social Posts of February 27, 2026</h1>
+  </div>
+</div>
+
+  </div>
+
+  <div class="field-docs-start-date-time">
+    <span  property="dc:date" datatype="xsd:dateTime" content="2026-02-27T00:00:00+00:00" class="date-display-single">February 27, 2026</span>  </div>
+
+  <div class="field-docs-content">
+    <p><i>NOTE: Posting times are in Pacific time.</i><br />
+</p><table border="0">
+<thead>
+<tr>
+<td style="border-bottom: 1px solid #43b4e0;"><b>Created:</b></td>
+<td style="border-bottom: 1px solid #43b4e0; padding-left:15px;"><b>"Truths":</b></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />4:25 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congrats to Newsmax. Big numbers! President DJT</p>
+<p>Newsmax Delivers 4M-Plus Viewers in Breakout State of Union Coverage: <a href="https://www.newsmax.com/newsfront/newsmax-tv-rating-sotu/2026/02/26/id/1247600/" target="_blank" title="https://www.newsmax.com/newsfront/newsmax-tv-rating-sotu/2026/02/26/id/1247600/">newsmax.com/newsfront/newsmax-</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116142578355684475">https://truthsocial.com/@realDonaldTrump/posts/116142578355684475</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />4:56 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Mortgage rates drop to under 6% for first time since 2022: Freddie Mac: <a href="https://justthenews.com/nation/economy/mortgage-rates-drop-under-6-first-time-2022-freddie-mac" target="_blank" title="https://justthenews.com/nation/economy/mortgage-rates-drop-under-6-first-time-2022-freddie-mac">justthenews.com/nation/economy</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116142702541066127">https://truthsocial.com/@realDonaldTrump/posts/116142702541066127</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />4:57 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump draws clear midterm battle lines: Patriots vs. 'Hate-triots': <a href="https://justthenews.com/government/white-house/midterm-battle-lines-drawn-patriots-vs-hateriots" target="_blank" title="https://justthenews.com/government/white-house/midterm-battle-lines-drawn-patriots-vs-hateriots">justthenews.com/government/whi</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116142704877346661">https://truthsocial.com/@realDonaldTrump/posts/116142704877346661</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />4:57 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>As Georgia prosecutor pursued Trump, Biden DOJ 'invited' her to get lucrative grant, memos show: <a href="https://justthenews.com/accountability/political-ethics/biden-justice-department-awarded-grants-fulton-da-during-trump">justthenews.com/accountability</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116142706501651832">https://truthsocial.com/@realDonaldTrump/posts/116142706501651832</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:13 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump Delivers A Show At State Of The Union: <a href="https://www.dailywire.com/news/trump-delivers-a-show-at-state-of-the-union">dailywire.com/news/trump-deliv</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143242034061788">https://truthsocial.com/@realDonaldTrump/posts/116143242034061788</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:14 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Liberal Media Reactions to Trump's State of the Union Were Wild, but This Poll Will Drive Libs Nuts: <a href="https://townhall.com/tipsheet/mattvespa/2026/02/25/liberal-media-reactions-to-trumps-state-of-the-union-were-wild-but-this-segment-will-drive-libs-nuts-n2671849">townhall.com/tipsheet/mattvesp</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143243981662384">https://truthsocial.com/@realDonaldTrump/posts/116143243981662384</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:15 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump's home-run State of the Union 2026 showed exactly how crazy the Democrats are: <a href="https://nypost.com/2026/02/25/opinion/trumps-home-run-state-of-the-union-2026-showed-exactly-how-crazy-the-democrats-are/">nypost.com/2026/02/25/opinion/</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143248735534922">https://truthsocial.com/@realDonaldTrump/posts/116143248735534922</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:16 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump Puts Democrats On Defense In Patriotic, Disciplined SOTU: <a href="https://dailycaller.com/2026/02/24/donald-trump-state-union-patriotic-disciplined-democrats-defense/">dailycaller.com/2026/02/24/don</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143251886894781">https://truthsocial.com/@realDonaldTrump/posts/116143251886894781</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:21 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>5 unforgettable moments from Trump's record-breaking State of the Union address: <a href="https://www.foxnews.com/politics/5-unforgettable-moments-from-trumps-record-breaking-state-union-address">foxnews.com/politics/5-unforge</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143270800377974">https://truthsocial.com/@realDonaldTrump/posts/116143270800377974</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:21 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Big ideas from Trump's State of the Union speech, from federal 401k payments to Dalilah's law: <a href="https://justthenews.com/politics-policy/all-things-trump/big-ideas-trumps-state-union-speech-federal-401k-payments-dalilahs">justthenews.com/politics-polic</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143272531781078">https://truthsocial.com/@realDonaldTrump/posts/116143272531781078</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:22 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump Breaks Record with Longest State of the Union Speech Ever: <a href="https://www.breitbart.com/politics/2026/02/24/trump-breaks-own-record-longest-state-ofthe-union-speech/">breitbart.com/politics/2026/02</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143276974529738">https://truthsocial.com/@realDonaldTrump/posts/116143276974529738</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:23 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>President Trump Brilliant in Fourth State of the Union Address: <a href="https://amac.us/newsline/politics/president-trump-brilliant-in-fourth-state-of-the-union-address/">amac.us/newsline/politics/pres</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143278178305226">https://truthsocial.com/@realDonaldTrump/posts/116143278178305226</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:24 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump continues to live rent free in their heads: <a href="https://www.americanthinker.com/blog/2026/02/trump_continues_to_live_rent_free_in_their_heads.html">americanthinker.com/blog/2026/</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143282495037265">https://truthsocial.com/@realDonaldTrump/posts/116143282495037265</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:24 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>The Right's Brand Is 'America First.' The Left's Brand Is Getting Mad About That: <a href="https://thefederalist.com/2026/02/25/the-rights-brand-is-america-first-the-lefts-brand-is-getting-mad-about-that/">thefederalist.com/2026/02/25/t</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143284354657458">https://truthsocial.com/@realDonaldTrump/posts/116143284354657458</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:36 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump blasts Dems for reaction to Charlotte stabbing victim's mother at State of the Union: 'How do you not stand?'<br /><a href="https://www.wbtv.com/2026/02/25/trump-blasts-dems-reaction-charlotte-stabbing-victims-mother-state-union/">wbtv.com/2026/02/25/trump-blas</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143330645417506">https://truthsocial.com/@realDonaldTrump/posts/116143330645417506</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:36 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Fact Check: Trump Oversees Fewest Illegal Aliens Crossing Border in Half a Century: <a href="https://www.breitbart.com/politics/2026/02/24/ffact-check-trump-oversees-fewest-illegal-aliens-crossing-border-in-half-a-century/">breitbart.com/politics/2026/02</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top"><a href="https://truthsocial.com/@realDonaldTrump/posts/116143332196891362">https://truthsocial.com/@realDonaldTrump/posts/116143332196891362</a></td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:37 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>'How Do You Not Stand?': The Jaw-Dropping Moments Democrats Remained Seated At SOTU: <a href="https://www.dailywire.com/news/how-do-you-not-stand-the-jaw-dropping-moments-democrats-remained-seated-at-sotu">dailywire.com/news/how-do-you-</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143334329837950">https://truthsocial.com/@realDonaldTrump/posts/116143334329837950</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:37 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>CBS's Tony Dokoupil Raves About Trump's 'Extraordinary' State Of The Union: <a href="https://www.huffpost.com/entry/cbs-tony-dokoupil-trump-state-of-the-union-extraordinary_n_699f20f9e4b01b76c0e313ad">huffpost.com/entry/cbs-tony-do</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143336722246796">https://truthsocial.com/@realDonaldTrump/posts/116143336722246796</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:38 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump awards Purple Hearts to National Guard members ambushed in Washington, DC: 'We love you all': <a href="https://www.foxnews.com/politics/trump-awards-purple-hearts-national-guard-members-ambushed-washington-dc-we-love-you-all">foxnews.com/politics/trump-awa</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143338666368511">https://truthsocial.com/@realDonaldTrump/posts/116143338666368511</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:38 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>'How Do You Not Stand?' Trump Blasts Democrats for Failing to Acknowledge Iryna Zarutska's Parents at SOTU: <a href="https://www.breitbart.com/politics/2026/02/24/how-do-you-not-stand-trump-blasts-democrats-for-failing-to-acknowledge-iryna-zarutskas-parents-at-sotu/">breitbart.com/politics/2026/02</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143340108802029">https://truthsocial.com/@realDonaldTrump/posts/116143340108802029</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:39 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump Promises to Block Immigration from Corrupt Cultures: <a href="https://www.breitbart.com/economy/2026/02/24/trump-promise-block-migration-corrupt-countries/">breitbart.com/economy/2026/02/</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143341220933079">https://truthsocial.com/@realDonaldTrump/posts/116143341220933079</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:40 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Apple News promotes left-leaning media outlets — as it shuts out conservative sites entirely: study: <a href="https://nypost.com/2026/02/10/business/apple-news-promotes-left-leaning-media-outlets-as-it-shuts-out-conservative-sites-entirely-study/">nypost.com/2026/02/10/business</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143347703798250">https://truthsocial.com/@realDonaldTrump/posts/116143347703798250</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:41 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump FTC sends letter to Apple about alleged political bias in its news app: <a href="https://www.foxnews.com/media/trump-ftc-sends-letter-apple-over-alleged-political-bias-its-news-app" target="_blank" title="https://www.foxnews.com/media/trump-ftc-sends-letter-apple-over-alleged-political-bias-its-news-app">foxnews.com/media/trump-ftc-se</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143350148522906">https://truthsocial.com/@realDonaldTrump/posts/116143350148522906</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:12 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p><img alt="image of a letter from the Federal Trade Commission" id="Picture 1" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image001.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 595px;" /> </p>
+<p><img alt="image of a letter from the Federal Trade Commission" id="Picture 2" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image002.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 514px;" /> </p>
+<p><img alt="image of a letter from the Federal Trade Commission" id="Picture 3" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image003.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 514px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143472996744400">https://truthsocial.com/@realDonaldTrump/posts/116143472996744400</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:16 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Nathaniel Moran is doing a fantastic job representing the Great People of Texas' 1st Congressional District!</p>
+<p>Nathaniel has an incredible Record of Success, and strong support from his Community. In Congress, he is working tirelessly to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Support our Amazing Farmers and Ranchers, Ensure American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Stop Migrant Crime, Champion our Brave Military/Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Nathaniel Moran has my Complete and Total Endorsement for Re-Election — HE WILL NOT LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143487057494510">https://truthsocial.com/@realDonaldTrump/posts/116143487057494510</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:16 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Keith Self is a Tremendous Advocate for the Great People of Texas' 3rd Congressional District!</p>
+<p>A West Point Graduate and retired Army Ranger, Keith knows the Wisdom and Courage required to Defend our Country, Support our Incredible Military/Veterans, and Ensure PEACE THROUGH STRENGTH. In Congress, he is working hard to Keep our now very Secure Border, SECURE, Stop Migrant Crime, Cut Taxes and Regulations, Unleash American Energy DOMINANCE, Promote MADE IN THE U.S.A., Safeguard our Elections, and Defend our always under siege Second Amendment.</p>
+<p>Keith Self has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143488153907744">https://truthsocial.com/@realDonaldTrump/posts/116143488153907744</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:16 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Pat Fallon is a fantastic Representative for the wonderful People of Texas' 4th Congressional District!</p>
+<p>An Air Force Veteran, successful Businessman, former National Championship Winning Notre Dame football player under the LEGENDARY Coach Lou Holtz, and now, as Congressman, Pat has a Proven Record of Success — He is a WARRIOR! In Congress, Pat is fighting hard to Grow the Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Champion American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Strengthen our Military/Veterans, Ensure LAW AND ORDER, Advance Election Integrity, and Protect our always under siege Second Amendment.</p>
+<p>Pat Fallon has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143489373842370">https://truthsocial.com/@realDonaldTrump/posts/116143489373842370</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:17 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Lance Gooden is an America First Patriot, who is doing a fantastic job representing Texas' 5th Congressional District!</p>
+<p>A MAGA Warrior, who has been with us from the very beginning, Lance is working hard to Grow our Economy, Cut Taxes and Regulations, Advance American Energy DOMINANCE, Promote MADE IN THE U.S.A., Keep our now very Secure Border, SECURE, Support our Military/Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Lance Gooden has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143490439374762">https://truthsocial.com/@realDonaldTrump/posts/116143490439374762</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:17 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Jake Ellzey is an America First Patriot who is doing an incredible job representing Texas' 6th Congressional District!</p>
+<p>A former Navy fighter pilot and Combat Veteran, Jake knows the Wisdom and Courage required to Defend our Country, Support our Brave Military/Veterans, and Ensure PEACE THROUGH STRENGTH. In Congress, he is working hard to Keep our now very Secure Border, SECURE, Stop Migrant Crime, Cut Taxes and Regulations, Unleash American Energy DOMINANCE, Promote MADE IN THE U.S.A., Grow our Economy, and Protect our always under siege Second Amendment.</p>
+<p>Jake Ellzey has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143491466237720">https://truthsocial.com/@realDonaldTrump/posts/116143491466237720</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:18 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>It is my Great Honor to endorse Jessica Steinmann, who is running to represent the amazing people of Texas' 8th Congressional District. Jessica is strongly supported by many of the greatest America First Patriots in Texas, including Governor Greg Abbott, Lieutenant Governor Dan Patrick, Senator Ted Cruz, and Congressman Morgan Luttrell, among others!</p>
+<p>As a former appointee in my First Term, and now, as a Highly Respected Attorney, Jessica continues to prove that she has the Wisdom and Courage necessary to uphold our Constitution, and ensure LAW AND ORDER. In Congress, Jessica will fight tirelessly to Strengthen our Military, Care for our Brave Veterans, Stand with our Law Enforcement, Keep our Border SECURE, Stop Migrant Crime, Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Advance American Energy DOMINANCE, and Defend our always under siege Second Amendment.</p>
+<p>Jessica Steinmann has my Complete and Total Endorsement to be the next Representative from Texas' 8th Congressional District. GET OUT AND VOTE FOR JESSICA STEINMANN — SHE WILL NEVER LET YOU DOWN!</p>
+<p>Find your Voting Location here: <a href="https://swampthevoteusa.com/Texas/" target="_blank" title="https://swampthevoteusa.com/Texas/">swampthevoteusa.com/Texas/</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143494629859059">https://truthsocial.com/@realDonaldTrump/posts/116143494629859059</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:18 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>It is my Great Honor to endorse America First Patriot Alex Mealer, who is running to represent the incredible people of Texas' 9th Congressional District.</p>
+<p>A West Point Graduate, and Combat Decorated Army Bomb Squad Officer, Alex knows the Wisdom and Courage required to Defend our Country, Support our Military/Veterans, and Ensure PEACE THROUGH STRENGTH. A Graduate of Harvard Business School and Harvard Law School, Alex is also a successful Business Executive who knows the America First Policies necessary to Create GREAT Jobs, Cut Taxes and Regulations, Unleash Innovation, Promote MADE IN THE U.S.A., and Ensure American Energy DOMINANCE. In Congress, she will work hard to Keep our Border SECURE, Stop Migrant Crime, Ensure LAW AND ORDER, Safeguard our Elections, and Defend our always under siege Second Amendment.</p>
+<p>Alex Mealer has my Complete and Total Endorsement to be the next Representative from Texas' 9th Congressional District. GET OUT AND VOTE FOR ALEX MEALER — SHE WILL NEVER LET YOU DOWN!</p>
+<p>Find your Voting Location here: <a href="https://swampthevoteusa.com/Texas/" target="_blank" title="https://swampthevoteusa.com/Texas/">swampthevoteusa.com/Texas/</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143496539840867">https://truthsocial.com/@realDonaldTrump/posts/116143496539840867</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:18 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>It is my Great Honor to endorse MAGA Warrior, Chris Gober, who is running to represent the wonderful people of Texas' 10th Congressional District.</p>
+<p>A Harvard Law School Graduate, and very successful Lawyer, Chris knows the Wisdom and Courage required to uphold our Constitution, and promote LAW AND ORDER. In Congress, Chris will fight tirelessly to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Champion American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Strongly Support our incredible Law Enforcement, Military, and Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Chris Gober has my Complete and Total Endorsement — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143497998354987">https://truthsocial.com/@realDonaldTrump/posts/116143497998354987</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:19 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman August Pfluger is a Tremendous Champion for Texas' 11th Congressional District!</p>
+<p>As the Chairman of the Republican Study Committee, August is doing an incredible job advancing our America First Agenda. He is working hard to Grow our Economy, Cut Taxes and Regulations, Champion our Great Farmers and American Agriculture, Promote MADE IN THE U.S.A., Ensure American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Strengthen our Incredible Military/Veterans, and Defend our always under siege Second Amendment.</p>
+<p>August Pfluger has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143499920564672">https://truthsocial.com/@realDonaldTrump/posts/116143499920564672</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:19 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Craig Goldman is an incredible Representative of Texas' 12th Congressional District!</p>
+<p>A Fifth Generation Texan, Craig served as a State Representative for 12 years prior to becoming a distinguished and Highly Respected Congressman. In Congress, he is fighting tirelessly to Champion our Great Farmers and American Agriculture, Cut Taxes and Regulations, Advance American Energy DOMINANCE, Promote MADE IN THE U.S.A., Keep our now very Secure Border, SECURE, Stop Migrant Crime, Strengthen our Military/Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Craig Goldman has my Complete and Total Endorsement for Re-Election — HE WILL NOT LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143501984582419">https://truthsocial.com/@realDonaldTrump/posts/116143501984582419</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:20 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman "Doc" Ronny Jackson is an America First Patriot, who is doing a fantastic job representing Texas' 13th Congressional District!</p>
+<p>A distinguished Medical Doctor and U.S. Navy Veteran, "Doc" Ronny knows the Wisdom and Courage that is necessary to Defend our Country, Support our Brave Military/Veterans, and Ensure PEACE THROUGH STRENGTH. In Congress, he is fighting tirelessly to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Champion American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Advance Election Integrity, and Protect our always under siege Second Amendment.</p>
+<p>"Doc" Ronny Jackson has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143503444570465">https://truthsocial.com/@realDonaldTrump/posts/116143503444570465</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:20 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Randy Weber is doing a fantastic job representing the wonderful people of Texas' 14th Congressional District!</p>
+<p>A successful Businessman, Randy knows the America First Policies necessary to Create GREAT Jobs, Unleash Innovation, and Ensure American Energy DOMINANCE. He is fighting tirelessly to Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Keep our now very Secure Border, SECURE, Stop Migrant Crime, Champion our Farmers and American Agriculture, Support our Brave Military/Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Randy Weber has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143504852875962">https://truthsocial.com/@realDonaldTrump/posts/116143504852875962</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:21 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congresswoman Monica De La Cruz is doing an incredible job representing the wonderful people of Texas' 15th Congressional District!</p>
+<p>A very successful Small Businesswoman, Monica knows the AMERICA FIRST Policies necessary to Create GREAT Jobs, Unleash Innovation, and Restore American Energy DOMINANCE. She is fighting tirelessly to Cut Taxes and Regulations, Secure our now VERY Secure (Record Setting!) Southern Border, Champion our Farmers and American Agriculture, Support our Brave Military/Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Monica De La Cruz has my Complete and Total Endorsement for Re-Election — SHE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143508443868122">https://truthsocial.com/@realDonaldTrump/posts/116143508443868122</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:21 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Pete Sessions is a Tremendous Champion for Texas' 17th Congressional District!</p>
+<p>As former Chairman of the House Rules Committee and the National Republican Congressional Committee, Pete has served in Congress during a career "loaded up" with accolades and WINS, always fighting tirelessly for our America First Agenda. He is working hard to Support our Amazing Farmers and Ranchers, Cut Taxes and Regulations, Champion American Energy DOMINANCE, Promote MADE IN THE U.S.A., Keep our now very Secure Border, SECURE, Strengthen our Military/Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Pete Sessions has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143509398901939">https://truthsocial.com/@realDonaldTrump/posts/116143509398901939</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:22 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Mark Teixeira is a former Major League Baseball STAR, and tremendous America First Candidate, who is running to represent the incredible people of Texas' 21st Congressional District!</p>
+<p>I know Mark well, and he is a TOTAL WINNER, on and off the field! An MLB All-Star, Mark's career was "loaded up" with Accolades and WINS, including five Gold Gloves, three Silver Sluggers, and a World Series Championship. Mark has a great wife, Leigh, and three beautiful children. In Congress, Mark will work hard to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Unleash American Energy DOMINANCE, Keep our Border SECURE, Stop Migrant Crime, Strengthen our Military/Veterans, Ensure LAW AND ORDER, Champion School Choice, Safeguard our Elections, and Defend our always under siege Second Amendment.</p>
+<p>Mark Teixeira has my Complete and Total Endorsement to be the next Representative from Texas' 21st Congressional District – HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143511132519794">https://truthsocial.com/@realDonaldTrump/posts/116143511132519794</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:22 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>It is my Honor to endorse MAGA Warrior TREVER NEHLS, who is running to represent the incredible people of Texas' 22nd Congressional District.</p>
+<p>Trever's brother is the GREAT Congressman from Texas, Troy Nehls. He and his family are fierce advocates for our Movement to, MAKE AMERICA GREAT AGAIN. As a former Fort Bend County Constable, and retired U.S. Army Colonel, Trever strongly supports our incredible Law Enforcement, Military, and Veterans, and knows the Wisdom and Courage it takes to Ensure LAW AND ORDER. In Congress, Trever will work hard to Keep our now very Secure Border, SECURE, Stop Migrant Crime, Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Advance American Energy DOMINANCE, Champion Election Integrity, and Defend our always under siege Second Amendment.</p>
+<p>Trever Nehls has my Complete and Total Endorsement – HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143513047787934">https://truthsocial.com/@realDonaldTrump/posts/116143513047787934</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:23 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congresswoman Beth Van Duyne is a fantastic Champion for the Great People of Texas' 24th Congressional District!</p>
+<p>A former appointee in my First Administration, where she worked hard to advance our America First Agenda, Beth is now a very distinguished and highly respected Congresswoman. In Congress, she is fighting tirelessly to Keep our now very Secure Border, SECURE, Stop Migrant Crime, Murderers, and other Criminals from illegally entering our Country, Ensure LAW AND ORDER, Strengthen our Great Military/Veterans, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Champion American Energy DOMINANCE, and Protect our always under siege Second Amendment.</p>
+<p>Beth Van Duyne has my Complete and Total Endorsement for Re-Election — SHE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143514083556003">https://truthsocial.com/@realDonaldTrump/posts/116143514083556003</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:23 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Roger Williams is a Tremendous Champion for the incredible people of Texas' 25th Congressional District!</p>
+<p>As a very successful Businessman, and Chairman of the House Small Business Committee, Roger knows the America First Policies required to Grow our Economy, Create GREAT Jobs, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., and Unleash American Energy DOMINANCE. Roger is also fighting tirelessly to Keep our now very Secure Border, SECURE, Ensure LAW AND ORDER, Strengthen our Incredible Military/Veterans, and Defend our always under siege Second Amendment.</p>
+<p>Roger Williams has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143515008414909">https://truthsocial.com/@realDonaldTrump/posts/116143515008414909</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:23 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Brandon Gill is a "MAGA" Warrior for the wonderful people of Texas' 26th Congressional District! I have known Brandon's family for many years. He has an incredible wife, Danielle, two beautiful children, and a truly great father-in-law, Dinesh D'Souza.</p>
+<p>As the Freshman Class President in Congress, Brandon is doing a tremendous job advancing our AMERICA FIRST Agenda. He is working tirelessly to Grow our Economy, Cut Taxes and Regulations, Help Secure our now VERY Secure (Record Setting!) Southern Border, Stop Migrant Crime, Murderers, and other Criminals from illegally entering our Country, Strengthen our Incredible Military/Veterans, Champion American Energy DOMINANCE, and Protect our always under siege Second Amendment.</p>
+<p>Brandon Gill has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143516124835450">https://truthsocial.com/@realDonaldTrump/posts/116143516124835450</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:23 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Michael Cloud is a Tremendous Advocate for the Great People of Texas' 27th Congressional District!</p>
+<p>As a Member of the POWERFUL House Appropriations Committee, Michael is fighting hard to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Advance American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Stop Migrant Crime, Support our Brave Military/Veterans, and Defend our always under siege Second Amendment.</p>
+<p>Michael Cloud has my Complete and Total Endorsement for Re-Election — HE WILL NOT LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143517028256998">https://truthsocial.com/@realDonaldTrump/posts/116143517028256998</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:24 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>A Great and Highly Respected Hispanic Judge, very successful Businessman, and Rancher, Tano Tijerina has dedicated his life to serving his Community. In Congress, he will fight tirelessly to Grow our Economy, Promote our Amazing Farmers and Ranchers, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Champion American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Stop Migrant Crime, Ensure LAW AND ORDER, Strengthen our Military/Veterans, and Protect our always under siege Second Amendment.</p>
+<p>I don't know why, but the fact that Henry Cuellar would be running against Donald J. Trump, and the Republican Party, seems to be a great act of disloyalty and, perhaps more importantly, the act of a fool who would immediately go back to a Political Party, the Radical Left Democrats, whose views are different from his, but not nearly good or strong enough to be a true Republican. The Democrats wanted to put him "away" for the rest of his life and, likewise, the life of his wife. Knowing everything and, if I had to do it again, I would do the exact same thing. I would pardon Henry Cuellar because he was put through a Political Persecution, but he was also not smart in what he did, not respected by his Party, and a person who truly deserves to be beaten badly in the upcoming Election, but not somebody who should be serving a 20 year jail sentence. Likewise, however, based on all that has happened, Henry should not be allowed to serve in Congress again. Tano's views are stronger, better, and far less tainted than Henry's, and he has my Complete and Total Endorsement to be the next Representative from Texas' 28th Congressional District — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143518815107485">https://truthsocial.com/@realDonaldTrump/posts/116143518815107485</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:24 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman John "Judge" Carter is a Fantastic Representative for the Great People of Texas' 31st Congressional District!</p>
+<p>"Judge" served over 20 years as a District Court Judge in Williamson County prior to becoming a very distinguished and respected U.S. Congressman. He is working tirelessly to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Champion American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Stop Migrant Crime, Murderers, and other Criminals from illegally entering our Country, Strengthen our Military/Veterans, and Defend our always under siege Second Amendment.</p>
+<p>Judge Carter has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143519912956415">https://truthsocial.com/@realDonaldTrump/posts/116143519912956415</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:24 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>It is my Great Honor to endorse America First Patriot, Jace Yarbrough, who is running to represent the wonderful people of Texas' 32nd Congressional District.</p>
+<p>A Brave Air Force Veteran, Jace knows the Wisdom and Courage required to Defend our Country, Support our Military/Veterans, and Ensure PEACE THROUGH STRENGTH. Additionally, as a very successful Stanford Law School Graduate and Business Attorney, Jace knows how to Create Jobs, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Unleash American Energy Dominance, and Champion our Nation's Golden Age. In Congress, he will fight tirelessly to Keep our Border SECURE, Stop Migrant Crime, Ensure LAW AND ORDER, Safeguard our Elections, and Protect our always under siege Second Amendment.</p>
+<p>Jace Yarbrough has my Complete and Total Endorsement to be the next Representative from Texas' 32nd Congressional District — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143520816027944">https://truthsocial.com/@realDonaldTrump/posts/116143520816027944</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:24 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>It is my Great Honor to endorse America First Patriot, Eric Flores, who is running to represent the wonderful people of Texas' 34th Congressional District.</p>
+<p>A Brave U.S. Army Veteran, and former Criminal Prosecutor, Eric knows the Wisdom and Courage it takes to Ensure LAW AND ORDER, Strongly Support our Great Heroes in Law Enforcement, and Champion our Military and Veterans. In Congress, Eric will fight tirelessly to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Advance American Energy DOMINANCE, Keep our now very Secure Border, SECURE, Stop Migrant Crime, and Protect our always under siege Second Amendment.</p>
+<p>Eric Flores has my Complete and Total Endorsement to be the next Congressman from Texas' 34th Congressional District — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143521787584376">https://truthsocial.com/@realDonaldTrump/posts/116143521787584376</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:25 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Congressman Brian Babin, D.D.S, is an incredible Representative of Texas' 36th Congressional District!</p>
+<p>As the Highly Respected Chairman of the House Science Committee, Brian is fighting hard to Grow our Economy, Cut Taxes and Regulations, Champion American Energy DOMINANCE, Promote MADE IN THE U.S.A., Keep our now very Secure Border, SECURE, Strongly Support Law Enforcement and our Military, Deliver Quality Care to our Brave Veterans, and Protect our always under siege Second Amendment.</p>
+<p>Brian Babin has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143522980928891">https://truthsocial.com/@realDonaldTrump/posts/116143522980928891</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:26 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>It is my Great Honor to endorse Carlos De La Cruz, a fantastic America First Candidate running to be the next Congressman from Texas' 35th Congressional District!</p>
+<p>A Brave, 20 Year Air Force Veteran, and now, as a successful Businessman, Carlos has a Proven Record of Success — He is a WINNER! In Congress, Carlos will work tirelessly to Grow the Economy, Promote our Amazing Farmers and Ranchers, Cut Taxes and Regulations, Champion MADE IN THE U.S.A., Advance American Energy DOMINANCE, Keep our Border SECURE, Strengthen our Military/Veterans, Ensure LAW AND ORDER, Advocate for Election Integrity, and Protect our always under siege Second Amendment.</p>
+<p>Carlos De La Cruz has my Complete and Total Endorsement to be the next Representative from Texas' 35th Congressional District. GET OUT AND VOTE FOR CARLOS DE LA CRUZ — HE WILL NEVER LET YOU DOWN!</p>
+<p>Find your Voting Location here: <a href="https://swampthevoteusa.com/Texas/" target="_blank" title="https://swampthevoteusa.com/Texas/">swampthevoteusa.com/Texas/</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143525942565730">https://truthsocial.com/@realDonaldTrump/posts/116143525942565730</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:26 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Jon Bonck is an incredible Candidate running to represent the fantastic people of Texas' 38th Congressional District. He is supported by many MAGA Patriots, including Senator Ted Cruz, Congressmen "Doc" Ronny Jackson, Brandon Gill, Jim Jordan, and Tim Burchett, among others.</p>
+<p>A successful Business Executive, Jon knows the America First Policies required to Create GREAT Jobs, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Unleash American Energy DOMINANCE, and Champion our Nation's Golden Age. In Congress, he will fight tirelessly to Keep our Border SECURE, Stop Migrant Crime, Strengthen our Military/Veterans, Safeguard our Elections, and Protect our always under siege Second Amendment.</p>
+<p>Jon Bonck has my Complete and Total Endorsement to be the next Representative from Texas' 38th Congressional District. GET OUT AND VOTE FOR JON BONCK — HE WILL NEVER LET YOU DOWN!</p>
+<p>Find your Voting Location here: <a href="https://swampthevoteusa.com/Texas/" target="_blank" title="https://swampthevoteusa.com/Texas/">swampthevoteusa.com/Texas/</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143529511602022">https://truthsocial.com/@realDonaldTrump/posts/116143529511602022</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:27 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>I am proud to once again endorse Texas Lieutenant Governor, Dan Patrick, for Re-Election.</p>
+<p>As Texas Chair of our Presidential Campaigns in 2016, 2020, and 2024, Dan has been an incredible friend to our Movement, helping us WIN BIG in the Primaries and General Elections. In his next Term, Dan will fight tirelessly alongside of us to Secure the Border, Stop Migrant Crime, Grow the Economy, Cut Taxes and Regulations, Champion School Choice, Support our Great Military/Vets, Restore American Energy DOMINANCE, and Strongly Protect our always under siege Second Amendment.</p>
+<p>Dan Patrick has my Complete and Total Endorsement – He will never let you down!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143531243446769">https://truthsocial.com/@realDonaldTrump/posts/116143531243446769</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:27 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Greg Abbott is the strong and highly respected Governor of Texas, a State I love and WON BIG three times, including with 6.4 Million Votes in 2024 (The most Votes in History, BY FAR)!</p>
+<p>Thanks to Greg's bold and effective Leadership, the wonderful people of Texas will have the opportunity to elect 5 new MAGA Republicans in the 2026 Midterm Elections with the passage of their new, fair, and much improved, Congressional Map — A BIG WIN for Republicans in The Lone Star State, and across the Country! As Governor, Greg is also fighting tirelessly to Champion Texas Values, Grow the Economy, Cut Taxes and Regulations, Support our Amazing Farmers and Ranchers, Advance MADE IN THE U.S.A., Unleash American Energy Dominance, Promote School Choice, Keep our now very Secure Border, SECURE, Stop Migrant Crime, Murderers, and other Criminals from illegally entering our Country, Ensure LAW AND ORDER, Protect our Brave Military, Veterans, and Law Enforcement, and Defend our always under siege Second Amendment.</p>
+<p>Greg Abbott has my Complete and Total Endorsement for Re-Election. He is an exceptional Governor and man — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143532789134529">https://truthsocial.com/@realDonaldTrump/posts/116143532789134529</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:29 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Justice Clarence Thomas' Dissent:<br /><a href="https://www.law.cornell.edu/supremecourt/text/24-1287#writing-24-1287_DISSENT_9" target="_blank" title="https://www.law.cornell.edu/supremecourt/text/24-1287#writing-24-1287_DISSENT_9">law.cornell.edu/supremecourt/t</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143539168239036">https://truthsocial.com/@realDonaldTrump/posts/116143539168239036</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:29 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Thank you Justice Thomas!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143541374008120">https://truthsocial.com/@realDonaldTrump/posts/116143541374008120</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:30 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Justice Brett Kavanaugh's Dissent:<br /><a href="https://www.law.cornell.edu/supremecourt/text/24-1287#writing-24-1287_DISSENT_10" target="_blank" title="https://www.law.cornell.edu/supremecourt/text/24-1287#writing-24-1287_DISSENT_10">law.cornell.edu/supremecourt/t</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143544228909416">https://truthsocial.com/@realDonaldTrump/posts/116143544228909416</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />8:30 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Thank you Justice Kavanaugh!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143545228804973">https://truthsocial.com/@realDonaldTrump/posts/116143545228804973</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />9:10 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>This beautiful building will be, when complete, the much anticipated White House Ballroom — The Greatest of its kind ever built! It is a rendering from the Treasury Building, directly across the street, and replaces the very small, dilapidated, and rebuilt many times, East Wing, with a magnificent New East Wing, consisting of a glorious Ballroom that has been asked for by Presidents for over 150 years. Being an identical height and scale, it is totally in keeping with our historic White House. This is the first rendering shown to the Public. If you notice, the North Wall is a replica of the North Facade of the White House, shown at the right hand side of the picture. This space will serve our Country well for, hopefully, Centuries into the future! PRESIDENT DONALD J. TRUMP</p>
+<p><img alt="image of the proposed White House ballroom" id="Picture 4" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image004.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 183px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116143698866938654">https://truthsocial.com/@realDonaldTrump/posts/116143698866938654</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:28 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>CBS's Tony Dokoupil Calls Trump's Speech 'Extraordinary' and 'Vintage Trump': <a href="https://www.mediaite.com/media/news/cbss-tony-dokoupil-calls-trumps-speech-extraordinary-and-vintage-trump/" target="_blank" title="https://www.mediaite.com/media/news/cbss-tony-dokoupil-calls-trumps-speech-extraordinary-and-vintage-trump/">mediaite.com/media/news/cbss-t</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144005595037510">https://truthsocial.com/@realDonaldTrump/posts/116144005595037510</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:28 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>President Calvin Coolidge: "The Business of America is BUSINESS!"</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144007354936339">https://truthsocial.com/@realDonaldTrump/posts/116144007354936339</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:28 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>IT'S "SAVE AMERICA ACT," NOT "SAVE ACT." REPUBLICANS MUST START USING THE TERM, "SAVE AMERICA ACT" — MUCH MORE POTENT, AND DESCRIPTIVE!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144008488017887">https://truthsocial.com/@realDonaldTrump/posts/116144008488017887</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:29 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Tariffs have influenced Novartis, and its great leader, Vasant (Vas) Narasimhan, M.D., to build 7+ Manufacturing and R&amp;D Facilities, creating thousands of Jobs. The Radical Left and the Lunatics who are suing against Tariffs refuse to talk about this, but the same thing is happening with hundreds of other Companies!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144013017188538">https://truthsocial.com/@realDonaldTrump/posts/116144013017188538</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:31 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p><img alt="image of a social media post" id="Picture 5" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image005.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 297px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144018875864353">https://truthsocial.com/@realDonaldTrump/posts/116144018875864353</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:35 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Markets Hail Trump's Economics: <a href="https://www.wsj.com/opinion/markets-hail-trumps-economics-he-will-repair-biden-damage-pro-growth-investment-boost-f3954dbe" target="_blank" title="https://www.wsj.com/opinion/markets-hail-trumps-economics-he-will-repair-biden-damage-pro-growth-investment-boost-f3954dbe">wsj.com/opinion/markets-hail-t</a></p>
+<p><img alt="image of am Op-Ed article from the Wall Street Journal" id="Picture 6" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image006.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 519px;" /></p>
+<p><img alt="image of am Op-Ed article from the Wall Street Journal" id="Picture 7" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image007.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 519px;" /></p>
+<p><img alt="image of am Op-Ed article from the Wall Street Journal" id="Picture 8" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image008.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 519px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144034294716498">https://truthsocial.com/@realDonaldTrump/posts/116144034294716498</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:36 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p><img alt="image of Tik Tok visits data" id="Picture 9" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image009.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 518px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144037691454541">https://truthsocial.com/@realDonaldTrump/posts/116144037691454541</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:41 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Apple News Continues Rejection of Right-Leaning Outlets in January: <a href="https://mrcfreespeechamerica.org/blogs/free-speech/heather-moon/2026/02/04/apple-news-continues-rejection-right-leaning-outlets" target="_blank" title="https://mrcfreespeechamerica.org/blogs/free-speech/heather-moon/2026/02/04/apple-news-continues-rejection-right-leaning-outlets">mrcfreespeechamerica.org/blogs</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144057341130700">https://truthsocial.com/@realDonaldTrump/posts/116144057341130700</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:41 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>The alleged bias of Apple News: Ex-liberal mag editor tasked to handpick stories for millions of iPhone users: <a href="https://www.foxnews.com/media/alleged-bias-apple-news-ex-liberal-mag-editor-tasked-handpick-stories-millions-iphone-users" target="_blank" title="https://www.foxnews.com/media/alleged-bias-apple-news-ex-liberal-mag-editor-tasked-handpick-stories-millions-iphone-users">foxnews.com/media/alleged-bias</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144058486971927">https://truthsocial.com/@realDonaldTrump/posts/116144058486971927</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:42 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Trump Hails 'Turnaround for the Ages' in SOTU Address:<br /><a href="https://www.newsmax.com/newsfront/donald-trump-turnaround-for-the-ages-sotu-address/2026/02/24/id/1247330/" target="_blank" title="https://www.newsmax.com/newsfront/donald-trump-turnaround-for-the-ages-sotu-address/2026/02/24/id/1247330/">newsmax.com/newsfront/donald-t</a></p>
+<p><img alt="image of a Newsmax news article" id="Picture 10" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image010.jpg" style="border-width: 0px; border-style: solid; width: 400px; height: 454px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144061962101342">https://truthsocial.com/@realDonaldTrump/posts/116144061962101342</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:51 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Video: <a href="https://1a-1791.com/video/fww1/d1/s8/2/c/Q/B/3/cQB3z.caa.mp4?b=1&amp;u=ummtf">https://1a-1791.com/video/fww1/d1/s8/2/c/Q/B/3/cQB3z.caa.mp4?b=1&amp;u=ummtf</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144097027816293">https://truthsocial.com/@realDonaldTrump/posts/116144097027816293</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:51 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p><img alt="image of the text of a transcript" id="Picture 11" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image011.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 522px;" /></p>
+<p><img alt="image of the text of a transcript" id="Picture 12" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image012.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 522px;" /></p>
+<p><img alt="image of the text of a transcript" id="Picture 13" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image013.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 521px;" /></p>
+<p><img alt="image of the text of a transcript" id="Picture 14" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image014.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 521px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144099725478051">https://truthsocial.com/@realDonaldTrump/posts/116144099725478051</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />10:52 AM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p><img alt="image of a list of what Trump thinks Harris would have done if she won the election" id="Picture 15" src="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image015.jpg" style="border-width: 0px; border-style: solid; width: 399px; height: 517px;" /></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144102050788116">https://truthsocial.com/@realDonaldTrump/posts/116144102050788116</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />12:47 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>THE UNITED STATES OF AMERICA WILL NEVER ALLOW A RADICAL LEFT, WOKE COMPANY TO DICTATE HOW OUR GREAT MILITARY FIGHTS AND WINS WARS! That decision belongs to YOUR COMMANDER-IN-CHIEF, and the tremendous leaders I appoint to run our Military.</p>
+<p>The Leftwing nut jobs at Anthropic have made a DISASTROUS MISTAKE trying to STRONG-ARM the Department of War, and force them to obey their Terms of Service instead of our Constitution. Their selfishness is putting AMERICAN LIVES at risk, our Troops in danger, and our National Security in JEOPARDY.</p>
+<p>Therefore, I am directing EVERY Federal Agency in the United States Government to IMMEDIATELY CEASE all use of Anthropic's technology. We don't need it, we don't want it, and will not do business with them again! There will be a Six Month phase out period for Agencies like the Department of War who are using Anthropic's products, at various levels. Anthropic better get their act together, and be helpful during this phase out period, or I will use the Full Power of the Presidency to make them comply, with major civil and criminal consequences to follow.</p>
+<p>WE will decide the fate of our Country — NOT some out-of-control, Radical Left AI company run by people who have no idea what the real World is all about. Thank you for your attention to this matter. MAKE AMERICA GREAT AGAIN!</p>
+<p>PRESIDENT DONALD J. TRUMP</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144552969293195">https://truthsocial.com/@realDonaldTrump/posts/116144552969293195</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />1:11 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>The recent Decision of the United States Supreme Court concerning TARIFFS could allow for Hundreds of Billions of Dollars to be returned to Countries and Companies that have been "ripping off" the United States of America for many years, and now, according to this Decision, could actually continue to do so, at an even increased level. I am sure that the Supreme Court did not have this in mind! It doesn't make sense that Countries and Companies that took advantage of us for decades, receiving Billions and Billions of Dollars that they should not have been allowed to receive, would now be entitled to an undeserved "windfall," the likes of which the World has never seen before, as a result of this highly disappointing, to say the least, ruling. Is a Rehearing or Readjudication of this case possible??? PRESIDENT DONALD J. TRUMP</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116144649664906576">https://truthsocial.com/@realDonaldTrump/posts/116144649664906576</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />5:26 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Video: <a href="https://1a-1791.com/video/fwe2/f4/s8/2/0/e/I/3/0eI3z.caa.mp4?b=1&amp;u=ummtf">https://1a-1791.com/video/fwe2/f4/s8/2/0/e/I/3/0eI3z.caa.mp4?b=1&amp;u=ummtf</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116145649488071320">https://truthsocial.com/@realDonaldTrump/posts/116145649488071320</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />5:26 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Video: <a href="https://1a-1791.com/video/fww1/c8/s8/2/e/g/I/3/egI3z.caa.mp4?b=1&amp;u=ummtf">https://1a-1791.com/video/fww1/c8/s8/2/e/g/I/3/egI3z.caa.mp4?b=1&amp;u=ummtf</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116145652468000789">https://truthsocial.com/@realDonaldTrump/posts/116145652468000789</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />5:27 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p><a href="https://1a-1791.com/video/fww1/53/s8/2/m/g/I/3/mgI3z.caa.mp4?b=1&amp;u=ummtf">https://1a-1791.com/video/fww1/53/s8/2/m/g/I/3/mgI3z.caa.mp4?b=1&amp;u=ummtf</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116145653196854894">https://truthsocial.com/@realDonaldTrump/posts/116145653196854894</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />5:27 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Video: <a href="https://1a-1791.com/video/fww1/87/s8/2/y/g/I/3/ygI3z.caa.mp4?b=1&amp;u=ummtf">https://1a-1791.com/video/fww1/87/s8/2/y/g/I/3/ygI3z.caa.mp4?b=1&amp;u=ummtf</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116145653498181186">https://truthsocial.com/@realDonaldTrump/posts/116145653498181186</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />5:35 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Don Huffines is a MAGA Warrior — He has been with me from the very beginning, and is running for Comptroller of Public Accounts in Texas, which I love and WON BIG in 2016, 2020, and 2024, getting the highest vote in the State's History.</p>
+<p>As a successful Businessman, Don knows the America First Policies required to Grow our Economy, Create GREAT Jobs, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., and Unleash American Energy DOMINANCE. As your next Comptroller, Don will fight tirelessly to Keep our Border SECURE, Ensure LAW AND ORDER, Strengthen our Military/Veterans, and Defend our always under siege Second Amendment.</p>
+<p>Don Huffines has my Complete and Total Endorsement to be the next Texas Comptroller of Public Accounts — DON WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116145686017289461">https://truthsocial.com/@realDonaldTrump/posts/116145686017289461</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />5:36 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Dr. Dawn Buckingham is the strong and highly popular Land Commissioner for Texas, a place I love and WON BIG three times, including with 6.4 Million Votes in 2024, the most in History (BY FAR)!</p>
+<p>Dawn is a Ninth Generation Texan, successful Surgeon, avid Hunter, former State Senator, and now, as Land Commissioner, has served the Lone Star State during a career "loaded up" with accolades and wins. A true America First Patriot, who has been with us from the very beginning, Dawn is an incredibly effective steward of Texas' 13 Million Acres of Precious, Energy Rich, State Land — She is a Strong Supporter of Texas Oil &amp; Gas! Dawn is fighting tirelessly to Grow our Economy, Cut Taxes and Regulations, Unleash American Energy DOMINANCE, Promote MADE IN THE U.S.A., Champion our Amazing Farmers and Ranchers, Keep our Border SECURE, Stop Migrant Crime, Murderers, and other Criminals from illegally entering our Country, and Protect our always under siege Second Amendment.</p>
+<p>Land Commissioner Dawn Buckingham, M.D., has my Complete and Total Endorsement for Re-Election — SHE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116145690898669254">https://truthsocial.com/@realDonaldTrump/posts/116145690898669254</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />5:51 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Sid Miller, a MAGA Warrior who has been with me from the very beginning, is doing a terrific job as Agriculture Commissioner for the Great State of Texas, which I love and WON BIG in Record Margins in 2016, 2020, and 2024!</p>
+<p>An Eighth Generation Farmer and Rancher, Sid is an incredibly effective Voice for Texas Agriculture, and our amazing Farmers and Ranchers. He is working tirelessly to Grow our Economy, Cut Taxes and Regulations, Promote MADE IN THE U.S.A., Unleash American Energy DOMINANCE, Keep our Border SECURE, Stop Migrant Crime, Strengthen our Military/Veterans, Ensure LAW AND ORDER, and Protect our always under siege Second Amendment.</p>
+<p>Agriculture Commissioner Sid Miller has my Complete and Total Endorsement for Re-Election — HE WILL NEVER LET YOU DOWN!</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116145748543672366">https://truthsocial.com/@realDonaldTrump/posts/116145748543672366</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />7:49 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Minnesota Autism Payments have gone from $1,099,946 in 2017, to $343,176,474 in 2024, an increase of 34,000% in just a few years. Steve Miller, Russ Vought, Dr. Oz, Pam Bondi - This is a GIANT SCAM. Investigate and Arrest these CROOKS, NOW. More Somalia involvement. California is worse!!! BALANCE BUDGET! Thank you to "Gutfeld." President DJT</p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116146212954175657">https://truthsocial.com/@realDonaldTrump/posts/116146212954175657</a></p>
+</td>
+</tr>
+<tr>
+<td nowrap="nowrap" style="padding-top:5px" valign="top"><i>February 27, 2026<br />11:30 PM</i></td>
+<td style="padding-left:15px; padding-top:5px" valign="top">
+<p>Video: <a href="https://1a-1791.com/video/fwe2/39/s8/2/E/A/M/3/EAM3z.caa.mp4?b=1&amp;u=ummtf">https://1a-1791.com/video/fwe2/39/s8/2/E/A/M/3/EAM3z.caa.mp4?b=1&amp;u=ummtf</a></p>
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #43b4e0; padding-top:5px" valign="top">
+<p><a href="https://truthsocial.com/@realDonaldTrump/posts/116147082884192486">https://truthsocial.com/@realDonaldTrump/posts/116147082884192486</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+  </div>
+
+  <div class="field-node-attached-images">
+    <h2 class="title">Related Images</h2><div class="view view-document-attached-files view-id-document_attached_files view-display-id-block view-dom-id-7f7df53069872c8cb3188ec04cb816f8">
+        
+    
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+      
+          
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image001.jpg" type="image/jpeg; length=38239">image001.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image002.jpg" type="image/jpeg; length=43017">image002.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image003.jpg" type="image/jpeg; length=23896">image003.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image004.jpg" type="image/jpeg; length=13249">image004.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image005.jpg" type="image/jpeg; length=17346">image005.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image006.jpg" type="image/jpeg; length=34447">image006.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image007.jpg" type="image/jpeg; length=48576">image007.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image008.jpg" type="image/jpeg; length=26561">image008.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image009.jpg" type="image/jpeg; length=55551">image009.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image010.jpg" type="image/jpeg; length=37720">image010.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image011.jpg" type="image/jpeg; length=45003">image011.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image012.jpg" type="image/jpeg; length=37357">image012.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image013.jpg" type="image/jpeg; length=35978">image013.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image014.jpg" type="image/jpeg; length=35728">image014.jpg</a></span>  </div>
+  <div class="field-election-related-docs">
+    <span class="file"><img class="file-icon" alt="Image icon" title="image/jpeg" src="/modules/file/icons/image-x-generic.png" /> <a href="https://www.presidency.ucsb.edu/sites/default/files/documents_with_attached_files/395483/image015.jpg" type="image/jpeg; length=21996">image015.jpg</a></span>  </div>
+    </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>  </div>
+
+  <div class="field-prez-document-citation">
+    <p class="ucsbapp_citation">Donald J. Trump (2nd Term), Truth Social Posts of February 27, 2026 Online by Gerhard Peters and John T. Woolley, The American Presidency Project https://www.presidency.ucsb.edu/node/395483</p>  </div>
+    </div>
+    <div class="col-sm-4 ">
+      <div class="group-meta">
+  <div class="field-ds-filed-under-">
+    <h3 class="oog-label">Filed Under</h3>  </div>
+<h3 class="label-above oog-label ds ">Categories</h3><div><a href="/documents/app-categories/presidential" typeof="skos:Concept" property="rdfs:label skos:prefLabel" datatype="">Presidential</a></div><div><a href="/documents/app-categories/social-media" typeof="skos:Concept" property="rdfs:label skos:prefLabel" datatype="">Social Media</a></div><h3 class="label-above oog-label ds">Attributes</h3><div><a href="/documents/app-attributes/truth-social" typeof="skos:Concept" property="rdfs:label skos:prefLabel" datatype="">Truth Social</a></div><div class="jump"><div class="view view-dpg-docs-media view-id-dpg_docs_media view-display-id-block_2 view-dom-id-7f81f1624012977a25082b8424298697">
+        
+    
+      <div class="view-content">
+        <div>
+      </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div></div></div><div class="rrssb"><ul class="rrssb-buttons"><li class="rrssb-twitter"><a href="https://twitter.com/intent/tweet?text=Truth%20Social%20Posts%20of%20February%2027%2C%202026&url=https%3A%2F%2Fwww.presidency.ucsb.edu%2Fdocuments%2Ftruth-social-posts-february-27-2026" class="popup"><span class="rrssb-icon"></span><span class="rrssb-text">twitter</span></a></li><li class="rrssb-facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.presidency.ucsb.edu%2Fdocuments%2Ftruth-social-posts-february-27-2026" class="popup"><span class="rrssb-icon"></span><span class="rrssb-text">facebook</span></a></li><li class="rrssb-linkedin"><a href="http://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.presidency.ucsb.edu%2Fdocuments%2Ftruth-social-posts-february-27-2026&title=Truth%20Social%20Posts%20of%20February%2027%2C%202026" class="popup"><span class="rrssb-icon"></span><span class="rrssb-text">linkedin</span></a></li><li class="rrssb-googleplus"><a href="https://plus.google.com/share?url=https%3A%2F%2Fwww.presidency.ucsb.edu%2Fdocuments%2Ftruth-social-posts-february-27-2026" class="popup"><span class="rrssb-icon"></span><span class="rrssb-text">google+</span></a></li><li class="rrssb-email"><a href="mailto:?subject=Truth%20Social%20Posts%20of%20February%2027%2C%202026&body=https%3A%2F%2Fwww.presidency.ucsb.edu%2Fdocuments%2Ftruth-social-posts-february-27-2026" ><span class="rrssb-icon"></span><span class="rrssb-text">email</span></a></li></ul></div>
+  <div class="field-ds-big-search-block">
+    <section id="block-views-5c12edf56060306972111336e0789cf4" class="block block-views other-frontpage-block clearfix">
+
+        <h2 class="block-title">Basic Search (case Sensitive!)</h2>
+    
+  <form action="/advanced-search" method="get" id="views-exposed-form-prez-documents-archive-search2-page-1" accept-charset="UTF-8"><div>  <div class="views-exposed-form vefl-layout bootstrap-6-6-stacked">
+    <div class="views-exposed-widgets clearfix">
+              <div class="vefl-region vefl-region-top">
+                      
+<div id="edit-field-keywords-wrapper" class="views-exposed-widget views-widget-edit-field-keywords">
+    
+  <div class="views-widget">    <div class="form-item form-item-field-keywords form-type-textfield form-group"><input class="form-control form-text" type="text" id="edit-field-keywords" name="field-keywords" value="" size="30" maxlength="128" /></div>  </div>
+  </div>
+                  </div>
+              <div class="vefl-region vefl-region-left">
+                  </div>
+              <div class="vefl-region vefl-region-right">
+                  </div>
+              <div class="vefl-region vefl-region-bottom">
+                      
+<div id="items-per-page-wrapper" class="views-exposed-widget views-widget-items-per-page">
+    
+      <div class="form-item form-item-items-per-page form-type-select form-group"> <label class="control-label" for="edit-items-per-page"># per page</label>
+<select class="form-control form-select" id="edit-items-per-page" name="items_per_page"><option value="5">5</option><option value="10">10</option><option value="25" selected="selected">25</option><option value="50">50</option><option value="100">100</option></select></div>  
+  </div>
+                      
+<div id="button-wrapper" class="views-exposed-widget views-widget-button views-submit-button">
+    
+      <button type="submit" id="edit-submit-prez-documents-archive-search2" name="" value="Apply" class="btn btn-default form-submit">Apply</button>
+  
+  </div>
+                  </div>
+          </div>
+  </div>
+</div></form>
+</section>
+  </div>
+
+  <div class="field-ds-typo">
+    <div class="view view-report-a-typo view-id-report_a_typo view-display-id-block view-dom-id-48e4af6b4e49770fafd10a8ee1cf831e">
+        
+    
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+      
+  <div class="views-field views-field-title">        <span class="field-content"><a href="/report-a-typo?content_id=395483&amp;title=Truth%20Social%20Posts%20of%20February%2027%2C%202026" class="report-typo" target="_blank"><h3>Report a Typo</h3></a></span>  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>  </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Needed to activate display suite support on forms -->
+
+</section>
+  </div>
+<!-- Content -->
+      </section>
+
+      
+    </div>
+  </div>
+  
+  
+</div>
+<footer class="site-footer no-print">
+  <div class="container">
+      <div class="region region-footer">
+    <section id="block-block-4" class="block block-block attribution clearfix">
+
+      
+  <p><span>The American Presidency Project</span><br />John Woolley and Gerhard Peters<br /><strong><a href="https://www.presidency.ucsb.edu/contact">Contact</a></strong></p>
+
+</section>
+<section id="block-block-6" class="block block-block foot ucsb clearfix">
+
+      
+  <p style="text-align: center;display:inline-block;"><a class="twitter" href="https://twitter.com/presidency_proj" target="_blank">Twitter</a> <a class="facebook" href="https://www.facebook.com/pg/american.presidency.project/" target="_blank">Facebook</a></p>
+
+</section>
+<section id="block-block-5" class="block block-block copyright clearfix">
+
+      
+  <p>Copyright &copy; The American Presidency Project<br /><a href="http://www.ucsb.edu/terms-of-use" target="_blank">Terms of Service</a> | <a href="https://www.privacy.ucsb.edu/information-privacy/website-privacy" target="_blank">Privacy</a> | <a href="/accessibility">Accessibility</a></p><p><img alt="uc santa barbara logo" src="/sites/default/files/pictures/uc-santa-barbara-wordmark-white1x.svg" style="width: 197px; min-width: 150px; height: 14px;object-fit:cover;" /></p>
+</section>
+  </div>
+  </div>
+  </footer>
+  <script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_NKBfN5q_T2fdeVG6tE3pdNU7glYkyzgPuDTc4K3Ne1w.js"></script>
+<script src="https://www.presidency.ucsb.edu/sites/default/files/js/js_MRdvkC2u4oGsp5wVxBG1pGV5NrCPW3mssHxIn6G9tGE.js"></script>
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"dee899de70","applicationID":"80106271","transactionName":"bl1XYxNYWkVYVxFdWVcXYEUIFhtfV1AATBhJUEU=","queueTime":0,"applicationTime":577,"atts":"QhpUFVtCSUs=","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
+</html>

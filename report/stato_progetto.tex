@@ -1,0 +1,452 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.8cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\setlist[itemize]{itemsep=2pt,topsep=4pt}
+\setlist[enumerate]{itemsep=2pt,topsep=4pt}
+
+\title{Post di Trump e prezzo del greggio\\[2pt]
+\large Stato del progetto}
+\author{}
+\date{21 settembre 2026}
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+
+\section{La catena di elaborazione}
+
+La domanda è se i post di Trump che segnalano un rischio all'offerta di
+greggio muovano il prezzo del petrolio, e per quanto tempo. Rispondere
+richiede tre cose: sapere \emph{quando} ogni post è stato pubblicato, con
+precisione sufficiente a isolarne l'effetto; stabilire \emph{quali} post
+contano come eventi, con un criterio che un revisore possa replicare; e avere
+una serie di prezzo abbastanza fitta da misurare la reazione nei minuti
+successivi.
+
+Il lavoro, fin ora, è diviso in cinque script numerati, ciascuno dei quali legge
+l'output del precedente.
+
+\begin{description}[leftmargin=1.6cm,style=nextline,itemsep=5pt]
+
+\item[\texttt{00}\ \ scraping] Costruisce il corpus dall'archivio
+dell'American Presidency Project. Il punto non banale è il tempo: l'orario di
+pubblicazione non viene letto dalla pagina ma ricavato dall'identificatore del
+post, che lo contiene per costruzione. Il confronto fra i due serve da
+controllo di qualità sull'intero dataset.
+
+\item[\texttt{01}\ \ selezione] Porta da ``tutti i post'' a ``gli eventi
+rilevanti''. Scarta ciò che non ha contenuto testuale, applica la regola che
+definisce l'evento petrolifero, raggruppa i post ravvicinati in episodi e
+misura quanto possono essere lunghe le finestre di osservazione prima che due
+episodi si sovrappongano. L'episodio, non il post, è l'unità di analisi.
+
+\item[\texttt{02}\ \ audit] Risponde all'obiezione prevedibile a qualunque
+definizione basata su parole chiave: \emph{hai trovato solo quello che
+cercavi}. Applica due metodi non supervisionati, che non conoscono le liste di
+termini, e verifica se emergono post rilevanti fuori dalla regola. Non
+definisce nulla: serve a misurare quanto la regola perde.
+
+\item[\texttt{03}\ \ prezzi] Procura la serie di prezzo al minuto contro cui
+misurare la reazione. È la fase ferma, in attesa di decidere insieme quali
+serie storiche usare.
+
+\item[\texttt{04}\ \ feature] Porta da ``quali post contano'' a ``quanto e in
+che direzione ciascuno spinge''. Feature calcolate da regole (orario,
+lunghezza, enfasi), novità semantica rispetto agli episodi recenti, e le
+variabili che richiedono lettura: direzione attesa sull'offerta, intensità,
+concretezza.
+
+\end{description}
+
+I primi tre script costruiscono la variabile esplicativa e ne verificano la
+tenuta; il quarto la gradua; il terzo fornisce la variabile dipendente. La
+separazione è deliberata: le feature vanno congelate prima di guardare i
+prezzi, altrimenti tararle sui rendimenti significherebbe costruire il
+risultato invece di misurarlo.
+
+\section{Dove siamo}
+
+La pipeline arriva fino alle feature deterministiche per episodio. Testo,
+regola di selezione, episodi e audit non supervisionato sono stati eseguiti e
+hanno prodotto output su disco; i prezzi sono ancora allo stadio di test; la
+parte di annotazione (manuale e LLM) non è iniziata.
+
+\begin{center}
+\begin{tabular}{llr}
+\toprule
+Fase & Stato & Output \\
+\midrule
+00 scraping UCSB        & eseguito & 8\,619 post, 98,1\% verificati \\
+01 pulizia e regola     & eseguito, in taratura & 4\,575 post, 362 eventi, 329 episodi \\
+02 audit BERTopic       & eseguito & 38 cluster, 84 candidati falsi negativi \\
+03 prezzi Dukascopy     & solo test su marzo 2025 & 10 file in \texttt{download/} \\
+04 feature              & solo fase A & 329 episodi, 18 colonne \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Il corpus e i timestamp}
+
+Lo scraper ha interrogato tutti i 608 giorni fra il 1 dicembre 2024 e il 31
+luglio 2026. Tre pagine risultano assenti sul server, cinque giorni sono
+elencati in \texttt{giorni\_falliti.txt}, i restanti hanno prodotto
+8\,619 post distribuiti su 597 giorni (mediana 10 post al giorno, massimo
+177).
+
+Il timestamp è derivato dall'identificatore del post. Truth Social eredita da
+Mastodon gli ID snowflake, in cui i bit alti sono i millisecondi dall'epoch
+Unix:
+\[
+  t_{\text{UTC}} = \frac{\texttt{post\_id} \gg 16}{1000},
+  \qquad
+  \texttt{seq} = \texttt{post\_id} \;\&\; \texttt{0xFFFF}.
+\]
+Il campo di sequenza ordina i post pubblicati nello stesso millisecondo, cosa
+che serve dentro i burst. Il 98,0\% dei timestamp ha secondi diversi da zero,
+come atteso: si può essere precisi anche al millisecondo.
+
+\subsection*{Il formato dell'ora in pagina}
+
+L'archivio non usa un formato solo. Su un campione di 766 blocchi di post, 457
+riportano l'ora a 24 ore senza suffisso (\texttt{18:11}) e 305 a 12 ore con
+meridiano (\texttt{1:17 PM}, \texttt{7:05 A.M.}). La prima versione del parser
+cercava \verb|(\d{1,2}):(\d{2})| e ignorava il suffisso, quindi leggeva
+\texttt{1:17 PM} come l'una di notte.
+
+L'effetto sulla validazione era vistoso: 1\,908 righe segnalate come anomale,
+di cui 1\,752 con uno scarto di esattamente 720 minuti — cioè dodici ore, la
+firma di un meridiano perduto. La correzione cerca l'ora, poi ancora la
+ricerca del meridiano subito dopo di essa, e richiede maiuscola e confine di
+parola per non scambiare per meridiano l'inizio del testo che segue un orario
+a 24 ore (\texttt{10:08 Amazing\dots}, \texttt{09:36 A MUST WATCH\dots}: due
+casi presenti nel corpus).
+
+Dopo la correzione le righe verificate passano da 6\,711 a \textbf{8\,455 su
+8\,619, il 98,1\%}. Le 164 anomalie residue si scompongono così:
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+Scarto & Righe & Causa \\
+\midrule
+180 min & 105 & UCSB stampa in Eastern time dal 15 al 21 settembre 2025 \\
+altro   & 36  & scarti irregolari, errori redazionali isolati \\
+assente & 15  & ora non presente in pagina \\
+720 min & 8   & pagina a 24 ore con ora errata (\texttt{12:27} per \texttt{00:27}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+I 105 casi a tre ore cadono tutti in una singola settimana, in cui l'archivio
+ha cambiato fuso senza dichiararlo; gli 8 residui a 720 minuti non sono un
+formato che sfugge alla regex ma errori di trascrizione su pagine che usano il
+formato a 24 ore. Nessuno dei due gruppi tocca i timestamp effettivi, che
+vengono dagli ID: riguardano solo la colonna di controllo. La settimana in
+Eastern time resta segnalata come anomala, in attesa di decidere se trattarla
+come eccezione dichiarata.
+
+\section{La pulizia}
+
+Dei 8\,619 post scaricati ne sopravvivono alla pulizia \textbf{4\,575}, il
+53,1\%. 
+Segue una tabella dei post rimossi:
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+Criterio & Post rimossi & Cosa toglie \\
+\midrule
+Segnaposto senza contenuto & 1\,849 & repost e immagini senza didascalia \\
+Doppi invii entro 2 minuti &   497  & testi identici ravvicinati \\
+Boilerplate endorsement    &   730  & il template degli endorsement elettorali \\
+Sotto le 5 parole          &   968  & slogan e frammenti \\
+\midrule
+Totale                     & 4\,044 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{La causa: un post su tre non ha testo proprio}
+
+Trump pubblica moltissimi video e immagini senza scrivere nulla. Nella pagina
+d'archivio un post del genere compare come la parola \emph{Video} seguita
+dall'indirizzo del file, oppure come il solo indirizzo. Gli indirizzi vengono
+rimossi all'inizio della pulizia — sono rumore per qualunque ricerca
+lessicale — e quello che resta è una stringa vuota o la sola parola
+\texttt{Video}. In tutto sono \textbf{2\,749 post, il 31,9\% del corpus}:
+1\,804 diventano vuoti e 945 si riducono a \texttt{Video}.
+
+Sono post reali, non errori di scraping, ma non contengono niente su cui una
+regola basata su parole possa lavorare. Escluderli è inevitabile. 
+\subsection*{Il criterio dei doppi invii rimuove post reali}
+
+Il caso da correggere è il secondo filtro. Serve a eliminare il doppio invio
+accidentale: lo stesso messaggio pubblicato due volte a pochi secondi di
+distanza è un gesto comunicativo solo, non due eventi. Per riconoscere ``lo
+stesso messaggio'' i testi vengono confrontati in forma \emph{normalizzata}:
+tutto minuscolo, via la punteggiatura, spazi compattati. È una chiave di
+confronto, non il testo che verrà analizzato dopo. Così ``Deal with Iran!!!''
+e ``deal with iran'' diventano entrambi \texttt{deal with iran} e risultano
+uguali.
+
+\subsection*{Cosa comporta}
+Va sottolineato che il 47\% dei post non è scartato in fase di pulizia per una 
+selezione aggressiva.
+I post sono scartati perché privi di contenuto e quindi per "costruzione", 
+sono irrilevanti per i nostri scopi.
+
+Si può valutare l'implementazione di un filtro a parte più specifico che chiarisca
+con precisione le proporzioni di tali post per un puro fine analitico. Ai fini 
+dell'estrazione delle features è irrilevante.
+
+Resta un limite che non si risolve spostando filtri. Un post di solo media può
+benissimo essere rilevante per la domanda di ricerca — un video di una
+raffineria colpita è informazione di mercato a tutti gli effetti — e nessuna
+regola lessicale può riconoscerlo. Conviene dichiararlo insieme al criterio di
+campionamento invece di lasciarlo implicito in una fase di pulizia.
+
+\section{La regola e gli eventi}
+
+La regola richiede la congiunzione di un attore dell'offerta e di un
+meccanismo:
+\[
+  \text{evento}_i = \mathbb{1}\!\left[\,
+    |A \cap T_i| \ge 1 \;\wedge\; |M \cap T_i| \ge 1 \,\right],
+\]
+con $T_i$ i token del post $i$, $A$ la lista degli attori e $M$ quella dei
+meccanismi. Sul corpus pulito: 631 post con almeno un attore, 810 con almeno
+un meccanismo, \textbf{362 eventi} (7,9\%).  I termini che
+reggono la regola sono concentrati — \texttt{iran} (223), \texttt{russia}
+(65), \texttt{hormuz} (62), \texttt{ukraine} (57) fra gli attori;
+\texttt{military} (97), \texttt{war} (95), \texttt{nuclear} (87),
+\texttt{strait} (67), \texttt{oil} (64) fra i meccanismi.
+
+Due problemi di taratura emergono dalle liste stesse.
+
+\textbf{Termini di mercato usati come attori.} \texttt{market} e
+\texttt{markets} sono nella lista degli attori, e \texttt{boom},
+\texttt{come down}, \texttt{going down}, \texttt{coming down} in quella dei
+meccanismi. Non sono attori dell'offerta né meccanismi di interruzione: sono
+commento sui prezzi. Venticinque eventi (6,9\%) si reggono esclusivamente su
+questi termini.
+Anche se leggendoli sono chiaramente fuori tema (e.g. ``The MARKETS are
+going to BOOM'', ``This is Biden's Stock Market'') li ho inseriti perché le 
+date di molti post sono post attacco in Venezuela o in iran da interpretare 
+come un riferimento a quanto stava succedendo in quel periodo. 
+Se tolti, gli eventi scendono a 337. Il costo in numerosità è modesto.
+
+\textbf{Il 44,5\% degli eventi si regge solo su meccanismi deboli}
+(\texttt{war}, \texttt{military}, \texttt{attack}, \texttt{strike},
+\texttt{nuclear}, \texttt{down}), cioè termini che indicano conflitto ma non
+offerta di greggio. La diagnostica è già implementata e segnala il caso; 161
+eventi su 362 ricadono lì. 
+Nel file \texttt{dati/petrolio/da\_leggere.csv} è presente un campione di 150 da controllare per verificare
+la correttezza della regola. Da una prima esamina si capisce che la regola tende più 
+a prendere un falso positivo che un falso negativo (Trump a volte tira fuori 
+le parole chiavi scelte solo per parlare male dei suoi avversari politici).
+Tutta via a causa della già scarsa presenza di post ho preferito non proseguire
+con una cernita più severa. 
+
+\section{Audit non supervisionato}
+
+L'audit è stato rilanciato sul corpus corretto: 38 cluster con il
+37,6\% di outlier. La copertura della regola per cluster è coerente con il
+disegno: 0,66 sul cluster Iran/Hormuz (195 su 297 post catturati), 0,65 su
+Ucraina/Russia (46 su 71). Le piccole variazioni rispetto all'esecuzione
+precedente vengono dalla ricostruzione degli embedding su testi ripuliti e non
+cambiano il quadro.
+
+Tre cluster hanno lessico petrolifero e copertura bassa. Il più rilevante è
+Venezuela/\allowbreak oil/\allowbreak strike, con copertura \textbf{0,43}: 23
+post catturati su 54. Il tema è dichiaratamente dentro il perimetro della
+tesi, quindi quella copertura indica un buco vero nella lista dei termini, non
+un falso allarme.
+
+Gli altri due stanno fuori per costruzione: uno raccoglie la politica
+energetica interna (EPA, permessi), l'altro — \texttt{prices},
+\texttt{gasoline}, \texttt{inflation} — il prezzo al distributore, con
+copertura \textbf{0,00}. Che il clustering isoli quest'ultimo a ogni
+riesecuzione non è un difetto della regola, ma dice che il confine fra prezzo
+al consumo americano e offerta globale di greggio conviene scriverlo per
+esteso invece di lasciarlo implicito nelle liste.
+
+La ricerca semantica restituisce 84 candidati falsi negativi, con similarità
+mediana 0,45 e massima 0,65. I più vicini alle sonde sono commenti sul prezzo
+al distributore (e.g. ``Gasoline Retailers must get their Prices down'',
+``Gasoline just broke \$1.98 a Gallon''). Nessuna
+parafrasi di interruzione dell'offerta compare fra i candidati: il richiamo
+della regola sul suo perimetro dichiarato sembra alto, e questo è il risultato
+che l'audit doveva produrre.
+
+\section{Episodi, finestra evento, potenza}
+
+Post entro 30 minuti l'uno dall'altro sono collassati in un episodio, datato
+al primo post. I 362 eventi danno \textbf{329 episodi}: 297 con un solo post,
+31 con due, 1 con tre. Solo il 9,7\% è multi-post, il che rende
+l'attribuzione del movimento molto più semplice di quanto ci si aspettasse.
+Identità e datazione degli episodi sono invariate rispetto a prima della
+correzione: cambia il testo di 179 di essi, non quali siano.
+
+32,5\% in orario di mercato USA, 24,0\% nel weekend, 16,9 episodi al mese su un arco di
+593 giorni. L'addensamento è marcato — giugno 2025, marzo, aprile e giugno
+2026 — e fornisce i regimi naturali da confrontare con CD-NOD senza doverli
+scegliere a posteriori.
+
+Gli intervalli fra episodi sono ampi: il primo percentile è 36 minuti, la
+mediana 19,5 ore. La quota di episodi contaminati da un altro dentro la
+finestra resta nulla fino a 30 minuti, sale al 3,4\% a un'ora e al 10,1\% a
+due ore. Con la soglia del 15\% adottata, \textbf{la finestra evento arriva a
+due ore} senza problemi di sovrapposizione. Il vincolo, quindi, non viene dal
+testo ma dai prezzi.
+
+La numerosità minima rilevabile si legge dalla formula standard per un test a
+due code su una media:
+\[
+  \text{MDE} = \frac{z_{1-\alpha/2} + z_{1-\beta}}{\sqrt{n}}\,\sigma
+  \;=\; \frac{2{,}802}{\sqrt{n}}\,\sigma
+  \qquad (\alpha = 0{,}05,\ 1-\beta = 0{,}8).
+\]
+Con $n = 329$ si rilevano effetti da 0,154 deviazioni standard del rendimento
+sulla finestra. Dividendo per direzione attesa si sale attorno a 0,22, e sui
+247 episodi che avranno effettivamente un prezzo (sezione seguente) a 0,178.
+Sono soglie praticabili per un evento macro su finestre di minuti, ma non
+lasciano margine per sottogruppi ulteriori.
+
+\section{Dati di prezzo: cosa dicono i test}
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+& Brent (\texttt{brentcmdusd}) & WTI (\texttt{lightcmdusd}) & Oro (\texttt{xauusd}) \\
+\midrule
+Barre nel mese          & 12\,720 & 36\,780 & --- \\
+Giorni feriali coperti  & 10 / 21 & 21 / 21 & 5 / 5 nel test \\
+Ore UTC coperte         & 0--20   & 0--23   & 0--23 \\
+Barre per giorno        & 1\,260  & 1\,440  & 1\,440 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Il Brent è inutilizzabile: metà dei giorni feriali manca del tutto e i giorni
+presenti si fermano alle 20:59 UTC. Il WTI copre tutti i giorni feriali e
+l'intera giornata. Ristretto a lunedì--venerdì: nessun buco superiore a 15
+minuti, 5,5\% di barre a volume nullo, deviazione standard dei rendimenti al
+minuto di $4{,}3 \times 10^{-4}$, 20\% di rendimenti esattamente nulli. Sono
+valori normali per dati al minuto su un future energetico.
+
+La riserva riguarda la domenica. Le barre domenicali sono il 92,6\% a volume
+nullo e riportano il prezzo di chiusura del venerdì congelato per ventidue
+ore: cinque tratti da oltre 1\,300 minuti a prezzo identico, uno per ogni
+domenica del mese. Sono riempimento sintetico, non quotazioni, e vanno
+scartate. Sul totale del mese il 21\% delle
+barre cade in tratti costanti di almeno un'ora; sui soli giorni feriali
+scende al 3,6\%.
+
+Tenendo conto di sabato, domenica fino alle 22 UTC e venerdì dopo le 21,
+\textbf{82 episodi su 329 (24,9\%) restano senza quotazione} e ne rimangono
+247 utilizzabili. Con il solo Brent sarebbero stati 211. La perdita non è
+casuale: colpisce un'intera fascia di calendario, quindi va confrontata la
+distribuzione delle feature fra episodi persi e conservati. Il primo controllo
+disponibile — il numero di post per episodio — non mostra differenze (1,08
+contro 1,10), ma il confronto va rifatto su tutte le feature una volta che
+esistono.
+
+Da qui la fase è ferma. Il test dice che una strada praticabile esiste, non
+che sia quella giusta, e la scelta conviene farla prima di scaricare venti
+mesi di dati. Restano aperte tre questioni.
+
+\begin{enumerate}
+  \item \textbf{Quanto in là arriva il WTI.} Marzo 2025 è coperto senza buchi,
+    ma è un mese solo. La copertura sul resto del periodo non è verificata, e
+    lo stesso vale per l'oro, scaricato finora su cinque giorni.
+  \item \textbf{Che dato è.} Sono quotazioni CFD di un broker, non prezzi di
+    borsa: seguono il future sottostante con uno spread proprio. Su finestre
+    di pochi minuti la differenza dovrebbe essere trascurabile, ma è
+    un'assunzione da avallare, non da dare per buona.
+  \item \textbf{Gli episodi senza mercato.} Un quarto degli episodi cade
+    quando non esiste un prezzo. Si accetta la perdita dichiarandola, si cerca
+    uno strumento con copertura più ampia, o si tratta quella fascia in modo
+    diverso nel disegno?
+\end{enumerate}
+
+Lo script 03 è ancora impostato sul Brent come variabile principale: verrà
+allineato quando la scelta sarà fatta.
+
+\section{Feature}
+
+\texttt{episodi\_features.parquet} contiene i 329 episodi con 18 colonne.
+Sono presenti solo le feature deterministiche della fase A — ora UTC e New York, giorno, weekend,
+orario di mercato, caratteri, esclamativi, maiuscole, parole urlate.
+
+La correzione del parser ha avuto un effetto misurabile. Le due
+lettere \texttt{AM}/\texttt{PM} contavano come maiuscole e gonfiavano la
+misura di enfasi: la quota di maiuscole era sovrastimata su \textbf{177
+episodi su 329}, di 0,005 in mediana e fino a 0,027. La mediana complessiva
+scende da 0,1065 a 0,1029. È una distorsione piccola ma non innocua, perché
+dipendeva dal formato della pagina d'archivio e non dal post, quindi entrava
+nelle feature come rumore arbitrario.
+
+Mancano la novità semantica, il gold standard e lo scoring LLM. La novità è
+l'unica delle tre che non richiede annotazione:
+\[
+  \text{novit\`a}_i = 1 - \max_{\,j\,:\,t_i - 30\text{gg} \le t_j < t_i}
+  \cos\!\left(e_i, e_j\right),
+\]
+con $e_i$ l'embedding del testo unito dell'episodio. Conviene calcolarla
+subito, perché è la feature che serve a distinguere l'informazione nuova dalla
+ripetizione ed è indipendente da tutto il resto.
+
+Il codice della fase D salva già modello, prompt e temperatura accanto ai
+risultati, che è la condizione minima perché una feature generata da un LLM
+sia riproducibile.
+
+\section{Decisioni da prendere insieme}
+
+Tre punti non si risolvono scrivendo codice, e sono quelli su cui chiedo un
+parere.
+
+\begin{enumerate}
+  \item \textbf{La serie di prezzo}, nei termini della sezione precedente.
+    Finché non è decisa, la variabile dipendente non esiste e l'event study
+    non si può impostare.
+  \item \textbf{La settimana in Eastern time.} Dal 15 al 21 settembre 2025
+    l'archivio stampa gli orari in un fuso diverso senza dichiararlo. I
+    timestamp restano corretti perché vengono dagli identificatori, ma il
+    controllo di qualità segnala 105 righe. O diventa un'eccezione dichiarata
+    nel validatore, o resta un'anomalia documentata: in tesi cambia solo come
+    la si racconta.
+  \item \textbf{Il confine del tema.} Un post sul prezzo della benzina al
+    distributore non è un rischio all'offerta globale, ma è a un passo, e sia
+    la ricerca semantica sia il clustering continuano a riportarlo a galla.
+    Conviene fissare il criterio adesso e per iscritto, prima che sia
+    un'annotazione a deciderlo caso per caso.
+\end{enumerate}
+
+\section{Lavoro già pianificato}
+
+\begin{enumerate}
+  \item Introdurre un filtro esplicito per i post di solo media, contato a
+    parte, invece di lasciarli distribuiti su tre criteri; e rendere il
+    criterio dei doppi invii condizionale alla presenza di testo.
+  \item Valutare di togliere \texttt{market}, \texttt{markets} e i termini di prezzo dalle
+    liste; aggiungere i termini mancanti del cluster Venezuela.
+  \item Finire di annotare i 150 post di \texttt{da\_leggere.csv} con criteri scritti
+    prima di cominciare. Riportare precisione e richiamo, poi congelare la
+    regola e rilanciare l'audit.
+  \item Calcolare la novità semantica ed esportare il gold standard;
+    annotarlo, eseguire lo scoring LLM, misurare il kappa pesato.
+  \item Congelare le feature e annotare la data.
+\end{enumerate}
+
+\end{document}
