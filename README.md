@@ -1,13 +1,5 @@
 # Post di Trump e prezzo del greggio
 
-Tesi magistrale in informatica su causal inference e causal discovery applicate a
-dati finanziari. La domanda è se i post di Donald Trump che segnalano un rischio
-all'offerta di greggio muovano il prezzo del petrolio, e per quanto tempo.
-
-L'effetto è stimato con un event study ad alta frequenza sugli episodi
-comunicativi; CD-NOD serve a verificare se il meccanismo causale resta stabile
-fra regimi diversi.
-
 **[Stato del progetto (PDF)](report/stato_progetto.pdf)** — cosa è stato fatto,
 i risultati verificati, i limiti e le decisioni ancora aperte. Sorgente in
 [`report/stato_progetto.tex`](report/stato_progetto.tex).

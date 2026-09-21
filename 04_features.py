@@ -366,6 +366,5 @@ def main():
           f"{len(df.columns)} colonne")
     print("\nLe feature vanno congelate, con la data, prima di toccare i prezzi.")
 
-
 if __name__ == "__main__":
     main()
