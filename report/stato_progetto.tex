@@ -258,6 +258,19 @@ le parole chiavi scelte solo per parlare male dei suoi avversari politici).
 Tutta via a causa della già scarsa presenza di post ho preferito non proseguire
 con una cernita più severa. 
 
+\textbf{UPDATE}-- \\
+Ho creato la cartella annotazioni che tiene traccia delle varie versioni della regola e dei file da controllare. 
+questa sarà utile sia a tenere traccia delle performance di ogni versione della regola sia ad autocompilare il giudizio dei post che sono già stati giudicati.
+
+\subsection{Il criterio della regola}
+si ritengono interessanti i post in cui Trump parla di: 
+\begin{enumerate}
+  \item \textbf{il conflitto iraniano e lo stretto di hormuz}: qualsiasi news riguardi l'apertura dello stretto o il raggiungimento di un accordo con gli iraniani è rilevante per capire le aspettative future sulla rotta petrolifera più importante. 
+  \item \textbf{Venezuela}: l'attacco intrapreso dall'amministrazione Trump in Venezuela ha interessato gli approvvigionamenti di petrolio americano dalle navi venezuelane 
+  \item \textbf{Previsioni di Trump sul mercato}: in molti post trump incita i suoi lettori a comprare. Spesso si stratta di propaganda e basta. Ciò nonostante, in un'analisi che riguarda l'influenza che ha un uomo sul mercato è interessante anche quando il presidente USA elargisce esplicitamente consigli finanziari. 
+  
+\end{enumerate}
+
 \section{Audit non supervisionato}
 
 L'audit è stato rilanciato sul corpus corretto: 38 cluster con il
@@ -413,8 +426,7 @@ sia riproducibile.
 
 \section{Decisioni da prendere insieme}
 
-Tre punti non si risolvono scrivendo codice, e sono quelli su cui chiedo un
-parere.
+Prima di proseguire ho bisogno di un consiglio sulle seguenti tematiche: 
 
 \begin{enumerate}
   \item \textbf{La serie di prezzo}, nei termini della sezione precedente.
@@ -441,9 +453,6 @@ parere.
     criterio dei doppi invii condizionale alla presenza di testo.
   \item Valutare di togliere \texttt{market}, \texttt{markets} e i termini di prezzo dalle
     liste; aggiungere i termini mancanti del cluster Venezuela.
-  \item Finire di annotare i 150 post di \texttt{da\_leggere.csv} con criteri scritti
-    prima di cominciare. Riportare precisione e richiamo, poi congelare la
-    regola e rilanciare l'audit.
   \item Calcolare la novità semantica ed esportare il gold standard;
     annotarlo, eseguire lo scoring LLM, misurare il kappa pesato.
   \item Congelare le feature e annotare la data.
