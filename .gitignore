@@ -26,3 +26,7 @@ report/*.synctex.gz
 # Configurazione locale dell'editor
 pyrightconfig.json
 .envrc
+
+#personal files
+PersonalNotes.md
+
