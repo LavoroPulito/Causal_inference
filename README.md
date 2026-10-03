@@ -2,7 +2,7 @@
 
 **[Stato del progetto (PDF)](report/stato_progetto.pdf)** — cosa è stato fatto,
 i risultati verificati, i limiti e le decisioni ancora aperte. Sorgente in
-[`report/stato_progetto.tex`](report/stato_progetto.tex).
+[`report/stato_progetto.tex`](report/stato_progetto.typ).
 
 ## Gli script
 
@@ -11,6 +11,7 @@ Cinque fasi, ciascuna legge l'output della precedente.
 | | | |
 |---|---|---|
 | `00_scraper_ucsb.py` | corpus | scarica i post e ne deriva il timestamp dall'identificatore |
+| `00b_aggiorna_cnn.py` | integrazione | funziona come 00 ma scarica i post dall'archivio cnn |
 | `01_regola_petrolio.py` | selezione | pulizia, regola attore × meccanismo, episodi, finestre |
 | `02_audit_bertopic.py` | audit | verifica la regola con topic modeling e ricerca semantica |
 | `03_scarica_prezzi.py` | prezzi | serie al minuto da Dukascopy — fase ferma, vedi report |
