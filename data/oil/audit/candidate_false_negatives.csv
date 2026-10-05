@@ -1,4 +1,4 @@
-sonda,similarita,post_id,timestamp,testo
+probe,similarity,post_id,timestamp,text
 disruption to global oil supply,0.62,117021602773641695,2026-08-01 18:12:32.478000+00:00,"Because of President Donald J. Trump, Oil Exports are SURGING!"
 disruption to global oil supply,0.596,117021680223306706,2026-08-01 18:32:14.266000+00:00,"RT of President Donald J. Trump, Oil Exports are SURGING!"
 disruption to global oil supply,0.558,116874572332187882,2026-07-06 19:00:45.986000+00:00,OIL PRICES COMING DOWN! bloomberg.com/news/articles/20
