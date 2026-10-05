@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-01 — Pulizia del corpus, regola petrolifera, episodi, intervalli.
+01 — Corpus cleaning, oil rule, episodes, intervals.
 
-    FASE 1  pulizia        duplicati, segnaposto, boilerplate
-    FASE 2  regola         attore x meccanismo
-    FASE 3  campione       post da annotare a mano
-    FASE 4  episodi        burst collassati
-    FASE 5  intervalli     dimensionamento della finestra evento
+    STEP 1  cleaning       duplicates, placeholders, boilerplate
+    STEP 2  rule           actor x mechanism
+    STEP 3  sample         posts to annotate by hand
+    STEP 4  episodes       collapsed bursts
+    STEP 5  intervals      sizing of the event window
 
-Le motivazioni delle scelte sono in report/stato_progetto.tex.
+The reasons behind each choice are in report/project_status.typ.
 
-    python 01_regola_petrolio.py
+    python 01_oil_rule.py
 
-Input: dati/truth_posts.csv
+Input: data/truth_posts.csv
 """
 
 import re
@@ -24,340 +24,340 @@ import pandas as pd
 
 
 # ==============================================================================
-# CONFIGURAZIONE
+# CONFIGURATION
 # ==============================================================================
 
-INPUT_CSV = "dati/truth_posts.csv"
-OUTPUT_DIR = Path("dati/petrolio")
+INPUT_CSV = "data/truth_posts.csv"
+OUTPUT_DIR = Path("data/oil")
 
-COL_TESTO = "testo"
+COL_TEXT = "text"
 COL_TIMESTAMP = "timestamp_utc"
 COL_ID = "post_id"
 
-SEME = 42
+SEED = 42
 
-# --- pulizia ------------------------------------------------------------------
-MIN_PAROLE = 5
+# --- cleaning -----------------------------------------------------------------
+MIN_WORDS = 5
 
-# Si deduplica su post_id, non sul testo: un testo ripubblicato con ID diverso
-# e' un evento distinto. Si collassano solo i doppi invii ravvicinati.
-COLLASSA_RIPUBBLICAZIONI_ENTRO_MINUTI = 2   # 0 per disattivare
+# Deduplication is on post_id, not on text: a text republished with a different
+# ID is a distinct event. Only close double posts are collapsed.
+COLLAPSE_REPOSTS_WITHIN_MINUTES = 2   # 0 to disable
 
-PATTERN_SEGNAPOSTO = [
+PLACEHOLDER_PATTERNS = [
     r"^\s*\[\s*response to previous truth post\s*\]\s*$",
     r"^\s*\[\s*no content\s*\]\s*$",
     r"^\s*$",
 ]
-PATTERN_BOILERPLATE = [
+BOILERPLATE_PATTERNS = [
     r"complete and total endorsement",
     r"(?:he|she) (?:will|has) never let you down",
 ]
 
-# --- campionamento per lettura manuale ----------------------------------------
-N_CAMPIONE_DENTRO = 100
-N_CAMPIONE_CONFINE = 50
+# --- manual review sample -----------------------------------------------------
+N_SAMPLE_INSIDE = 100
+N_SAMPLE_BOUNDARY = 50
 
-# --- episodi ------------------------------------------------------------------
-SOGLIA_BURST_MINUTI = 30
+# --- episodes -----------------------------------------------------------------
+BURST_THRESHOLD_MINUTES = 30
 
-# --- intervalli ---------------------------------------------------------------
-FINESTRE_MINUTI = [1, 2, 5, 10, 15, 30, 60, 120]
-QUOTA_SOVRAPPOSIZIONE_ACCETTABILE = 0.15
+# --- intervals ----------------------------------------------------------------
+WINDOWS_MINUTES = [1, 2, 5, 10, 15, 30, 60, 120]
+ACCEPTABLE_OVERLAP_SHARE = 0.15
 
 
 # ==============================================================================
-# LA REGOLA
+# THE RULE
 # ==============================================================================
 
-ATTORI = [
+ACTORS = [
     # Iran
     "iran", "iranian", "iranians", "tehran", "khamenei", "irgc",
     "revolutionary guard", "hormuz", "persian gulf",
     # Venezuela
     "venezuela", "venezuelan", "maduro", "caracas", "pdvsa",
-    # Russia / Ucraina
+    # Russia / Ukraine
     "russia", "russian", "russians", "putin", "moscow", "kremlin",
     "rosneft", "lukoil", "gazprom", "nord stream", "urals",
     "ukraine", "ukrainian", "zelensky", "zelenskyy", "kyiv",
-    # produttori e istituzioni del greggio
+    # crude producers and institutions
     "opec", "saudi", "saudi arabia", "aramco",
     "strategic petroleum reserve", "spr",
-    # rotte e navigazione
+    # routes and shipping
     "red sea", "houthi", "houthis", "suez", "bab el mandeb",
-    # petrolio esplicito
+    # explicit oil
     "oil", "crude", "barrel", "barrels", "petroleum", "gasoline", "fuel",
-    # mercato
+    # market
     "market", "markets"
     ]
 
-MECCANISMI = [
-    # interruzione fisica dell'offerta
+MECHANISMS = [
+    # physical supply disruption
     "blockade", "blockading", "mine", "mines", "interdict", "interdiction",
     "tanker", "tankers", "shipping", "strait", "waterway", "vessel", "vessels",
     "convoy", "port", "ports", "pipeline", "refinery", "refineries",
     "shadow fleet", "dark fleet",
-    # azione militare
+    # military action
     "strike", "strikes", "military", "navy", "naval", "bomber", "bombers",
     "attack", "attacked", "destroy", "destroyed", "drone", "drones",
-    # sanzioni ed embargo
+    # sanctions and embargo
     "sanction", "sanctions", "sanctioned", "embargo", "price cap",
     "secondary tariff", "secondary tariffs",
-    # negoziato nucleare
+    # nuclear negotiation
     "nuclear", "enrichment", "jcpoa",
-    # prezzo
+    # price
     "boom", "down", "plummet", "dropping"
 ]
 
-# Solo diagnostica: segnalano un possibile falso positivo se sono l'unico
-# meccanismo presente.
-MECCANISMI_DEBOLI = ["war", "military", "attack", "strike", "strikes", "nuclear", "down"]
+# Diagnostics only: they flag a possible false positive when they are the only
+# mechanism present.
+WEAK_MECHANISMS = ["war", "military", "attack", "strike", "strikes", "nuclear", "down"]
 
 
 # ==============================================================================
-# UTILITA'
+# UTILITIES
 # ==============================================================================
 
-def titolo(t):
+def heading(t):
     print("\n" + "=" * 78)
     print(t)
     print("=" * 78)
 
 
-def pattern_di(termini):
-    return r"\b(" + "|".join(re.escape(x) for x in termini) + r")\b"
+def pattern_for(terms):
+    return r"\b(" + "|".join(re.escape(x) for x in terms) + r")\b"
 
 
-def trovati(serie_lower, termini):
-    """Per ogni riga, la lista dei termini effettivamente trovati."""
-    rx = re.compile(pattern_di(termini))
-    return serie_lower.fillna("").astype(str).apply(
+def find_terms(lower_series, terms):
+    """For each row, the list of terms actually found."""
+    rx = re.compile(pattern_for(terms))
+    return lower_series.fillna("").astype(str).apply(
         lambda t: sorted(set(m.group(0) for m in rx.finditer(t))))
 
 
-def normalizza(t):
+def normalize(t):
     t = str(t).lower()
     t = re.sub(r"[^a-z0-9 ]", " ", t)
     return re.sub(r"\s+", " ", t).strip()
 
 
 # ==============================================================================
-# FASE 1 — PULIZIA
+# STEP 1 — CLEANING
 # ==============================================================================
 
-def pulisci(df):
-    """Rimozioni in ordine di sicurezza, ciascuna contata."""
-    titolo("FASE 1 — PULIZIA")
+def clean(df):
+    """Removals in order of safety, each one counted."""
+    heading("STEP 1 — CLEANING")
     n0 = len(df)
     df = df.copy()
 
-    # fillna prima di astype: con pandas 3 astype(str) lascia i NaN mancanti
-    df[COL_TESTO] = df[COL_TESTO].fillna("").astype(str)
+    # fillna before astype: in pandas 3 astype(str) leaves NaN missing
+    df[COL_TEXT] = df[COL_TEXT].fillna("").astype(str)
 
-    df[COL_TESTO] = (df[COL_TESTO]
-                     .str.replace(r"http\S+|www\.\S+", " ", regex=True)
-                     .str.replace(r"@\w+", " ", regex=True)
-                     .str.replace(r"&amp;", "&", regex=True)
-                     .str.replace(r"\s+", " ", regex=True)
-                     .str.strip())
+    df[COL_TEXT] = (df[COL_TEXT]
+                    .str.replace(r"http\S+|www\.\S+", " ", regex=True)
+                    .str.replace(r"@\w+", " ", regex=True)
+                    .str.replace(r"&amp;", "&", regex=True)
+                    .str.replace(r"\s+", " ", regex=True)
+                    .str.strip())
 
     dup_id = df.duplicated(subset=COL_ID, keep="first")
-    print(f"post_id duplicati          : {dup_id.sum()}  (artefatti, rimossi)")
+    print(f"Duplicate post_id          : {dup_id.sum()}  (artifacts, removed)")
     df = df[~dup_id]
 
     mask = pd.Series(False, index=df.index)
-    for p in PATTERN_SEGNAPOSTO:
-        mask |= df[COL_TESTO].str.match(p, case=False, na=False)
-    print(f"Segnaposto senza contenuto : {mask.sum()}")
+    for p in PLACEHOLDER_PATTERNS:
+        mask |= df[COL_TEXT].str.match(p, case=False, na=False)
+    print(f"Placeholders, no content   : {mask.sum()}")
     df = df[~mask]
 
-    df["_norm"] = df[COL_TESTO].apply(normalizza)
-    n_testi_ripetuti = int(df.duplicated(subset="_norm", keep="first").sum())
-    print(f"Testi identici ripubblicati: {n_testi_ripetuti}  (CONSERVATI)")
-    if n_testi_ripetuti > 0:
-        print("  piu' ripubblicati:")
+    df["_norm"] = df[COL_TEXT].apply(normalize)
+    n_repeated = int(df.duplicated(subset="_norm", keep="first").sum())
+    print(f"Identical texts republished: {n_repeated}  (KEPT)")
+    if n_repeated > 0:
+        print("  most republished:")
         for t, c in df["_norm"].value_counts().head(3).items():
             print(f"    {c}x  {t[:60]}")
 
-    if COLLASSA_RIPUBBLICAZIONI_ENTRO_MINUTI > 0:
+    if COLLAPSE_REPOSTS_WITHIN_MINUTES > 0:
         df = df.sort_values(["_norm", COL_TIMESTAMP])
         gap = df.groupby("_norm")[COL_TIMESTAMP].diff().dt.total_seconds().div(60)
-        doppi = gap.notna() & (gap <= COLLASSA_RIPUBBLICAZIONI_ENTRO_MINUTI)
-        print(f"Doppi invii entro {COLLASSA_RIPUBBLICAZIONI_ENTRO_MINUTI} min   "
-              f": {doppi.sum()}  (collassati)")
-        df = df[~doppi].sort_values(COL_TIMESTAMP)
+        doubles = gap.notna() & (gap <= COLLAPSE_REPOSTS_WITHIN_MINUTES)
+        print(f"Double posts within {COLLAPSE_REPOSTS_WITHIN_MINUTES} min "
+              f": {doubles.sum()}  (collapsed)")
+        df = df[~doubles].sort_values(COL_TIMESTAMP)
 
-    low = df[COL_TESTO].fillna("").astype(str).str.lower()
+    low = df[COL_TEXT].fillna("").astype(str).str.lower()
     mb = pd.Series(False, index=df.index)
-    for p in PATTERN_BOILERPLATE:
+    for p in BOILERPLATE_PATTERNS:
         mb |= low.str.contains(p, regex=True, na=False)
-    print(f"Boilerplate endorsement    : {mb.sum()}")
+    print(f"Endorsement boilerplate    : {mb.sum()}")
     df = df[~mb]
 
-    df["n_parole"] = df[COL_TESTO].str.split().str.len()
-    corti = df["n_parole"] < MIN_PAROLE
-    print(f"Sotto le {MIN_PAROLE} parole            : {corti.sum()}")
-    df = df[~corti]
+    df["n_words"] = df[COL_TEXT].str.split().str.len()
+    short = df["n_words"] < MIN_WORDS
+    print(f"Under {MIN_WORDS} words              : {short.sum()}")
+    df = df[~short]
 
     df = df.drop(columns=["_norm"]).reset_index(drop=True)
-    print(f"\nRimasti: {len(df)} su {n0} ({len(df)/n0:.1%})")
+    print(f"\nRemaining: {len(df)} of {n0} ({len(df)/n0:.1%})")
     return df
 
 
 # ==============================================================================
-# FASE 2 — REGOLA
+# STEP 2 — RULE
 # ==============================================================================
 
-def applica_regola(df):
-    """Congiunzione attore x meccanismo, con tracciamento dei termini trovati."""
-    titolo("FASE 2 — REGOLA PETROLIFERA")
-    low = df[COL_TESTO].fillna("").astype(str).str.lower()
+def apply_rule(df):
+    """Actor x mechanism conjunction, recording the terms found."""
+    heading("STEP 2 — OIL RULE")
+    low = df[COL_TEXT].fillna("").astype(str).str.lower()
 
     df = df.copy()
-    df["attori_trovati"] = trovati(low, ATTORI)
-    df["meccanismi_trovati"] = trovati(low, MECCANISMI)
-    df["ha_attore"] = df["attori_trovati"].str.len() > 0
-    df["ha_meccanismo"] = df["meccanismi_trovati"].str.len() > 0
-    df["evento_petrolio"] = df["ha_attore"] & df["ha_meccanismo"]
+    df["actors_found"] = find_terms(low, ACTORS)
+    df["mechanisms_found"] = find_terms(low, MECHANISMS)
+    df["has_actor"] = df["actors_found"].str.len() > 0
+    df["has_mechanism"] = df["mechanisms_found"].str.len() > 0
+    df["oil_event"] = df["has_actor"] & df["has_mechanism"]
 
-    n = int(df["evento_petrolio"].sum())
-    print(f"Con almeno un ATTORE      : {df['ha_attore'].sum()}")
-    print(f"Con almeno un MECCANISMO  : {df['ha_meccanismo'].sum()}")
-    print(f"EVENTI (entrambi)         : {n}  ({n/len(df):.1%} del corpus)")
+    n = int(df["oil_event"].sum())
+    print(f"With at least one ACTOR    : {df['has_actor'].sum()}")
+    print(f"With at least one MECHANISM: {df['has_mechanism'].sum()}")
+    print(f"EVENTS (both)              : {n}  ({n/len(df):.1%} of the corpus)")
 
-    ev = df[df["evento_petrolio"]]
+    ev = df[df["oil_event"]]
 
-    print("\nAttori piu' frequenti negli eventi:")
-    ca = pd.Series([x for l in ev["attori_trovati"] for x in l]).value_counts()
+    print("\nMost frequent actors in events:")
+    ca = pd.Series([x for l in ev["actors_found"] for x in l]).value_counts()
     print(ca.head(12).to_string())
 
-    print("\nMeccanismi piu' frequenti negli eventi:")
-    cm = pd.Series([x for l in ev["meccanismi_trovati"] for x in l]).value_counts()
+    print("\nMost frequent mechanisms in events:")
+    cm = pd.Series([x for l in ev["mechanisms_found"] for x in l]).value_counts()
     print(cm.head(12).to_string())
 
-    solo_deboli = ev["meccanismi_trovati"].apply(
-        lambda l: len(l) > 0 and all(x in MECCANISMI_DEBOLI for x in l))
-    print(f"\nEventi retti SOLO da meccanismi deboli: {solo_deboli.sum()} "
-          f"({solo_deboli.mean():.1%} degli eventi)")
+    weak_only = ev["mechanisms_found"].apply(
+        lambda l: len(l) > 0 and all(x in WEAK_MECHANISMS for x in l))
+    print(f"\nEvents resting ONLY on weak mechanisms: {weak_only.sum()} "
+          f"({weak_only.mean():.1%} of events)")
 
-    df["solo_meccanismi_deboli"] = False
-    df.loc[ev.index[solo_deboli], "solo_meccanismi_deboli"] = True
+    df["weak_mechanisms_only"] = False
+    df.loc[ev.index[weak_only], "weak_mechanisms_only"] = True
 
-    print("\nEventi per mese:")
+    print("\nEvents per month:")
     print(ev.groupby(ev[COL_TIMESTAMP].dt.to_period("M")).size().to_string())
 
     return df
 
 
 # ==============================================================================
-# FASE 3 — CAMPIONE DA LEGGERE A MANO
+# STEP 3 — MANUAL REVIEW SAMPLE
 # ==============================================================================
 
-def campiona(df, outdir):
-    """Estrae i post catturati ('dentro') e quelli con un solo criterio
-    soddisfatto ('confine'), per stimare precisione e richiamo."""
-    titolo("FASE 3 — CAMPIONE DA LEGGERE A MANO")
-    rng = np.random.default_rng(SEME)
+def sample(df, outdir):
+    """Draws posts captured by the rule ('inside') and posts meeting only one
+    criterion ('boundary'), to estimate precision and recall."""
+    heading("STEP 3 — MANUAL REVIEW SAMPLE")
+    rng = np.random.default_rng(SEED)
 
-    dentro = df[df["evento_petrolio"]]
-    confine = df[df["ha_attore"] ^ df["ha_meccanismo"]]
+    inside = df[df["oil_event"]]
+    boundary = df[df["has_actor"] ^ df["has_mechanism"]]
 
-    def pesca(sub, n, etichetta):
+    def draw(sub, n, group):
         if len(sub) == 0:
             return pd.DataFrame()
         idx = rng.choice(sub.index, size=min(n, len(sub)), replace=False)
-        out = sub.loc[idx, [COL_ID, COL_TIMESTAMP, COL_TESTO,
-                            "attori_trovati", "meccanismi_trovati"]].copy()
-        out.insert(0, "gruppo", etichetta)
-        out["giudizio"] = ""      # da compilare: ok / falso / dubbio
+        out = sub.loc[idx, [COL_ID, COL_TIMESTAMP, COL_TEXT,
+                            "actors_found", "mechanisms_found"]].copy()
+        out.insert(0, "group", group)
+        out["label"] = ""      # to fill in by hand: 1 relevant, 0 not
         return out
 
-    campione = pd.concat([
-        pesca(dentro, N_CAMPIONE_DENTRO, "dentro"),
-        pesca(confine, N_CAMPIONE_CONFINE, "confine"),
+    review = pd.concat([
+        draw(inside, N_SAMPLE_INSIDE, "inside"),
+        draw(boundary, N_SAMPLE_BOUNDARY, "boundary"),
     ])
-    campione.to_csv(outdir / "da_leggere.csv", index=False)
+    review.to_csv(outdir / "to_review.csv", index=False)
 
-    print(f"Catturati dalla regola : {len(dentro)}  "
-          f"(campionati {min(N_CAMPIONE_DENTRO, len(dentro))})")
-    print(f"Al confine             : {len(confine)}  "
-          f"(campionati {min(N_CAMPIONE_CONFINE, len(confine))})")
-    print("\nSalvato 'da_leggere.csv' con la colonna 'giudizio' da compilare.")
+    print(f"Captured by the rule : {len(inside)}  "
+          f"(sampled {min(N_SAMPLE_INSIDE, len(inside))})")
+    print(f"On the boundary      : {len(boundary)}  "
+          f"(sampled {min(N_SAMPLE_BOUNDARY, len(boundary))})")
+    print("\nSaved 'to_review.csv' with the 'label' column to fill in.")
 
 
 # ==============================================================================
-# FASE 4 — EPISODI
+# STEP 4 — EPISODES
 # ==============================================================================
 
-def costruisci_episodi(eventi, outdir):
-    """Collassa i post ravvicinati in un episodio, datato al primo post."""
-    titolo("FASE 4 — EPISODI (burst collassati)")
+def build_episodes(events, outdir):
+    """Collapses close posts into one episode, dated at the first post."""
+    heading("STEP 4 — EPISODES (collapsed bursts)")
 
-    ev = eventi.sort_values(COL_TIMESTAMP).copy()
+    ev = events.sort_values(COL_TIMESTAMP).copy()
     gap_min = ev[COL_TIMESTAMP].diff().dt.total_seconds().div(60)
-    ev["nuovo_episodio"] = (gap_min.isna()) | (gap_min > SOGLIA_BURST_MINUTI)
-    ev["episodio_id"] = ev["nuovo_episodio"].cumsum()
+    ev["new_episode"] = (gap_min.isna()) | (gap_min > BURST_THRESHOLD_MINUTES)
+    ev["episode_id"] = ev["new_episode"].cumsum()
 
-    ep = ev.groupby("episodio_id").agg(
-        inizio=(COL_TIMESTAMP, "min"),
-        fine=(COL_TIMESTAMP, "max"),
+    ep = ev.groupby("episode_id").agg(
+        start=(COL_TIMESTAMP, "min"),
+        end=(COL_TIMESTAMP, "max"),
         n_post=(COL_ID, "size"),
-        n_parole_tot=("n_parole", "sum"),
-        primo_post=(COL_ID, "first"),
-        testo_unito=(COL_TESTO, lambda s: " || ".join(s)),
+        n_words_total=("n_words", "sum"),
+        first_post=(COL_ID, "first"),
+        joined_text=(COL_TEXT, lambda s: " || ".join(s)),
     ).reset_index()
-    ep["durata_min"] = (ep["fine"] - ep["inizio"]).dt.total_seconds() / 60
+    ep["duration_min"] = (ep["end"] - ep["start"]).dt.total_seconds() / 60
 
-    print(f"Eventi (post singoli) : {len(ev)}")
-    print(f"Episodi (soglia {SOGLIA_BURST_MINUTI} min): {len(ep)}")
-    print(f"Riduzione             : {1 - len(ep)/len(ev):.1%}")
-    print(f"\nPost per episodio: mediana {ep['n_post'].median():.0f}, "
+    print(f"Events (single posts) : {len(ev)}")
+    print(f"Episodes ({BURST_THRESHOLD_MINUTES} min threshold): {len(ep)}")
+    print(f"Reduction             : {1 - len(ep)/len(ev):.1%}")
+    print(f"\nPosts per episode: median {ep['n_post'].median():.0f}, "
           f"max {ep['n_post'].max()}")
-    print("Distribuzione:")
+    print("Distribution:")
     print(ep["n_post"].value_counts().sort_index().head(8).to_string())
 
-    ep.to_csv(outdir / "episodi.csv", index=False)
+    ep.to_csv(outdir / "episodes.csv", index=False)
     return ev, ep
 
 
 # ==============================================================================
-# FASE 5 — INTERVALLI
+# STEP 5 — INTERVALS
 # ==============================================================================
 
-def intervalli(ep):
-    """Finestra evento massima compatibile con la distanza fra episodi."""
-    titolo("FASE 5 — INTERVALLI FRA EPISODI")
+def intervals(ep):
+    """Longest event window compatible with the spacing between episodes."""
+    heading("STEP 5 — INTERVALS BETWEEN EPISODES")
 
     if len(ep) < 2:
-        print("Troppi pochi episodi.")
+        print("Too few episodes.")
         return
 
-    ts = ep["inizio"].sort_values()
+    ts = ep["start"].sort_values()
     d = ts.diff().dt.total_seconds().div(60).dropna()
-    giorni = max((ts.max() - ts.min()).days, 1)
+    days = max((ts.max() - ts.min()).days, 1)
 
-    print(f"Episodi: {len(ts)} su {giorni} giorni "
-          f"({len(ts)/giorni*30.44:.1f} al mese)")
+    print(f"Episodes: {len(ts)} over {days} days "
+          f"({len(ts)/days*30.44:.1f} per month)")
 
-    print("\nPercentili dell'intervallo fra episodi (minuti):")
+    print("\nPercentiles of the interval between episodes (minutes):")
     for p in [1, 5, 10, 25, 50, 75]:
         v = np.percentile(d, p)
-        extra = f"  ({v/60:.1f} ore)" if v >= 120 else ""
+        extra = f"  ({v/60:.1f} hours)" if v >= 120 else ""
         print(f"  p{p:<3}: {v:>10.1f} min{extra}")
 
-    print("\nQuota di episodi preceduti da un altro entro la finestra:")
+    print("\nShare of episodes preceded by another within the window:")
     ok = []
-    for w in FINESTRE_MINUTI:
+    for w in WINDOWS_MINUTES:
         q = (d < w).mean()
-        stato = "ok" if q < QUOTA_SOVRAPPOSIZIONE_ACCETTABILE else "contaminata"
-        print(f"  {w:>4} min : {q:>6.1%}   {stato}")
-        if q < QUOTA_SOVRAPPOSIZIONE_ACCETTABILE:
+        status = "ok" if q < ACCEPTABLE_OVERLAP_SHARE else "contaminated"
+        print(f"  {w:>4} min : {q:>6.1%}   {status}")
+        if q < ACCEPTABLE_OVERLAP_SHARE:
             ok.append(w)
 
     if ok:
-        print(f"\nFinestra evento massima dal lato testuale: {max(ok)} minuti.")
+        print(f"\nLongest event window allowed by the text side: {max(ok)} minutes.")
     else:
-        print("\nSovrapposizione oltre soglia gia' a 1 minuto: alza "
-              "SOGLIA_BURST_MINUTI.")
+        print("\nOverlap above threshold already at 1 minute: raise "
+              "BURST_THRESHOLD_MINUTES.")
 
 
 # ==============================================================================
@@ -368,34 +368,34 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     df = pd.read_csv(INPUT_CSV)
-    # format esplicito: i timestamp che cadono su un secondo esatto sono scritti
-    # senza parte frazionaria, e pandas 3 inferisce il formato dalla prima riga
+    # explicit format: timestamps falling on an exact second are written without
+    # a fractional part, and pandas 3 infers the format from the first row
     df[COL_TIMESTAMP] = pd.to_datetime(df[COL_TIMESTAMP], utc=True,
                                        format="ISO8601", errors="coerce")
     df = df.dropna(subset=[COL_TIMESTAMP]).sort_values(COL_TIMESTAMP)
-    print(f"Caricati {len(df)} post da {INPUT_CSV}")
-    print(f"Periodo (UTC): {df[COL_TIMESTAMP].min()} -> {df[COL_TIMESTAMP].max()}")
+    print(f"Loaded {len(df)} posts from {INPUT_CSV}")
+    print(f"Period (UTC): {df[COL_TIMESTAMP].min()} -> {df[COL_TIMESTAMP].max()}")
 
-    df = pulisci(df)
-    df = applica_regola(df)
-    campiona(df, OUTPUT_DIR)
+    df = clean(df)
+    df = apply_rule(df)
+    sample(df, OUTPUT_DIR)
 
-    eventi = df[df["evento_petrolio"]].copy()
-    if len(eventi) < 2:
-        print("\nTroppi pochi eventi: allarga le liste e rilancia.")
+    events = df[df["oil_event"]].copy()
+    if len(events) < 2:
+        print("\nToo few events: widen the lists and rerun.")
         return
 
-    ev, ep = costruisci_episodi(eventi, OUTPUT_DIR)
-    intervalli(ep)
+    ev, ep = build_episodes(events, OUTPUT_DIR)
+    intervals(ep)
 
-    df.to_csv(OUTPUT_DIR / "corpus_pulito.csv", index=False)
-    ev.to_csv(OUTPUT_DIR / "eventi_petrolio.csv", index=False)
+    df.to_csv(OUTPUT_DIR / "clean_corpus.csv", index=False)
+    ev.to_csv(OUTPUT_DIR / "oil_events.csv", index=False)
 
-    titolo("FATTO")
-    print("corpus_pulito.csv    corpus con le colonne della regola")
-    print(f"eventi_petrolio.csv  {len(ev)} post catturati, con episodio_id")
-    print(f"episodi.csv          {len(ep)} episodi, unita' di analisi")
-    print("da_leggere.csv       campione da annotare a mano")
+    heading("DONE")
+    print("clean_corpus.csv     corpus with the rule columns")
+    print(f"oil_events.csv       {len(ev)} captured posts, with episode_id")
+    print(f"episodes.csv         {len(ep)} episodes, the unit of analysis")
+    print("to_review.csv        sample to annotate by hand")
 
 
 if __name__ == "__main__":

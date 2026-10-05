@@ -30,7 +30,7 @@ the translation.
 | `annotazioni/riempi_giudizi.py` | `annotations/fill_labels.py` |
 | `annotazioni/criteri_gold.md` | `annotations/gold_guidelines.md` |
 | `report/stato_progetto.typ` | `report/project_status.typ` |
-| `report/numeri.py`, `numeri.json` | `report/numbers.py`, `numbers.json` |
+| `report/numeri.py`, `numeri.json` | `report/figures.py`, `figures.json` |
 | `anomalie.csv` | `anomalies.csv` |
 | `giorni_falliti.txt` | `failed_days.txt` |
 | `corpus_pulito.csv` | `clean_corpus.csv` |
@@ -96,3 +96,13 @@ the translation.
 | evento, episodio | event, episode |
 | precisione, richiamo | precision, recall |
 | novità | novelty |
+
+## Command-line options
+
+| script | Italian | English |
+|---|---|---|
+| `00` | `--ispeziona` | `--inspect` |
+| `03` | `--solo` | `--only` |
+| `03` | instrument `oro` | instrument `gold` |
+| `04` | `--novita`, `--accordo` | `--novelty`, `--agreement` |
+| `query/precision.py` | `--gruppo`, `--valore` | `--group`, `--value` |

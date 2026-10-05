@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-03 — Download degli storici di prezzo al minuto da Dukascopy.
+03 — Downloads one-minute price history from Dukascopy.
 
-    WTI     variabile principale
-    ORO     controllo: rischio geopolitico via bene rifugio
-    EUR/USD proxy del dollaro, confondente plausibile
-    BRENT   robustezza (copertura incompleta: vedi report)
+    WTI     main variable
+    GOLD    control: geopolitical risk through the safe-haven channel
+    EUR/USD dollar proxy, plausible confounder
+    BRENT   robustness (incomplete coverage: see the report)
 
-Scelta degli strumenti, qualita' dei dati e limiti in
-report/stato_progetto.tex.
+Choice of instruments, data quality and limits in report/project_status.typ.
 
-    python 03_scarica_prezzi.py --dry-run
-    python 03_scarica_prezzi.py
-    python 03_scarica_prezzi.py --solo wti
+    python 03_download_prices.py --dry-run
+    python 03_download_prices.py
+    python 03_download_prices.py --only wti
 
-Dipendenze: pandas, numpy, pyarrow; Node.js per npx dukascopy-node.
+Dependencies: pandas, numpy, pyarrow; Node.js for npx dukascopy-node.
 """
 
 import sys
@@ -30,58 +29,58 @@ import pandas as pd
 
 
 # ==============================================================================
-# CONFIGURAZIONE
+# CONFIGURATION
 # ==============================================================================
 
-DATA_INIZIO = date(2024, 12, 1)
-DATA_FINE = date(2026, 8, 1)      # estremo escluso
+START_DATE = date(2024, 12, 1)
+END_DATE = date(2026, 8, 1)       # exclusive
 
 TIMEFRAME = "m1"
-PREZZO = "bid"
+PRICE = "bid"
 
-GREZZI_DIR = Path("dati/prezzi/grezzi")
-OUTPUT_DIR = Path("dati/prezzi")
+RAW_DIR = Path("data/prices/raw")
+OUTPUT_DIR = Path("data/prices")
 
-# Identificativi Dukascopy. Verificarli con --dry-run prima di una corsa lunga:
-# cambiano fra versioni della CLI.
-STRUMENTI = {
+# Dukascopy identifiers. Check them with --dry-run before a long run: they
+# change between CLI versions.
+INSTRUMENTS = {
     "wti":    "lightcmdusd",
-    "oro":    "xauusd",
+    "gold":   "xauusd",
     "eurusd": "eurusd",
     "brent":  "brentcmdusd",
 }
 
-BUCO_MINUTI = 15
-PAUSA_FRA_CHIAMATE = 1.0
+GAP_MINUTES = 15
+PAUSE_BETWEEN_CALLS = 1.0
 
 
 # ==============================================================================
-# UTILITA'
+# UTILITIES
 # ==============================================================================
 
-def titolo(t):
+def heading(t):
     print("\n" + "=" * 78)
     print(t)
     print("=" * 78)
 
 
-def mesi(inizio, fine):
-    """Estremi (primo_giorno, primo_giorno_mese_successivo)."""
-    cur = date(inizio.year, inizio.month, 1)
-    while cur < fine:
-        succ = date(cur.year + (cur.month == 12), cur.month % 12 + 1, 1)
-        yield cur, min(succ, fine)
-        cur = succ
+def months(start, end):
+    """Bounds (first_day, first_day_of_next_month)."""
+    cur = date(start.year, start.month, 1)
+    while cur < end:
+        nxt = date(cur.year + (cur.month == 12), cur.month % 12 + 1, 1)
+        yield cur, min(nxt, end)
+        cur = nxt
 
 
-def comando(strumento_id, da, a, outdir):
+def command(instrument_id, frm, to, outdir):
     return [
         "npx", "--yes", "dukascopy-node",
-        "-i", strumento_id,
-        "-from", da.isoformat(),
-        "-to", a.isoformat(),
+        "-i", instrument_id,
+        "-from", frm.isoformat(),
+        "-to", to.isoformat(),
         "-t", TIMEFRAME,
-        "-p", PREZZO,
+        "-p", PRICE,
         "-f", "csv",
         "-dir", str(outdir),
         "-v", "true",
@@ -92,21 +91,21 @@ def comando(strumento_id, da, a, outdir):
 # DOWNLOAD
 # ==============================================================================
 
-def scarica(nome, strumento_id, dry_run=False):
-    """Un blocco mensile alla volta; i blocchi gia' presenti si saltano."""
-    outdir = GREZZI_DIR / nome
+def download(name, instrument_id, dry_run=False):
+    """One month at a time; blocks already present are skipped."""
+    outdir = RAW_DIR / name
     outdir.mkdir(parents=True, exist_ok=True)
 
-    print(f"\n--- {nome} ({strumento_id}) ---")
-    falliti = []
+    print(f"\n--- {name} ({instrument_id}) ---")
+    failed = []
 
-    for da, a in mesi(DATA_INIZIO, DATA_FINE):
-        gia_presenti = list(outdir.glob(f"*{da.isoformat()}*"))
-        if gia_presenti and not dry_run:
-            print(f"  {da:%Y-%m}  gia' presente, salto")
+    for frm, to in months(START_DATE, END_DATE):
+        present = list(outdir.glob(f"*{frm.isoformat()}*"))
+        if present and not dry_run:
+            print(f"  {frm:%Y-%m}  already present, skipping")
             continue
 
-        cmd = comando(strumento_id, da, a, outdir)
+        cmd = command(instrument_id, frm, to, outdir)
 
         if dry_run:
             print("  " + " ".join(cmd))
@@ -115,52 +114,52 @@ def scarica(nome, strumento_id, dry_run=False):
         try:
             r = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
             if r.returncode != 0:
-                print(f"  {da:%Y-%m}  ERRORE\n    {r.stderr.strip()[:300]}")
-                falliti.append(str(da))
+                print(f"  {frm:%Y-%m}  ERROR\n    {r.stderr.strip()[:300]}")
+                failed.append(str(frm))
             else:
-                print(f"  {da:%Y-%m}  ok")
+                print(f"  {frm:%Y-%m}  ok")
         except subprocess.TimeoutExpired:
-            print(f"  {da:%Y-%m}  timeout")
-            falliti.append(str(da))
+            print(f"  {frm:%Y-%m}  timeout")
+            failed.append(str(frm))
         except FileNotFoundError:
-            print("\nnpx non trovato: installa Node.js.")
+            print("\nnpx not found: install Node.js.")
             sys.exit(1)
 
-    return falliti
+    return failed
 
 
 # ==============================================================================
-# UNIONE E NORMALIZZAZIONE
+# MERGE AND NORMALIZATION
 # ==============================================================================
 
-def unisci(nome):
-    """Unisce i CSV mensili in una serie ordinata in UTC. Il campo temporale
-    puo' essere epoch (ms o s) o stringa ISO a seconda della versione."""
-    outdir = GREZZI_DIR / nome
-    file_csv = sorted(outdir.glob("*.csv"))
-    if not file_csv:
-        print(f"{nome}: nessun CSV trovato.")
+def merge(name):
+    """Merges the monthly CSVs into one sorted series in UTC. The time field
+    can be epoch (ms or s) or an ISO string depending on the version."""
+    outdir = RAW_DIR / name
+    csv_files = sorted(outdir.glob("*.csv"))
+    if not csv_files:
+        print(f"{name}: no CSV found.")
         return None
 
-    pezzi = []
-    for f in file_csv:
+    pieces = []
+    for f in csv_files:
         try:
-            pezzi.append(pd.read_csv(f))
+            pieces.append(pd.read_csv(f))
         except Exception as e:
-            print(f"  illeggibile {f.name}: {e}")
+            print(f"  unreadable {f.name}: {e}")
 
-    if not pezzi:
+    if not pieces:
         return None
 
-    df = pd.concat(pezzi, ignore_index=True)
+    df = pd.concat(pieces, ignore_index=True)
     df.columns = [c.strip().lower() for c in df.columns]
 
     col_t = next((c for c in df.columns
                   if c in ("timestamp", "time", "date", "datetime")), df.columns[0])
 
     if pd.api.types.is_numeric_dtype(df[col_t]):
-        unita = "ms" if df[col_t].iloc[0] > 1e11 else "s"
-        df["t"] = pd.to_datetime(df[col_t], unit=unita, utc=True)
+        unit = "ms" if df[col_t].iloc[0] > 1e11 else "s"
+        df["t"] = pd.to_datetime(df[col_t], unit=unit, utc=True)
     else:
         df["t"] = pd.to_datetime(df[col_t], utc=True, errors="coerce")
 
@@ -169,48 +168,48 @@ def unisci(nome):
             .sort_values("t")
             .reset_index(drop=True))
 
-    tieni = ["t"] + [c for c in ("open", "high", "low", "close", "volume")
-                     if c in df.columns]
-    return df[tieni]
+    keep = ["t"] + [c for c in ("open", "high", "low", "close", "volume")
+                    if c in df.columns]
+    return df[keep]
 
 
 # ==============================================================================
-# CONTROLLO QUALITA'
+# QUALITY CHECK
 # ==============================================================================
 
-def qualita(nome, df):
-    """Copertura oraria e buchi infrasettimanali: determina quanti episodi
-    avranno un prezzo utilizzabile."""
-    print(f"\n--- {nome} ---")
-    print(f"Barre           : {len(df):,}")
-    print(f"Periodo (UTC)   : {df['t'].min()} -> {df['t'].max()}")
+def quality(name, df):
+    """Hourly coverage and weekday gaps: they determine how many episodes will
+    have a usable price."""
+    print(f"\n--- {name} ---")
+    print(f"Bars            : {len(df):,}")
+    print(f"Period (UTC)    : {df['t'].min()} -> {df['t'].max()}")
 
     gap = df["t"].diff().dt.total_seconds().div(60)
-    print(f"Intervallo mediano: {gap.median():.1f} min")
+    print(f"Median interval : {gap.median():.1f} min")
 
-    prec = df["t"].shift(1)
-    weekend = prec.dt.dayofweek.isin([4, 5, 6])
-    buchi = gap > BUCO_MINUTI
-    buchi_feriali = buchi & ~weekend
+    prev = df["t"].shift(1)
+    weekend = prev.dt.dayofweek.isin([4, 5, 6])
+    gaps = gap > GAP_MINUTES
+    weekday_gaps = gaps & ~weekend
 
-    print(f"Buchi > {BUCO_MINUTI} min   : {buchi.sum()} "
-          f"(di cui {buchi_feriali.sum()} infrasettimanali)")
+    print(f"Gaps > {GAP_MINUTES} min    : {gaps.sum()} "
+          f"(of which {weekday_gaps.sum()} on weekdays)")
 
-    if buchi_feriali.sum():
-        peggiori = (df.assign(gap=gap)[buchi_feriali]
-                    .nlargest(5, "gap")[["t", "gap"]])
-        print("  i piu' lunghi:")
-        for _, r in peggiori.iterrows():
+    if weekday_gaps.sum():
+        worst = (df.assign(gap=gap)[weekday_gaps]
+                 .nlargest(5, "gap")[["t", "gap"]])
+        print("  longest:")
+        for _, r in worst.iterrows():
             print(f"    {r['t']}  {r['gap']:.0f} min")
 
-    per_ora = df["t"].dt.hour.value_counts().sort_index()
-    print(f"Ore coperte     : {len(per_ora)}/24  "
-          f"(min {per_ora.min():,} barre, max {per_ora.max():,})")
+    per_hour = df["t"].dt.hour.value_counts().sort_index()
+    print(f"Hours covered   : {len(per_hour)}/24  "
+          f"(min {per_hour.min():,} bars, max {per_hour.max():,})")
 
     if "close" in df.columns:
-        strani = (df["close"] <= 0).sum()
-        if strani:
-            print(f"  ATTENZIONE: {strani} barre con close <= 0")
+        odd = (df["close"] <= 0).sum()
+        if odd:
+            print(f"  WARNING: {odd} bars with close <= 0")
 
 
 # ==============================================================================
@@ -220,53 +219,53 @@ def qualita(nome, df):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
-                    help="stampa i comandi senza eseguirli")
-    ap.add_argument("--solo", help="scarica un solo strumento (es. wti)")
+                    help="print the commands without running them")
+    ap.add_argument("--only", help="download a single instrument (e.g. wti)")
     args = ap.parse_args()
 
     if not args.dry_run and shutil.which("npx") is None:
-        print("npx non trovato. Installa Node.js, oppure usa --dry-run.")
+        print("npx not found. Install Node.js, or use --dry-run.")
         sys.exit(1)
 
-    if args.solo and args.solo not in STRUMENTI:
-        print(f"Strumento sconosciuto. Disponibili: {list(STRUMENTI)}")
+    if args.only and args.only not in INSTRUMENTS:
+        print(f"Unknown instrument. Available: {list(INSTRUMENTS)}")
         sys.exit(1)
 
-    GREZZI_DIR.mkdir(parents=True, exist_ok=True)
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    da_fare = ({args.solo: STRUMENTI[args.solo]} if args.solo else STRUMENTI)
+    todo = ({args.only: INSTRUMENTS[args.only]} if args.only else INSTRUMENTS)
 
-    titolo("DOWNLOAD")
-    falliti = {}
-    for nome, sid in da_fare.items():
-        f = scarica(nome, sid, dry_run=args.dry_run)
+    heading("DOWNLOAD")
+    failed = {}
+    for name, sid in todo.items():
+        f = download(name, sid, dry_run=args.dry_run)
         if f:
-            falliti[nome] = f
+            failed[name] = f
 
     if args.dry_run:
-        print("\nDry run: niente scaricato.")
+        print("\nDry run: nothing downloaded.")
         return
 
-    titolo("UNIONE E CONTROLLO QUALITA'")
-    serie = {}
-    for nome in da_fare:
-        df = unisci(nome)
+    heading("MERGE AND QUALITY CHECK")
+    series = {}
+    for name in todo:
+        df = merge(name)
         if df is None or df.empty:
-            print(f"{nome}: niente da unire.")
+            print(f"{name}: nothing to merge.")
             continue
-        qualita(nome, df)
-        df.to_parquet(OUTPUT_DIR / f"{nome}_m1.parquet", index=False)
-        serie[nome] = df
+        quality(name, df)
+        df.to_parquet(OUTPUT_DIR / f"{name}_m1.parquet", index=False)
+        series[name] = df
 
-    if falliti:
-        print("\nBLOCCHI FALLITI (rilancia lo script: riprende da questi)")
-        for n, mm in falliti.items():
+    if failed:
+        print("\nFAILED BLOCKS (rerun the script: it resumes from these)")
+        for n, mm in failed.items():
             print(f"  {n}: {', '.join(mm)}")
 
-    titolo("FATTO")
-    for nome, df in serie.items():
-        print(f"  {nome}_m1.parquet   {len(df):,} barre")
+    heading("DONE")
+    for name, df in series.items():
+        print(f"  {name}_m1.parquet   {len(df):,} bars")
 
 
 if __name__ == "__main__":

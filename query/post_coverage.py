@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""Quota di post che cadono in orari in cui le serie di download/ hanno dati.
+"""Share of posts falling at hours when the series in download/ have data.
 
-Ogni post riceve la copertura del suo giorno della settimana e della sua ora
-UTC (quota di minuti con una barra reale, vedi orari_serie.py). La media sui
-post e' la percentuale attesa di post con un prezzo disponibile.
+Each post gets the coverage of its weekday and UTC hour (share of minutes with
+a real bar, see series_hours.py). The mean over posts is the expected share of
+posts with a price available.
 
-    python query/copertura_post.py
+    python query/post_coverage.py
 """
 
-from _comune import carica, carica_serie, copertura_oraria
+from _common import load, load_series, hourly_coverage
 
-insiemi = {"tutti i post": carica("posts"), "selezionati da 01": carica("eventi")}
+sets = {"all posts": load("posts"), "selected by 01": load("events")}
 
-for nome, df in carica_serie().items():
-    cop = copertura_oraria(df)
-    print(f"\n=== {nome} ({df['t'].min():%Y-%m-%d} -> {df['t'].max():%Y-%m-%d}) ===")
-    for etichetta, posts in insiemi.items():
+for name, df in load_series().items():
+    cov = hourly_coverage(df)
+    print(f"\n=== {name} ({df['t'].min():%Y-%m-%d} -> {df['t'].max():%Y-%m-%d}) ===")
+    for label, posts in sets.items():
         t = posts["timestamp_utc"].dropna()
-        quota = cop.reindex(list(zip(t.dt.dayofweek, t.dt.hour))).mean()
-        print(f"  {etichetta:18s} {len(t):6d} post  ->  {quota:.1%} in orari con dati")
+        share = cov.reindex(list(zip(t.dt.dayofweek, t.dt.hour))).mean()
+        print(f"  {label:16s} {len(t):6d} posts  ->  {share:.1%} at hours with data")

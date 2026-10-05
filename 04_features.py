@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-04 — Feature per episodio.
+04 — Features for each episode.
 
-    A  feature deterministiche          (sempre)
-    B  novita' semantica                (--novita)
-    C  esporta il campione da annotare  (--gold)
-    D  scoring con LLM locale           (--llm)
-    E  accordo manuale vs automatico    (--accordo)
+    A  deterministic features           (always)
+    B  semantic novelty                 (--novelty)
+    C  export the sample to annotate    (--gold)
+    D  scoring with a local LLM         (--llm)
+    E  manual vs automatic agreement    (--agreement)
 
-La variabile di interesse e' la direzione attesa sull'offerta, non il
-sentiment; l'unita' di analisi e' l'episodio. Vedi report/stato_progetto.tex.
+The variable of interest is the expected direction on supply, not sentiment;
+the unit of analysis is the episode. See report/project_status.typ.
 
     python 04_features.py
-    python 04_features.py --novita --gold
+    python 04_features.py --novelty --gold
     python 04_features.py --llm
-    python 04_features.py --accordo
+    python 04_features.py --agreement
 
-Dipendenze: pandas, numpy, pyarrow, sentence-transformers, scikit-learn,
-scipy, requests; Ollama per la fase D.
+Dependencies: pandas, numpy, pyarrow, sentence-transformers, scikit-learn,
+scipy, requests; Ollama for step D.
 """
 
 import re
@@ -31,306 +31,306 @@ import pandas as pd
 
 
 # ==============================================================================
-# CONFIGURAZIONE
+# CONFIGURATION
 # ==============================================================================
 
-EPISODI_CSV = "dati/petrolio/episodi.csv"
-OUTPUT_DIR = Path("dati/features")
+EPISODES_CSV = "data/oil/episodes.csv"
+OUTPUT_DIR = Path("data/features")
 
-SEME = 42
+SEED = 42
 
-# --- novita' ------------------------------------------------------------------
-MODELLO_EMBEDDING = "all-MiniLM-L6-v2"
-FINESTRA_NOVITA_GIORNI = 30
+# --- novelty ------------------------------------------------------------------
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+NOVELTY_WINDOW_DAYS = 30
 
 # --- gold standard ------------------------------------------------------------
 N_GOLD = 200
-N_DOPPIA_ANNOTAZIONE = 50
+N_DOUBLE_ANNOTATION = 50
 
 # --- LLM ----------------------------------------------------------------------
 OLLAMA_URL = "http://localhost:11434/api/generate"
-MODELLO_LLM = "qwen2.5:14b"
-TEMPERATURA = 0.0
-MAX_CARATTERI_PROMPT = 4000
+LLM_MODEL = "qwen2.5:14b"
+TEMPERATURE = 0.0
+MAX_PROMPT_CHARS = 4000
 
-# Il prompt va in appendice alla tesi insieme a modello e temperatura.
+# The prompt goes in the thesis appendix together with model and temperature.
 PROMPT = """You are annotating social media posts for a study on oil markets.
 
 Read the post and answer ONLY with a JSON object, no other text.
 
 Fields:
-- "direzione": integer from -2 to 2. Expected effect on global oil SUPPLY.
+- "direction": integer from -2 to 2. Expected effect on global oil SUPPLY.
     -2 = strong threat to supply (blockade, strikes on oil infrastructure, war)
     -1 = mild threat (sanctions talk, rising tension)
      0 = no clear supply implication
     +1 = mild easing (talks, partial sanctions relief)
     +2 = strong easing (deal reached, blockade lifted, output increase)
-- "intensita": integer 1-3.
+- "intensity": integer 1-3.
      1 = speculation or commentary
      2 = threat or stated intention
      3 = action declared as done or imminent
-- "concretezza": integer 0-1.
+- "specificity": integer 0-1.
      1 = names a specific target, quantity, deadline or party
      0 = generic
-- "confidenza": float 0-1, your own confidence in this annotation.
+- "confidence": float 0-1, your own confidence in this annotation.
 
 POST:
-\"\"\"{testo}\"\"\"
+\"\"\"{text}\"\"\"
 """
 
 
 # ==============================================================================
-# UTILITA'
+# UTILITIES
 # ==============================================================================
 
-def titolo(t):
+def heading(t):
     print("\n" + "=" * 78)
     print(t)
     print("=" * 78)
 
 
-def carica():
-    df = pd.read_csv(EPISODI_CSV)
-    for c in ("inizio", "fine"):
+def load():
+    df = pd.read_csv(EPISODES_CSV)
+    for c in ("start", "end"):
         if c in df.columns:
             df[c] = pd.to_datetime(df[c], utc=True, format="ISO8601")
-    if "testo_unito" not in df.columns:
-        raise SystemExit("Manca 'testo_unito': rilancia 01_regola_petrolio.py")
-    df["testo_unito"] = df["testo_unito"].fillna("").astype(str)
-    return df.sort_values("inizio").reset_index(drop=True)
+    if "joined_text" not in df.columns:
+        raise SystemExit("Missing 'joined_text': rerun 01_oil_rule.py")
+    df["joined_text"] = df["joined_text"].fillna("").astype(str)
+    return df.sort_values("start").reset_index(drop=True)
 
 
 # ==============================================================================
-# FASE A — FEATURE DETERMINISTICHE
+# STEP A — DETERMINISTIC FEATURES
 # ==============================================================================
 
-def feature_deterministiche(df):
-    """Ora, calendario, lunghezza, enfasi. Nessun modello di mezzo."""
-    titolo("FASE A — FEATURE DETERMINISTICHE")
-    t = df["inizio"]
-    locale = t.dt.tz_convert("America/New_York")
-    minuti = locale.dt.hour * 60 + locale.dt.minute
+def deterministic_features(df):
+    """Time, calendar, length, emphasis. No model involved."""
+    heading("STEP A — DETERMINISTIC FEATURES")
+    t = df["start"]
+    local = t.dt.tz_convert("America/New_York")
+    minutes = local.dt.hour * 60 + local.dt.minute
 
     df = df.copy()
-    df["ora_utc"] = t.dt.hour
-    df["ora_ny"] = locale.dt.hour
-    df["giorno_settimana"] = locale.dt.dayofweek
-    df["weekend"] = df["giorno_settimana"] >= 5
-    df["mercato_usa_aperto"] = (~df["weekend"]) & minuti.between(9 * 60 + 30, 16 * 60)
+    df["hour_utc"] = t.dt.hour
+    df["hour_ny"] = local.dt.hour
+    df["weekday"] = local.dt.dayofweek
+    df["weekend"] = df["weekday"] >= 5
+    df["us_market_open"] = (~df["weekend"]) & minutes.between(9 * 60 + 30, 16 * 60)
 
-    testo = df["testo_unito"]
-    df["n_caratteri"] = testo.str.len()
-    df["n_esclamativi"] = testo.str.count("!")
-    df["n_maiuscole"] = testo.str.count(r"[A-Z]")
-    df["quota_maiuscole"] = (df["n_maiuscole"] /
-                             testo.str.count(r"[A-Za-z]").replace(0, np.nan))
-    df["n_parole_urlate"] = testo.str.count(r"\b[A-Z]{4,}\b")
+    text = df["joined_text"]
+    df["n_chars"] = text.str.len()
+    df["n_exclamations"] = text.str.count("!")
+    df["n_uppercase"] = text.str.count(r"[A-Z]")
+    df["uppercase_share"] = (df["n_uppercase"] /
+                             text.str.count(r"[A-Za-z]").replace(0, np.nan))
+    df["n_shouted_words"] = text.str.count(r"\b[A-Z]{4,}\b")
 
-    print(f"Episodi: {len(df)}")
-    print(f"In orario di mercato USA : {df['mercato_usa_aperto'].mean():.1%}")
-    print(f"Nel weekend              : {df['weekend'].mean():.1%}")
-    print(f"Post per episodio (mediana): {df['n_post'].median():.0f}")
-    print(f"Quota maiuscole (mediana)  : {df['quota_maiuscole'].median():.2f}")
+    print(f"Episodes: {len(df)}")
+    print(f"During US market hours   : {df['us_market_open'].mean():.1%}")
+    print(f"On weekends              : {df['weekend'].mean():.1%}")
+    print(f"Posts per episode (median): {df['n_post'].median():.0f}")
+    print(f"Uppercase share (median)  : {df['uppercase_share'].median():.2f}")
     return df
 
 
 # ==============================================================================
-# FASE B — NOVITA' SEMANTICA
+# STEP B — SEMANTIC NOVELTY
 # ==============================================================================
 
-def novita(df, outdir):
-    """novita = 1 - max similarita' coseno con gli episodi della finestra
-    precedente. Vicino a 1 = contenuto nuovo, vicino a 0 = ripetizione."""
-    titolo("FASE B — NOVITA' SEMANTICA")
+def novelty(df, outdir):
+    """novelty = 1 - max cosine similarity with the episodes of the previous
+    window. Close to 1 = new content, close to 0 = repetition."""
+    heading("STEP B — SEMANTIC NOVELTY")
     from sentence_transformers import SentenceTransformer
     from sklearn.metrics.pairwise import cosine_similarity
 
-    cache = outdir / "emb_episodi.npy"
-    emb_model = SentenceTransformer(MODELLO_EMBEDDING)
+    cache = outdir / "episode_embeddings.npy"
+    emb_model = SentenceTransformer(EMBEDDING_MODEL)
 
     if cache.exists() and len(np.load(cache)) == len(df):
         emb = np.load(cache)
-        print("Embedding riusati dalla cache.")
+        print("Embeddings reused from the cache.")
     else:
-        emb = emb_model.encode(df["testo_unito"].tolist(), show_progress_bar=True)
+        emb = emb_model.encode(df["joined_text"].tolist(), show_progress_bar=True)
         np.save(cache, emb)
 
-    finestra = pd.Timedelta(days=FINESTRA_NOVITA_GIORNI)
-    valori, simili = [], []
+    window = pd.Timedelta(days=NOVELTY_WINDOW_DAYS)
+    values, similar = [], []
 
     for i in range(len(df)):
-        t_i = df.loc[i, "inizio"]
-        prec = df.index[(df["inizio"] < t_i) & (df["inizio"] >= t_i - finestra)]
-        if len(prec) == 0:
-            valori.append(1.0)
-            simili.append(None)
+        t_i = df.loc[i, "start"]
+        prev = df.index[(df["start"] < t_i) & (df["start"] >= t_i - window)]
+        if len(prev) == 0:
+            values.append(1.0)
+            similar.append(None)
             continue
-        sim = cosine_similarity(emb[i:i + 1], emb[prec])[0]
-        valori.append(float(1 - sim.max()))
-        simili.append(int(prec[int(sim.argmax())]))
+        sim = cosine_similarity(emb[i:i + 1], emb[prev])[0]
+        values.append(float(1 - sim.max()))
+        similar.append(int(prev[int(sim.argmax())]))
 
     df = df.copy()
-    df["novita"] = valori
-    df["episodio_piu_simile"] = simili
+    df["novelty"] = values
+    df["most_similar_episode"] = similar
 
-    print(f"Novita' — mediana {np.median(valori):.3f}, "
-          f"p10 {np.percentile(valori, 10):.3f}, "
-          f"p90 {np.percentile(valori, 90):.3f}")
-    print(f"Episodi quasi identici a uno precedente (novita < 0.15): "
-          f"{(df['novita'] < 0.15).sum()}")
+    print(f"Novelty — median {np.median(values):.3f}, "
+          f"p10 {np.percentile(values, 10):.3f}, "
+          f"p90 {np.percentile(values, 90):.3f}")
+    print(f"Episodes nearly identical to a previous one (novelty < 0.15): "
+          f"{(df['novelty'] < 0.15).sum()}")
     return df
 
 
 # ==============================================================================
-# FASE C — CAMPIONE PER ANNOTAZIONE MANUALE
+# STEP C — SAMPLE FOR MANUAL ANNOTATION
 # ==============================================================================
 
-def esporta_gold(df, outdir):
-    """Campione stratificato per trimestre, piu' un sottoinsieme per l'accordo
-    fra annotatori."""
-    titolo("FASE C — CAMPIONE DA ANNOTARE")
-    rng = np.random.default_rng(SEME)
+def export_gold(df, outdir):
+    """Sample stratified by quarter, plus a subset for inter-annotator
+    agreement."""
+    heading("STEP C — SAMPLE TO ANNOTATE")
+    rng = np.random.default_rng(SEED)
 
     df = df.copy()
-    df["_strato"] = df["inizio"].dt.to_period("Q")
-    per_strato = max(1, N_GOLD // df["_strato"].nunique())
+    df["_stratum"] = df["start"].dt.to_period("Q")
+    per_stratum = max(1, N_GOLD // df["_stratum"].nunique())
 
-    scelti = []
-    for _, g in df.groupby("_strato"):
-        n = min(per_strato, len(g))
-        scelti.extend(rng.choice(g.index, size=n, replace=False))
+    chosen = []
+    for _, g in df.groupby("_stratum"):
+        n = min(per_stratum, len(g))
+        chosen.extend(rng.choice(g.index, size=n, replace=False))
 
-    gold = df.loc[sorted(scelti)].copy()
+    gold = df.loc[sorted(chosen)].copy()
 
-    colonne = ["episodio_id", "inizio", "n_post", "testo_unito"]
-    if "novita" in gold.columns:
-        colonne.append("novita")
-    gold = gold[colonne]
+    columns = ["episode_id", "start", "n_post", "joined_text"]
+    if "novelty" in gold.columns:
+        columns.append("novelty")
+    gold = gold[columns]
 
-    for c in ["direzione", "intensita", "concretezza", "note"]:
+    for c in ["direction", "intensity", "specificity", "notes"]:
         gold[c] = ""
 
-    gold.to_csv(outdir / "gold_da_annotare.csv", index=False)
+    gold.to_csv(outdir / "gold_to_annotate.csv", index=False)
 
-    doppia = gold.sample(n=min(N_DOPPIA_ANNOTAZIONE, len(gold)),
-                         random_state=SEME)
-    doppia.to_csv(outdir / "gold_doppia_annotazione.csv", index=False)
+    double = gold.sample(n=min(N_DOUBLE_ANNOTATION, len(gold)),
+                         random_state=SEED)
+    double.to_csv(outdir / "gold_double_annotation.csv", index=False)
 
-    print(f"Esportati {len(gold)} episodi in 'gold_da_annotare.csv'.")
-    print(f"Di questi, {len(doppia)} anche in 'gold_doppia_annotazione.csv' "
-          "per l'accordo fra annotatori.")
-    print("I criteri di annotazione vanno fissati prima di cominciare: se "
-          "cambiano, si riannota da capo.")
+    print(f"Exported {len(gold)} episodes to 'gold_to_annotate.csv'.")
+    print(f"Of these, {len(double)} also in 'gold_double_annotation.csv' "
+          "for inter-annotator agreement.")
+    print("The annotation guidelines must be fixed before starting: if they "
+          "change, everything is annotated again.")
 
 
 # ==============================================================================
-# FASE D — SCORING CON LLM LOCALE
+# STEP D — SCORING WITH A LOCAL LLM
 # ==============================================================================
 
-def scoring_llm(df, outdir):
-    """Annotazione automatica, ripartibile. Modello, prompt e temperatura
-    vengono salvati accanto ai risultati."""
-    titolo("FASE D — SCORING CON LLM LOCALE")
+def llm_scoring(df, outdir):
+    """Automatic annotation, resumable. Model, prompt and temperature are saved
+    next to the results."""
+    heading("STEP D — SCORING WITH A LOCAL LLM")
     import requests
 
-    outfile = outdir / "llm_annotazioni.jsonl"
-    gia_fatti = set()
+    outfile = outdir / "llm_annotations.jsonl"
+    done = set()
     if outfile.exists():
         with open(outfile, encoding="utf-8") as f:
-            for riga in f:
+            for line in f:
                 try:
-                    gia_fatti.add(json.loads(riga)["episodio_id"])
+                    done.add(json.loads(line)["episode_id"])
                 except Exception:
                     pass
-        print(f"Ripresa: {len(gia_fatti)} episodi gia' annotati.")
+        print(f"Resuming: {len(done)} episodes already annotated.")
 
     (outdir / "llm_prompt.txt").write_text(
-        f"modello: {MODELLO_LLM}\ntemperatura: {TEMPERATURA}\n\n{PROMPT}",
+        f"model: {LLM_MODEL}\ntemperature: {TEMPERATURE}\n\n{PROMPT}",
         encoding="utf-8")
 
-    da_fare = df[~df["episodio_id"].isin(gia_fatti)]
-    print(f"Da annotare: {len(da_fare)}")
+    todo = df[~df["episode_id"].isin(done)]
+    print(f"To annotate: {len(todo)}")
 
-    ok, errori = 0, 0
+    ok, errors = 0, 0
     with open(outfile, "a", encoding="utf-8") as f:
-        for i, (_, r) in enumerate(da_fare.iterrows(), 1):
-            testo = r["testo_unito"][:MAX_CARATTERI_PROMPT]
+        for i, (_, r) in enumerate(todo.iterrows(), 1):
+            text = r["joined_text"][:MAX_PROMPT_CHARS]
             try:
                 resp = requests.post(OLLAMA_URL, timeout=180, json={
-                    "model": MODELLO_LLM,
-                    "prompt": PROMPT.format(testo=testo),
+                    "model": LLM_MODEL,
+                    "prompt": PROMPT.format(text=text),
                     "format": "json",
                     "stream": False,
-                    "options": {"temperature": TEMPERATURA, "seed": SEME},
+                    "options": {"temperature": TEMPERATURE, "seed": SEED},
                 })
-                dati = json.loads(resp.json()["response"])
-                dati["episodio_id"] = int(r["episodio_id"])
-                f.write(json.dumps(dati, ensure_ascii=False) + "\n")
+                answer = json.loads(resp.json()["response"])
+                answer["episode_id"] = int(r["episode_id"])
+                f.write(json.dumps(answer, ensure_ascii=False) + "\n")
                 f.flush()
                 ok += 1
             except Exception as e:
-                errori += 1
-                if errori <= 3:
-                    print(f"  errore su {r['episodio_id']}: {str(e)[:120]}")
+                errors += 1
+                if errors <= 3:
+                    print(f"  error on {r['episode_id']}: {str(e)[:120]}")
 
             if i % 50 == 0:
-                print(f"  {i}/{len(da_fare)}  (ok {ok}, errori {errori})")
+                print(f"  {i}/{len(todo)}  (ok {ok}, errors {errors})")
 
-    print(f"\nCompletati {ok}, errori {errori}.")
-    if errori > len(da_fare) * 0.05:
-        print("Tasso di errore alto: controlla Ollama e la validita' del JSON.")
+    print(f"\nCompleted {ok}, errors {errors}.")
+    if errors > len(todo) * 0.05:
+        print("High error rate: check Ollama and the validity of the JSON.")
 
     if outfile.exists():
         ann = pd.read_json(outfile, lines=True)
-        ann = ann.drop_duplicates(subset="episodio_id", keep="last")
+        ann = ann.drop_duplicates(subset="episode_id", keep="last")
         ann = ann.rename(columns={c: f"llm_{c}" for c in ann.columns
-                                  if c != "episodio_id"})
-        df = df.merge(ann, on="episodio_id", how="left")
+                                  if c != "episode_id"})
+        df = df.merge(ann, on="episode_id", how="left")
 
-        if "llm_direzione" in df.columns:
-            print("\nDistribuzione della direzione stimata:")
-            print(df["llm_direzione"].value_counts().sort_index().to_string())
+        if "llm_direction" in df.columns:
+            print("\nDistribution of the estimated direction:")
+            print(df["llm_direction"].value_counts().sort_index().to_string())
     return df
 
 
 # ==============================================================================
-# FASE E — ACCORDO
+# STEP E — AGREEMENT
 # ==============================================================================
 
-def accordo(df, outdir):
-    """Spearman e kappa pesato quadratico fra annotazione manuale e LLM.
-    Sotto 0.4 la variabile automatica non si usa."""
-    titolo("FASE E — ACCORDO MANUALE vs AUTOMATICO")
-    gold_file = outdir / "gold_annotato.csv"
+def agreement(df, outdir):
+    """Spearman and quadratic weighted kappa between manual and LLM annotation.
+    Below 0.4 the automatic variable is not used."""
+    heading("STEP E — MANUAL vs AUTOMATIC AGREEMENT")
+    gold_file = outdir / "gold_annotated.csv"
     if not gold_file.exists():
-        print("Manca 'gold_annotato.csv'. Annota 'gold_da_annotare.csv', "
-              "rinominalo e rilancia.")
+        print("Missing 'gold_annotated.csv'. Annotate 'gold_to_annotate.csv', "
+              "rename it and rerun.")
         return
 
     from scipy.stats import spearmanr
     from sklearn.metrics import cohen_kappa_score
 
     gold = pd.read_csv(gold_file)
-    merge = gold.merge(df, on="episodio_id", suffixes=("_man", "_auto"))
+    merged = gold.merge(df, on="episode_id", suffixes=("_man", "_auto"))
 
-    for campo in ["direzione", "intensita", "concretezza"]:
-        col_auto = f"llm_{campo}"
-        if campo not in merge.columns or col_auto not in merge.columns:
+    for field in ["direction", "intensity", "specificity"]:
+        col_auto = f"llm_{field}"
+        if field not in merged.columns or col_auto not in merged.columns:
             continue
-        sub = merge[[campo, col_auto]].apply(pd.to_numeric, errors="coerce").dropna()
+        sub = merged[[field, col_auto]].apply(pd.to_numeric, errors="coerce").dropna()
         if len(sub) < 20:
-            print(f"{campo}: troppi pochi casi ({len(sub)})")
+            print(f"{field}: too few cases ({len(sub)})")
             continue
 
-        rho, p = spearmanr(sub[campo], sub[col_auto])
-        k = cohen_kappa_score(sub[campo].astype(int), sub[col_auto].astype(int),
+        rho, p = spearmanr(sub[field], sub[col_auto])
+        k = cohen_kappa_score(sub[field].astype(int), sub[col_auto].astype(int),
                               weights="quadratic")
-        esatta = (sub[campo] == sub[col_auto]).mean()
+        exact = (sub[field] == sub[col_auto]).mean()
 
-        print(f"\n{campo}  (n={len(sub)})")
-        print(f"  Spearman      : {rho:+.3f}  (p={p:.1e})")
-        print(f"  kappa pesato  : {k:+.3f}")
-        print(f"  accordo esatto: {esatta:.1%}")
+        print(f"\n{field}  (n={len(sub)})")
+        print(f"  Spearman       : {rho:+.3f}  (p={p:.1e})")
+        print(f"  weighted kappa : {k:+.3f}")
+        print(f"  exact agreement: {exact:.1%}")
 
 
 # ==============================================================================
@@ -339,32 +339,32 @@ def accordo(df, outdir):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--novita", action="store_true")
+    ap.add_argument("--novelty", action="store_true")
     ap.add_argument("--gold", action="store_true")
     ap.add_argument("--llm", action="store_true")
-    ap.add_argument("--accordo", action="store_true")
+    ap.add_argument("--agreement", action="store_true")
     args = ap.parse_args()
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    df = carica()
+    df = load()
 
-    df = feature_deterministiche(df)
+    df = deterministic_features(df)
 
-    if args.novita:
-        df = novita(df, OUTPUT_DIR)
+    if args.novelty:
+        df = novelty(df, OUTPUT_DIR)
     if args.gold:
-        esporta_gold(df, OUTPUT_DIR)
+        export_gold(df, OUTPUT_DIR)
     if args.llm:
-        df = scoring_llm(df, OUTPUT_DIR)
-    if args.accordo:
-        accordo(df, OUTPUT_DIR)
+        df = llm_scoring(df, OUTPUT_DIR)
+    if args.agreement:
+        agreement(df, OUTPUT_DIR)
 
-    df.to_parquet(OUTPUT_DIR / "episodi_features.parquet", index=False)
+    df.to_parquet(OUTPUT_DIR / "episode_features.parquet", index=False)
 
-    titolo("FATTO")
-    print(f"episodi_features.parquet   {len(df)} episodi, "
-          f"{len(df.columns)} colonne")
-    print("\nLe feature vanno congelate, con la data, prima di toccare i prezzi.")
+    heading("DONE")
+    print(f"episode_features.parquet   {len(df)} episodes, "
+          f"{len(df.columns)} columns")
+    print("\nFreeze the features, with the date, before touching prices.")
 
 if __name__ == "__main__":
     main()

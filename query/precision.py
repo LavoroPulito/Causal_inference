@@ -1,52 +1,52 @@
 #!/usr/bin/env python3
-"""Quota di righe di un gruppo di da_leggere.csv con un dato giudizio.
+"""Share of rows in a group of to_review.csv with a given label.
 
-    python query/precisione.py                       # dentro, giudizio 1
-    python query/precisione.py --gruppo confine      # stesso conto sul confine
+    python query/precision.py                       # inside, label 1
+    python query/precision.py --group boundary      # same count on the boundary
 """
 
 import argparse
 import math
 
-from _comune import carica
+from _common import load
 
 
 def wilson(k, n, z=1.96):
-    """Intervallo di confidenza al 95% per una proporzione."""
+    """95% confidence interval for a proportion."""
     if n == 0:
         return float("nan"), float("nan")
     p = k / n
     den = 1 + z**2 / n
-    centro = (p + z**2 / (2 * n)) / den
-    semi = z * math.sqrt(p * (1 - p) / n + z**2 / (4 * n**2)) / den
-    return centro - semi, centro + semi
+    centre = (p + z**2 / (2 * n)) / den
+    half = z * math.sqrt(p * (1 - p) / n + z**2 / (4 * n**2)) / den
+    return centre - half, centre + half
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--gruppo", default="dentro")
-    ap.add_argument("--valore", type=float, default=1)
+    ap.add_argument("--group", default="inside")
+    ap.add_argument("--value", type=float, default=1)
     args = ap.parse_args()
 
-    df = carica("da_leggere")
-    g = df[df["gruppo"] == args.gruppo]
+    df = load("to_review")
+    g = df[df["group"] == args.group]
     if g.empty:
-        raise SystemExit(f"Nessuna riga nel gruppo '{args.gruppo}'. "
-                         f"Gruppi presenti: {sorted(df['gruppo'].unique())}")
+        raise SystemExit(f"No rows in group '{args.group}'. "
+                         f"Groups present: {sorted(df['group'].unique())}")
 
     n = len(g)
-    annotate = int(g["giudizio"].notna().sum())
-    print(f"gruppo '{args.gruppo}': {n} righe, {annotate} annotate")
-    if annotate == 0:
+    labelled = int(g["label"].notna().sum())
+    print(f"group '{args.group}': {n} rows, {labelled} labelled")
+    if labelled == 0:
         return
 
-    k = int((g["giudizio"] == args.valore).sum())
-    basso, alto = wilson(k, n)
-    print(f"giudizio = {args.valore:g}: {k} su {n} = {k / n:.1%}")
-    print(f"IC 95% (Wilson): {basso:.1%} - {alto:.1%}")
-    if annotate < n:
-        print(f"attenzione: {n - annotate} righe senza giudizio contano al "
-              f"denominatore; sulle sole annotate la quota e' {k / annotate:.1%}")
+    k = int((g["label"] == args.value).sum())
+    low, high = wilson(k, n)
+    print(f"label = {args.value:g}: {k} of {n} = {k / n:.1%}")
+    print(f"95% CI (Wilson): {low:.1%} - {high:.1%}")
+    if labelled < n:
+        print(f"warning: {n - labelled} unlabelled rows count in the "
+              f"denominator; on labelled rows only the share is {k / labelled:.1%}")
 
 
 if __name__ == "__main__":

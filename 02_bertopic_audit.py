@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-02 — Audit della regola: topic modeling e ricerca semantica.
+02 — Rule audit: topic modeling and semantic search.
 
-Due controlli non supervisionati sulla regola dello script 01:
-    A) copertura della regola per cluster BERTopic
-    B) post semanticamente vicini a frasi-sonda ma non catturati
+Two unsupervised checks on the rule of script 01:
+    A) rule coverage for each BERTopic cluster
+    B) posts semantically close to probe sentences but not captured
 
-Gli audit non definiscono le variabili, le verificano. Vedi
-report/stato_progetto.tex.
+The audits do not define the variables, they test them. See
+report/project_status.typ.
 
-    python 02_audit_bertopic.py
+    python 02_bertopic_audit.py
 
-Input: dati/petrolio/corpus_pulito.csv
-Dipendenze: bertopic, sentence-transformers, scikit-learn, pandas, numpy.
+Input: data/oil/clean_corpus.csv
+Dependencies: bertopic, sentence-transformers, scikit-learn, pandas, numpy.
 """
 
 from pathlib import Path
@@ -23,34 +23,34 @@ import pandas as pd
 
 
 # ==============================================================================
-# CONFIGURAZIONE
+# CONFIGURATION
 # ==============================================================================
 
-INPUT_CSV = "dati/petrolio/corpus_pulito.csv"
-OUTPUT_DIR = Path("dati/petrolio/audit")
+INPUT_CSV = "data/oil/clean_corpus.csv"
+OUTPUT_DIR = Path("data/oil/audit")
 
-COL_TESTO = "testo"
+COL_TEXT = "text"
 COL_ID = "post_id"
 
-MODELLO_EMBEDDING = "all-MiniLM-L6-v2"
-SEME = 42
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+SEED = 42
 
 MIN_CLUSTER_SIZE = 25
 N_NEIGHBORS = 15
 N_COMPONENTS = 5
 
 # --- audit A ------------------------------------------------------------------
-SOGLIA_COPERTURA_SOSPETTA = 0.5
-LESSICO_SPIA = [
+SUSPICIOUS_COVERAGE_THRESHOLD = 0.5
+TELLTALE_LEXICON = [
     "oil", "crude", "barrel", "petroleum", "gas", "gasoline", "fuel", "energy",
     "opec", "saudi", "iran", "russia", "venezuela", "tanker", "pipeline",
     "refinery", "sanctions", "embargo", "strait", "hormuz", "shipping",
 ]
 
 # --- audit B ------------------------------------------------------------------
-# Descrivono il costrutto, non le parole: il modello trova i post vicini anche
-# con vocabolario diverso.
-SONDE = [
+# They describe the construct, not the words: the model finds close posts even
+# when the vocabulary differs.
+PROBES = [
     "disruption to global oil supply",
     "blocking shipping lanes and tankers",
     "sanctions on energy exports",
@@ -58,32 +58,32 @@ SONDE = [
     "rising gasoline and fuel prices",
     "agreement to increase oil output",
 ]
-N_SIMILI_PER_SONDA = 40
+N_SIMILAR_PER_PROBE = 40
 
 
 # ==============================================================================
-# UTILITA'
+# UTILITIES
 # ==============================================================================
 
-def titolo(t):
+def heading(t):
     print("\n" + "=" * 78)
     print(t)
     print("=" * 78)
 
 
-def carica_embedding(docs, outdir):
-    """Calcola gli embedding una volta sola e li mette in cache su disco."""
+def load_embeddings(docs, outdir):
+    """Computes the embeddings once and caches them on disk."""
     from sentence_transformers import SentenceTransformer
 
     cache = outdir / "embeddings.npy"
-    embedder = SentenceTransformer(MODELLO_EMBEDDING)
+    embedder = SentenceTransformer(EMBEDDING_MODEL)
 
     if cache.exists():
         emb = np.load(cache)
         if len(emb) == len(docs):
-            print("Embedding riusati dalla cache.")
+            print("Embeddings reused from the cache.")
             return embedder, emb
-        print("Cache incoerente col corpus: ricalcolo.")
+        print("Cache inconsistent with the corpus: recomputing.")
 
     emb = embedder.encode(docs, show_progress_bar=True)
     np.save(cache, emb)
@@ -94,22 +94,22 @@ def carica_embedding(docs, outdir):
 # AUDIT A — TOPIC MODELING
 # ==============================================================================
 
-def audit_topic(df, embedder, embeddings, outdir):
-    """Copertura della regola per cluster. Le stop words servono solo a rendere
-    leggibili le etichette c-TF-IDF, non influiscono sul clustering."""
-    titolo("AUDIT A — TOPIC MODELING")
+def topic_audit(df, embedder, embeddings, outdir):
+    """Rule coverage for each cluster. Stop words only make the c-TF-IDF labels
+    readable, they do not affect the clustering."""
+    heading("AUDIT A — TOPIC MODELING")
 
     from bertopic import BERTopic
     from sklearn.feature_extraction.text import CountVectorizer
     from umap import UMAP
     from hdbscan import HDBSCAN
 
-    docs = df[COL_TESTO].tolist()
+    docs = df[COL_TEXT].tolist()
 
-    modello = BERTopic(
+    model = BERTopic(
         embedding_model=embedder,
         umap_model=UMAP(n_neighbors=N_NEIGHBORS, n_components=N_COMPONENTS,
-                        min_dist=0.0, metric="cosine", random_state=SEME),
+                        min_dist=0.0, metric="cosine", random_state=SEED),
         hdbscan_model=HDBSCAN(min_cluster_size=MIN_CLUSTER_SIZE,
                               metric="euclidean",
                               cluster_selection_method="eom",
@@ -120,90 +120,90 @@ def audit_topic(df, embedder, embeddings, outdir):
         verbose=True,
     )
 
-    topics, _ = modello.fit_transform(docs, embeddings)
+    topics, _ = model.fit_transform(docs, embeddings)
     df = df.copy()
     df["topic"] = topics
 
-    quota_outlier = (np.array(topics) == -1).mean()
-    print(f"\nTopic: {len(set(topics)) - 1} | outlier: {quota_outlier:.1%}")
+    outlier_share = (np.array(topics) == -1).mean()
+    print(f"\nTopics: {len(set(topics)) - 1} | outliers: {outlier_share:.1%}")
 
     tab = (df[df["topic"] != -1]
            .groupby("topic")
            .agg(n=(COL_ID, "size"),
-                catturati=("evento_petrolio", "sum"),
-                copertura=("evento_petrolio", "mean")))
-    tab["termini"] = [
-        ", ".join(w for w, _ in (modello.get_topic(t) or [])[:6])
+                captured=("oil_event", "sum"),
+                coverage=("oil_event", "mean")))
+    tab["terms"] = [
+        ", ".join(w for w, _ in (model.get_topic(t) or [])[:6])
         for t in tab.index
     ]
 
-    print("\nCluster con la maggior parte dei post catturati dalla regola:")
-    print(tab.sort_values("catturati", ascending=False)
-          .head(12)[["n", "catturati", "copertura", "termini"]]
+    print("\nClusters with most posts captured by the rule:")
+    print(tab.sort_values("captured", ascending=False)
+          .head(12)[["n", "captured", "coverage", "terms"]]
           .to_string())
 
-    spia = tab["termini"].apply(lambda s: any(w in s for w in LESSICO_SPIA))
-    sospetti = tab[spia & (tab["copertura"] < SOGLIA_COPERTURA_SOSPETTA)]
+    telltale = tab["terms"].apply(lambda s: any(w in s for w in TELLTALE_LEXICON))
+    suspicious = tab[telltale & (tab["coverage"] < SUSPICIOUS_COVERAGE_THRESHOLD)]
 
-    print("\n--- CLUSTER SOSPETTI (lessico petrolifero, copertura bassa) ---")
-    if len(sospetti) == 0:
-        print("Nessuno.")
+    print("\n--- SUSPICIOUS CLUSTERS (oil lexicon, low coverage) ---")
+    if len(suspicious) == 0:
+        print("None.")
     else:
-        print(sospetti[["n", "catturati", "copertura", "termini"]].to_string())
+        print(suspicious[["n", "captured", "coverage", "terms"]].to_string())
 
-        righe = []
-        for t in sospetti.index:
-            sub = df[(df["topic"] == t) & (~df["evento_petrolio"])]
+        rows = []
+        for t in suspicious.index:
+            sub = df[(df["topic"] == t) & (~df["oil_event"])]
             for _, r in sub.head(10).iterrows():
-                righe.append({"topic": t, "termini": tab.loc[t, "termini"],
-                              COL_ID: r[COL_ID], "testo": r[COL_TESTO][:500]})
-        pd.DataFrame(righe).to_csv(outdir / "cluster_sospetti.csv", index=False)
+                rows.append({"topic": t, "terms": tab.loc[t, "terms"],
+                             COL_ID: r[COL_ID], "text": r[COL_TEXT][:500]})
+        pd.DataFrame(rows).to_csv(outdir / "suspicious_clusters.csv", index=False)
 
-    tab.to_csv(outdir / "copertura_per_cluster.csv")
+    tab.to_csv(outdir / "coverage_by_cluster.csv")
     return df
 
 
 # ==============================================================================
-# AUDIT B — RICERCA SEMANTICA
+# AUDIT B — SEMANTIC SEARCH
 # ==============================================================================
 
-def audit_semantico(df, embedder, embeddings, outdir):
-    """Post vicini alle sonde nello spazio degli embedding ma non catturati
-    dalla regola: i candidati falsi negativi."""
-    titolo("AUDIT B — RICERCA SEMANTICA")
+def semantic_audit(df, embedder, embeddings, outdir):
+    """Posts close to the probes in embedding space but not captured by the
+    rule: the candidate false negatives."""
+    heading("AUDIT B — SEMANTIC SEARCH")
 
     from sklearn.metrics.pairwise import cosine_similarity
 
-    emb_sonde = embedder.encode(SONDE)
-    sim = cosine_similarity(emb_sonde, embeddings)   # (n_sonde, n_doc)
+    probe_emb = embedder.encode(PROBES)
+    sim = cosine_similarity(probe_emb, embeddings)   # (n_probes, n_docs)
 
     df = df.copy()
-    df["similarita_max"] = sim.max(axis=0)
-    df["sonda_piu_vicina"] = [SONDE[i] for i in sim.argmax(axis=0)]
+    df["max_similarity"] = sim.max(axis=0)
+    df["nearest_probe"] = [PROBES[i] for i in sim.argmax(axis=0)]
 
-    righe = []
-    for i, sonda in enumerate(SONDE):
-        ordine = np.argsort(-sim[i])[:N_SIMILI_PER_SONDA]
+    rows = []
+    for i, probe in enumerate(PROBES):
+        order = np.argsort(-sim[i])[:N_SIMILAR_PER_PROBE]
 
-        for pos in ordine:
+        for pos in order:
             r = df.iloc[pos]
-            if r["evento_petrolio"]:
+            if r["oil_event"]:
                 continue
-            righe.append({
-                "sonda": sonda,
-                "similarita": round(float(sim[i, pos]), 3),
+            rows.append({
+                "probe": probe,
+                "similarity": round(float(sim[i, pos]), 3),
                 COL_ID: r[COL_ID],
                 "timestamp": r.get("timestamp_utc", None),
-                "testo": str(r[COL_TESTO])[:500],
+                "text": str(r[COL_TEXT])[:500],
             })
 
-    if righe:
-        out = pd.DataFrame(righe).drop_duplicates(subset=COL_ID)
-        out.to_csv(outdir / "falsi_negativi_candidati.csv", index=False)
-        print(f"\n{len(out)} candidati falsi negativi in "
-              f"'falsi_negativi_candidati.csv'.")
+    if rows:
+        out = pd.DataFrame(rows).drop_duplicates(subset=COL_ID)
+        out.to_csv(outdir / "candidate_false_negatives.csv", index=False)
+        print(f"\n{len(out)} candidate false negatives in "
+              f"'candidate_false_negatives.csv'.")
     else:
-        print("\nNessun candidato.")
+        print("\nNo candidates.")
 
     return df
 
@@ -216,27 +216,27 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     df = pd.read_csv(INPUT_CSV)
-    if "evento_petrolio" not in df.columns:
-        raise SystemExit("Manca 'evento_petrolio': lancia prima lo script 01.")
-    df["evento_petrolio"] = df["evento_petrolio"].astype(bool)
+    if "oil_event" not in df.columns:
+        raise SystemExit("Missing 'oil_event': run script 01 first.")
+    df["oil_event"] = df["oil_event"].astype(bool)
     df = df.reset_index(drop=True)
 
-    print(f"Corpus: {len(df)} post, di cui "
-          f"{df['evento_petrolio'].sum()} catturati dalla regola "
-          f"({df['evento_petrolio'].mean():.1%})")
+    print(f"Corpus: {len(df)} posts, of which "
+          f"{df['oil_event'].sum()} captured by the rule "
+          f"({df['oil_event'].mean():.1%})")
 
-    docs = df[COL_TESTO].astype(str).tolist()
-    embedder, embeddings = carica_embedding(docs, OUTPUT_DIR)
+    docs = df[COL_TEXT].astype(str).tolist()
+    embedder, embeddings = load_embeddings(docs, OUTPUT_DIR)
 
-    df = audit_topic(df, embedder, embeddings, OUTPUT_DIR)
-    df = audit_semantico(df, embedder, embeddings, OUTPUT_DIR)
+    df = topic_audit(df, embedder, embeddings, OUTPUT_DIR)
+    df = semantic_audit(df, embedder, embeddings, OUTPUT_DIR)
 
-    df.to_csv(OUTPUT_DIR / "corpus_con_audit.csv", index=False)
+    df.to_csv(OUTPUT_DIR / "corpus_with_audit.csv", index=False)
 
-    titolo("FATTO")
-    print("copertura_per_cluster.csv       copertura della regola per cluster")
-    print("cluster_sospetti.csv            cluster petroliferi poco coperti")
-    print("falsi_negativi_candidati.csv    post simili alle sonde ma esclusi")
+    heading("DONE")
+    print("coverage_by_cluster.csv         rule coverage per cluster")
+    print("suspicious_clusters.csv         oil clusters with low coverage")
+    print("candidate_false_negatives.csv   posts similar to the probes but excluded")
 
 
 if __name__ == "__main__":

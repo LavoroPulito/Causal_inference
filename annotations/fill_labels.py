@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
-"""Riempie il giudizio in da_leggere.csv per i post gia' giudicati nelle
-versioni salvate. A parita' di post vale la versione piu' recente."""
+"""Fills the label in to_review.csv for posts already labelled in the saved
+versions. For the same post the most recent version wins."""
 
 from pathlib import Path
 
 import pandas as pd
 
-RADICE = Path(__file__).resolve().parents[1]
-CARTELLA = RADICE / "annotazioni"
-DA_LEGGERE = RADICE / "dati" / "petrolio" / "da_leggere.csv"
+ROOT = Path(__file__).resolve().parents[1]
+FOLDER = ROOT / "annotations"
+TO_REVIEW = ROOT / "data" / "oil" / "to_review.csv"
 
-versioni = sorted((p for p in CARTELLA.glob("v*") if p.is_dir()),
+versions = sorted((p for p in FOLDER.glob("v*") if p.is_dir()),
                   key=lambda p: int(p.name[1:]))
 
-giudizi = {}
-for v in versioni:
-    ann = pd.read_csv(v / "da_leggere.csv").dropna(subset=["giudizio"])
-    giudizi.update(zip(ann["post_id"], ann["giudizio"]))
+labels = {}
+for v in versions:
+    ann = pd.read_csv(v / "to_review.csv").dropna(subset=["label"])
+    labels.update(zip(ann["post_id"], ann["label"]))
 
-df = pd.read_csv(DA_LEGGERE)
-prima = df["giudizio"].notna().sum()
-df["giudizio"] = df["giudizio"].fillna(df["post_id"].map(giudizi))
-df.to_csv(DA_LEGGERE, index=False)
+df = pd.read_csv(TO_REVIEW)
+before = df["label"].notna().sum()
+df["label"] = df["label"].fillna(df["post_id"].map(labels))
+df.to_csv(TO_REVIEW, index=False)
 
-print(f"riempiti {df['giudizio'].notna().sum() - prima} giudizi su {len(df)} righe")
+print(f"filled {df['label'].notna().sum() - before} labels out of {len(df)} rows")
