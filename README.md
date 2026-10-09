@@ -44,8 +44,9 @@ Two dependencies outside Python:
 
 - **Node.js** for `03`, which calls `npx dukascopy-node` to download prices.
 - **[Ollama](https://ollama.com)** for step D of `04`, which assigns the
-  judgement variables with a local model (`qwen2.5:14b`, temperature 0).
-  Needed only for that step, which has not been run yet.
+  judgement variables with a local model (`qwen2.5:14b-instruct-q4_K_M`,
+  temperature 0). The model needs more than 8 GB of memory:
+  `notebooks/llm_scoring_kaggle.ipynb` runs the same step on a Kaggle GPU.
 
 For the causal discovery part the project uses
 [Tigramite](https://github.com/jakobrunge/tigramite), not included here.

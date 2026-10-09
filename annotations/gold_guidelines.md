@@ -1,6 +1,6 @@
 # Gold standard annotation guidelines
 
-Version 1 — to be frozen after the trial on 20 episodes. If the guidelines change, everything is annotated again.
+Version 1 — forzen on oct 8 2026 
 
 ## Principles
 
@@ -53,15 +53,15 @@ Mixed messages: what changes the physical state prevails. If they balance out: 0
 | "the nuclear sites in Iran are completely destroyed" (argument with CNN) | 0 | 1 | 0 |
 | "If I didn't terminate… JCPOA" | 0 | 1 | 0 |
 
-## Cases to settle during the trial
+## Cases resolved during the trial
 
-- "Oil is flowing like never before" — retrospective boast (0) or signal that routes will stay open (+1)?
-- "Countries that receive Oil through Hormuz must take…" — the US stepping back from protecting the strait (−1)?
+- "Oil is flowing like never before" — signal that routes will stay open (+1)
+- "Countries that receive Oil through Hormuz must take…" — the US stepping back from protecting the strait (−1)? Yes it is. 
 
 ## Procedure
 
 1. Trial on 20 episodes, revise, freeze, start again from scratch.
 2. Random order, not chronological.
 3. Every doubt in `notes`.
-4. The 50 double episodes to a second person, with this file and without your labels. Target: weighted kappa ≥ 0.6 on direction.
+4. The 50 double episodes to a second person. Target: weighted kappa ≥ 0.6 on direction.
 5. Check: episodes labelled 0 in the rule versions must have `direction` 0.

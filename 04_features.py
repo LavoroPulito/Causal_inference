@@ -48,31 +48,30 @@ N_GOLD = 200
 N_DOUBLE_ANNOTATION = 50
 
 # --- LLM ----------------------------------------------------------------------
-OLLAMA_URL = "http://localhost:11434/api/generate"
-LLM_MODEL = "qwen2.5:14b"
+OLLAMA_URL = "http://localhost:11434"
+LLM_MODEL = "qwen2.5:14b-instruct-q4_K_M"
 TEMPERATURE = 0.0
 MAX_PROMPT_CHARS = 4000
 
-# The prompt goes in the thesis appendix together with model and temperature.
-PROMPT = """You are annotating social media posts for a study on oil markets.
+# The model gets the frozen annotation guidelines verbatim, so that it is
+# judged against the same instructions as the human annotators. The examples
+# are gold episodes and stay out: agreement would otherwise be measured on
+# answers the model has already seen.
+GUIDELINES = Path("annotations/gold_guidelines.md")
+PROMPT_SECTIONS = ["Principles", "direction", "intensity", "specificity", "Always 0"]
 
-Read the post and answer ONLY with a JSON object, no other text.
+PROMPT_HEAD = """You are annotating posts by Donald Trump for a study on how they affect the global oil market.
+Follow these annotation guidelines exactly.
 
-Fields:
-- "direction": integer from -2 to 2. Expected effect on global oil SUPPLY.
-    -2 = strong threat to supply (blockade, strikes on oil infrastructure, war)
-    -1 = mild threat (sanctions talk, rising tension)
-     0 = no clear supply implication
-    +1 = mild easing (talks, partial sanctions relief)
-    +2 = strong easing (deal reached, blockade lifted, output increase)
-- "intensity": integer 1-3.
-     1 = speculation or commentary
-     2 = threat or stated intention
-     3 = action declared as done or imminent
-- "specificity": integer 0-1.
-     1 = names a specific target, quantity, deadline or party
-     0 = generic
-- "confidence": float 0-1, your own confidence in this annotation.
+"""
+
+PROMPT_TAIL = """
+
+Answer ONLY with a JSON object with these fields, no other text:
+- "direction": integer from -2 to 2
+- "intensity": integer from 1 to 3
+- "specificity": integer, 0 or 1
+- "confidence": number from 0 to 1, your own confidence in this annotation
 
 POST:
 \"\"\"{text}\"\"\"
@@ -87,6 +86,24 @@ def heading(t):
     print("\n" + "=" * 78)
     print(t)
     print("=" * 78)
+
+
+def build_prompt(path=GUIDELINES):
+    """Prompt with the PROMPT_SECTIONS of the guidelines; '{text}' is the post."""
+    sections = re.split(r"^## ", Path(path).read_text(encoding="utf-8"), flags=re.M)[1:]
+    by_title = {s.split("\n", 1)[0].split(" (")[0].strip(): "## " + s.strip()
+                for s in sections}
+    missing = [t for t in PROMPT_SECTIONS if t not in by_title]
+    if missing:
+        raise SystemExit(f"Sections missing from {path}: {missing}")
+    body = "\n\n".join(by_title[t] for t in PROMPT_SECTIONS)
+    return PROMPT_HEAD + body + PROMPT_TAIL
+
+
+def model_digest(requests):
+    """Digest of the local model, to record exactly which weights were used."""
+    tags = requests.get(f"{OLLAMA_URL}/api/tags", timeout=10).json()["models"]
+    return next((m["digest"] for m in tags if m["name"] == LLM_MODEL), "unknown")
 
 
 def load():
@@ -244,21 +261,24 @@ def llm_scoring(df, outdir):
                     pass
         print(f"Resuming: {len(done)} episodes already annotated.")
 
-    (outdir / "llm_prompt.txt").write_text(
-        f"model: {LLM_MODEL}\ntemperature: {TEMPERATURE}\n\n{PROMPT}",
-        encoding="utf-8")
-
     todo = df[~df["episode_id"].isin(done)]
     print(f"To annotate: {len(todo)}")
+
+    prompt = build_prompt()
+    if len(todo):
+        (outdir / "llm_prompt.txt").write_text(
+            f"model: {LLM_MODEL}\ndigest: {model_digest(requests)}\n"
+            f"temperature: {TEMPERATURE}\nseed: {SEED}\n\n{prompt}",
+            encoding="utf-8")
 
     ok, errors = 0, 0
     with open(outfile, "a", encoding="utf-8") as f:
         for i, (_, r) in enumerate(todo.iterrows(), 1):
             text = r["joined_text"][:MAX_PROMPT_CHARS]
             try:
-                resp = requests.post(OLLAMA_URL, timeout=180, json={
+                resp = requests.post(f"{OLLAMA_URL}/api/generate", timeout=180, json={
                     "model": LLM_MODEL,
-                    "prompt": PROMPT.format(text=text),
+                    "prompt": prompt.replace("{text}", text),
                     "format": "json",
                     "stream": False,
                     "options": {"temperature": TEMPERATURE, "seed": SEED},
