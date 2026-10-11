@@ -29,3 +29,8 @@ pyrightconfig.json
 
 # Personal files
 PersonalNotes.md
+
+# Archives moved to and from Kaggle: copies of versioned files
+kaggle_input.zip
+kaggle_input/
+llm_output.zip

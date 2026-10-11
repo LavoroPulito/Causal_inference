@@ -9,8 +9,11 @@
     D  scoring with a local LLM         (--llm)
     E  manual vs automatic agreement    (--agreement)
 
-The variable of interest is the expected direction on supply, not sentiment;
-the unit of analysis is the episode. See report/project_status.typ.
+The main variable is the direction of the conflicts affecting crude supply,
+toward resolution or escalation (annotations/gold_guidelines.md), not sentiment;
+the unit of analysis is the episode. Step D was tested on Kaggle and is on hold:
+the judgement variables are annotated by hand in
+data/features/manual_annotations.csv. See report/project_status.typ.
 
     python 04_features.py
     python 04_features.py --novelty --gold
@@ -244,13 +247,21 @@ def export_gold(df, outdir):
 # STEP D — SCORING WITH A LOCAL LLM
 # ==============================================================================
 
-def llm_scoring(df, outdir):
+def llm_files(outdir):
+    """Output files of a model, named after it so that runs of different models
+    stay side by side."""
+    slug = LLM_MODEL.replace(":", "_").replace("/", "_")
+    return (outdir / f"llm_annotations_{slug}.jsonl",
+            outdir / f"llm_prompt_{slug}.txt")
+
+
+def llm_scoring(df, outdir, gold_only=False):
     """Automatic annotation, resumable. Model, prompt and temperature are saved
-    next to the results."""
-    heading("STEP D — SCORING WITH A LOCAL LLM")
+    next to the results. With gold_only, only the gold standard episodes."""
+    heading(f"STEP D — SCORING WITH A LOCAL LLM ({LLM_MODEL})")
     import requests
 
-    outfile = outdir / "llm_annotations.jsonl"
+    outfile, promptfile = llm_files(outdir)
     done = set()
     if outfile.exists():
         with open(outfile, encoding="utf-8") as f:
@@ -262,11 +273,14 @@ def llm_scoring(df, outdir):
         print(f"Resuming: {len(done)} episodes already annotated.")
 
     todo = df[~df["episode_id"].isin(done)]
+    if gold_only:
+        gold = pd.read_csv(outdir / "gold_annotated.csv")
+        todo = todo[todo["episode_id"].isin(gold["episode_id"])]
     print(f"To annotate: {len(todo)}")
 
     prompt = build_prompt()
     if len(todo):
-        (outdir / "llm_prompt.txt").write_text(
+        promptfile.write_text(
             f"model: {LLM_MODEL}\ndigest: {model_digest(requests)}\n"
             f"temperature: {TEMPERATURE}\nseed: {SEED}\n\n{prompt}",
             encoding="utf-8")
@@ -276,7 +290,7 @@ def llm_scoring(df, outdir):
         for i, (_, r) in enumerate(todo.iterrows(), 1):
             text = r["joined_text"][:MAX_PROMPT_CHARS]
             try:
-                resp = requests.post(f"{OLLAMA_URL}/api/generate", timeout=180, json={
+                resp = requests.post(f"{OLLAMA_URL}/api/generate", timeout=600, json={
                     "model": LLM_MODEL,
                     "prompt": prompt.replace("{text}", text),
                     "format": "json",
@@ -358,12 +372,18 @@ def agreement(df, outdir):
 # ==============================================================================
 
 def main():
+    global LLM_MODEL
     ap = argparse.ArgumentParser()
     ap.add_argument("--novelty", action="store_true")
     ap.add_argument("--gold", action="store_true")
     ap.add_argument("--llm", action="store_true")
     ap.add_argument("--agreement", action="store_true")
+    ap.add_argument("--llm-gold-only", action="store_true",
+                    help="annotate only the gold standard episodes")
+    ap.add_argument("--model", default=LLM_MODEL, help="Ollama model tag")
     args = ap.parse_args()
+
+    LLM_MODEL = args.model
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     df = load()
@@ -375,7 +395,7 @@ def main():
     if args.gold:
         export_gold(df, OUTPUT_DIR)
     if args.llm:
-        df = llm_scoring(df, OUTPUT_DIR)
+        df = llm_scoring(df, OUTPUT_DIR, gold_only=args.llm_gold_only)
     if args.agreement:
         agreement(df, OUTPUT_DIR)
 

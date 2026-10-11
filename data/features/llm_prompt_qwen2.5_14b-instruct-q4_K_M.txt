@@ -1,0 +1,53 @@
+model: qwen2.5:14b-instruct-q4_K_M
+digest: 7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6
+temperature: 0.0
+seed: 42
+
+You are annotating posts by Donald Trump for a study on how they affect the global oil market.
+Follow these annotation guidelines exactly.
+
+## Principles
+
+- The whole episode is annotated (`joined_text`).
+- Judge with what was public at that moment. No prices, no later facts.
+- Guiding question: does the episode change what is expected for crude supply in the coming days?
+- Novelty is not judged: the `novelty` feature already measures it.
+
+## direction (−2 … +2)
+
+Expected effect on **supply**. Negative = supply at risk (price expected to rise).
+
+1. Does it change expectations on supply? No → **0** (even if the post is off topic).
+2. Sign: threat, escalation, sanctions, blockades → negative. Agreements, ceasefires, reopened routes, more output → positive.
+3. Strength: **±2** if it affects physical flows (Hormuz closed/reopened, attack on infrastructure, ceasefire concluded); **±1** if it affects probabilities (negotiations, demands, generic threats, sanctions on third parties).
+
+Mixed messages: what changes the physical state prevails. If they balance out: 0 and a note.
+
+## intensity (1 … 3)
+
+- **1** comment, opinion, forecast
+- **2** threat, ultimatum, demand, intention
+- **3** action done, or imminent with a precise moment ("tonight", "within 48 hours")
+
+## specificity (0 / 1)
+
+**1** if it names at least one of: a specific place, facility or ship; a quantity; a deadline; a specific measure (tariff, agreement).
+
+**Convention:** if `direction` = 0, then `intensity` = 1 and `specificity` = 0.
+
+## Always 0
+
+- Actor or mechanism mentioned in passing in a post about something else.
+- Polls, linked op-eds, arguments about facts already known.
+- Military facts unrelated to supply (drug trafficking, drones over Poland).
+- Comments on prices that have already moved.
+- Greenland.
+
+Answer ONLY with a JSON object with these fields, no other text:
+- "direction": integer from -2 to 2
+- "intensity": integer from 1 to 3
+- "specificity": integer, 0 or 1
+- "confidence": number from 0 to 1, your own confidence in this annotation
+
+POST:
+"""{text}"""

@@ -68,7 +68,7 @@ The work is split into numbered scripts, each reading the output of the previous
 
 / `03`  prices: Downloads the one-minute price series. On hold, pending a decision on which series to use.
 
-/ `04`  features: Measures each episode: time, length, emphasis, novelty with respect to recent episodes, and the variables that require reading (expected direction on supply, intensity, specificity).
+/ `04`  features: Measures each episode: time, length, emphasis, novelty with respect to recent episodes, and the variables that require reading: the direction of the conflicts affecting supply, intensity, specificity. These are annotated by hand.
 
 Two support folders: `annotations/` keeps every version of the rule together with the annotated sample used to evaluate it; `query/` holds read-only scripts to query the data.
 
@@ -86,7 +86,7 @@ The features must be frozen before looking at prices: tuning them on returns wou
   [01 selection], [done, rule #n.versions.last().version], [#thou(n.events) events, #thou(n.episodes) episodes],
   [02 audit], [done], [#n.audit.topics clusters, #n.audit.false_negatives candidate false negatives],
   [03 prices], [on hold], [test on March 2025],
-  [04 features], [steps A, B, C], [#n.feature_columns columns, gold standard of #n.gold episodes],
+  [04 features], [A, B, C done; D on hold], [#n.feature_columns columns; #n.manual.annotated of #n.manual.episodes episodes annotated],
   bottomrule,
 )
 
@@ -215,7 +215,7 @@ With the current version the _boundary_ counts #thou(n.boundary) posts. The esti
 
 The rule errs more by excess than by omission: Trump also uses the keywords to attack political opponents. On 482 posts annotated across all versions, proximity constraints between actor and mechanism (same sentence, within 20 words) remove almost as many relevant posts as irrelevant ones. False positives are not a lexical problem: in "Strong Majority Backs Trump in Stopping Iran's Nuclear Ambitions" actor and mechanism are adjacent, and it is the purpose of the post that makes it irrelevant.
 
-A semantic classifier (logistic regression on embeddings) trained on the same 482 labels separates relevant and irrelevant posts with an AUC of 0.92 in cross-validation. Used as a second stage, it raises precision _inside_ from 80% to 87% while losing 6 relevant posts out of 217. It is an open decision (section 10).
+A semantic classifier (logistic regression on embeddings) trained on the same 482 labels separates relevant and irrelevant posts with an AUC of 0.92 in cross-validation. Used as a second stage, it raises precision _inside_ from 80% to 87% while losing 6 relevant posts out of 217. It is an open decision (@decisions).
 
 = Unsupervised audit
 
@@ -264,7 +264,7 @@ Open questions:
 
 = Features
 
-`episode_features.parquet`: #n.episodes episodes, #n.feature_columns columns. Steps A (deterministic features), B (novelty) and C (gold standard sample) are computed.
+`episode_features.parquet`: #n.episodes episodes, #n.feature_columns columns. Steps A (deterministic features), B (novelty) and C (gold standard sample) are computed. Step D, automatic annotation with a language model, was tested and is on hold (@kaggle).
 
 #sub[Novelty]
 
@@ -275,9 +275,48 @@ with $e_i$ the embedding of the episode text. Median #n.novelty.median, 10th per
 
 #sub[Gold standard]
 
-#n.gold episodes exported instead of 200: the quota per quarter is fixed and quarters with few episodes do not fill it. Annotation follows `annotations/gold_guidelines.md`. Before annotating, reposts of his own posts should be removed.
+#n.gold episodes, sampled by quarter, annotated by hand following `annotations/gold_guidelines.md`. They are 145 rather than 200 because the quota per quarter is fixed and quarters with few episodes do not fill it.
 
-= Decisions to take together
+The guidelines changed during the work. Version 1 asked for the expected effect on supply and treated claims of victory as known facts, hence 0. Annotating, it became clear that several kinds of post carry a signal on where the conflict is going, and they were labelled as positive. Version 2 (9 October 2026) describes the criteria actually applied: direction measures whether the conflicts affecting crude supply are moving toward resolution (positive) or escalation (negative). Claims that the war is won, US control of the Strait of Hormuz, and envoys or meetings aimed at peace count as positive; statements that Iran will never have a nuclear weapon count as negative.
+
+The double annotation of 50 gold episodes by a second person is postponed: without it, there is no measure of how far two people agree on the same guidelines.
+
+#sub[Manual annotation]
+
+`data/features/manual_annotations.csv` holds all #n.manual.episodes episodes: the gold standard ones, already annotated, followed by the others in random order. #n.manual.annotated are annotated so far.
+
+= Automatic annotation: tests on Kaggle <kaggle>
+
+The judgement variables were meant to be assigned by a language model running locally, validated against the gold standard, so that only the 145 gold episodes would need reading. Three runs were made on Kaggle, with Ollama on two Tesla T4 GPUs (16 GB each), temperature 0 and seed 42. The prompt contains the annotation guidelines, read from `annotations/gold_guidelines.md`, without the examples: they are gold episodes, and the model would see the right answers.
+
+Agreement with the manual labels is measured on the 145 gold episodes with Cohen's kappa, weighted quadratically: a disagreement counts by the square of its distance, so confusing −2 with +2 weighs sixteen times as much as confusing −1 with −2. The model was to be used above 0.6, and with caution between 0.4 and 0.6.
+
+#grid-table(
+  columns: 8,
+  align: (left, left, center, right, right, right, right, right),
+  toprule,
+  [], [], [], table.cell(colspan: 3, align: center)[Weighted kappa], [Sign], [Labels 0],
+  [Run], [Qwen2.5], [Guidelines], [direction], [intensity], [specificity], [reversals], [given a direction],
+  midrule,
+  [1], [14B], [v1], [0.43], [0.51], [0.40], [10], [2],
+  [2], [32B], [v1], [0.43], [0.44], [0.37], [13], [6],
+  [3], [32B], [v2], [0.51], [0.45], [0.40], [21], [22],
+  bottomrule,
+)
+
+Both models are quantized to 4 bits. A sign reversal is an episode with a direction in the manual annotation that the model labels with the opposite sign; there are 97 such episodes in the gold. The 32B model takes about 6 seconds per episode.
+
+- *The size of the model does not help.* With the same guidelines, the 14B and the 32B models reach the same kappa, 0.43. The 14B model is the most cautious: it sets 57% of the corpus to 0, against 33% in the manual annotation.
+- *Version 2 of the guidelines raises the kappa to 0.51*, mostly because the model recognises more positive episodes: 28 of 48, against 17 with version 1. But sign reversals rise to 21 of 97, and 22 of the 48 episodes labelled 0 receive a direction.
+- *The reversals go mostly one way*: 17 of the 21 are de-escalation read as escalation. In run 1, "we consider winding down our great Military efforts" is labelled −2: the model reacts to military vocabulary rather than to where the message points.
+
+A reversed sign is worse than noise. Direction enters the event study with its sign, so a reversal subtracts effect instead of diluting it, and the kappa understates the damage. The confidence declared by the model cannot be used to filter its answers: it is 0.98 on right and wrong answers alike.
+
+Two caveats on the numbers. Version 2 of the guidelines was written after annotating the gold, to describe it, so the kappa of run 3 is somewhat optimistic. And the gold has a single annotator, so there is no ceiling to compare the model against.
+
+Automatic annotation is on hold: the remaining episodes are annotated by hand. The output of run 1 is in `data/features/`, the logs of runs 2 and 3 in `notebooks/logs/`, and `notebooks/llm_scoring_kaggle.ipynb` reproduces them.
+
+= Decisions to take together <decisions>
 
 + *The price series* (section 8). Until it is decided, the dependent variable does not exist.
 + *Rule or rule plus classifier.* The semantic second stage improves precision, but the definition of event becomes what the model learned from 482 examples, and it must be frozen and declared like a prompt.
@@ -289,12 +328,17 @@ with $e_i$ the embedding of the episode text. Median #n.novelty.median, 10th per
 + Remove reposts of his own posts during cleaning; add a column distinguishing reposts of other accounts.
 + Make the double-post filter conditional on the presence of text.
 + Extend the term lists for Russia/Ukraine and Venezuela, the two gaps found by the audit.
-+ Fix the gold standard export to reach 200 episodes; annotate it, run the LLM scoring, measure the weighted kappa.
++ Annotate by hand the remaining episodes in `data/features/manual_annotations.csv`, then bring the manual variables into `episode_features.parquet`.
++ Have a second person annotate the 50 double episodes of the gold standard, before the final version.
 + Freeze the features and record the date.
 
 = Change log
 
 #let entry(date, text) = [/ #date: #text]
+
+#entry[11/10/2026][Automatic annotation on hold. Three runs of local language models on Kaggle (Qwen2.5 14B and 32B) did not reach sufficient agreement with the manually annotated gold standard: the best reached a weighted kappa of 0.51 on direction, but reversed its sign in about one directional episode out of five (@kaggle). The remaining episodes will be annotated manually.]
+
+#entry[9/10/2026][Gold standard annotated: 145 episodes. Annotation guidelines version 2: direction measures where the conflicts affecting supply are heading.]
 
 #entry[5/10/2026][Repository translated into English: files, folders, data columns and the values `dentro`/`confine` (now `inside`/`boundary`). Data contents unchanged. Old-to-new names in `GLOSSARY.md`.]
 

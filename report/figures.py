@@ -42,6 +42,7 @@ posts = load("posts")
 corpus = load("corpus")
 episodes = load("episodes")
 feat = pd.read_parquet(ROOT / "data" / "features" / "episode_features.parquet")
+manual = pd.read_csv(ROOT / "data" / "features" / "manual_annotations.csv")
 
 # cleaning: the counts are the ones printed by 01
 raw = pd.read_csv(ROOT / "data" / "truth_posts.csv")
@@ -134,7 +135,9 @@ figures = {
                 for k, q in [("p10", .1), ("median", .5), ("p90", .9)]},
     "novelty_low": int((feat["novelty"] < 0.15).sum()),
     "novelty_low_rt": int(((feat["novelty"] < 0.15) & feat["joined_text"].str.startswith("RT")).sum()),
-    "gold": len(pd.read_csv(ROOT / "data" / "features" / "gold_to_annotate.csv")),
+    "gold": len(pd.read_csv(ROOT / "data" / "features" / "gold_annotated.csv")),
+    "manual": {k: int(v) for k, v in [
+        ("episodes", len(manual)), ("annotated", manual["direction"].notna().sum())]},
     "feature_columns": feat.shape[1],
     "versions": versions,
 }

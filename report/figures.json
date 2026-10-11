@@ -1,5 +1,5 @@
 {
-  "date": "05/10/2026",
+  "date": "11/10/2026",
   "posts": 13014,
   "posts_ucsb": 8619,
   "posts_cnn": 4395,
@@ -80,6 +80,10 @@
   "novelty_low": 30,
   "novelty_low_rt": 22,
   "gold": 145,
+  "manual": {
+    "episodes": 323,
+    "annotated": 145
+  },
   "feature_columns": 20,
   "versions": [
     {
