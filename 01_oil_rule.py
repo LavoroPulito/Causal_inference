@@ -12,11 +12,13 @@
 The reasons behind each choice are in report/project_status.typ.
 
     python 01_oil_rule.py
+    python 01_oil_rule.py --no-sample     keeps the current to_review.csv
 
 Input: data/truth_posts.csv
 """
 
 import re
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -370,6 +372,11 @@ def intervals(ep):
 # ==============================================================================
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--no-sample", action="store_true",
+                    help="do not redraw the manual review sample")
+    args = ap.parse_args()
+
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     df = pd.read_csv(INPUT_CSV)
@@ -383,7 +390,8 @@ def main():
 
     df = clean(df)
     df = apply_rule(df)
-    sample(df, OUTPUT_DIR)
+    if not args.no_sample:
+        sample(df, OUTPUT_DIR)
 
     events = df[df["oil_event"]].copy()
     if len(events) < 2:

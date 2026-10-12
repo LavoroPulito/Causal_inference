@@ -34,3 +34,6 @@ PersonalNotes.md
 kaggle_input.zip
 kaggle_input/
 llm_output.zip
+
+# Latest CNN archive, overwritten at every update: the corpus is versioned instead
+cache_cnn/truth_archive_latest.json

@@ -58,9 +58,9 @@ The question is whether Trump's posts that signal a risk to crude supply move th
 
 The work is split into numbered scripts, each reading the output of the previous one.
 
-/ `00`  corpus: Downloads the posts from the archive of the American Presidency Project (UCSB). The publication time is not read from the page but derived from the post identifier, which contains it by construction. The time printed on the page is only a check.
+/ `00`  corpus: Downloads the posts from the archive of the American Presidency Project (UCSB), up to 31 July 2026. The publication time is not read from the page but derived from the post identifier, which contains it by construction. The time printed on the page is only a check.
 
-/ `00b`  integration: Adds the posts UCSB does not have, taken from CNN's public archive. Here too the time comes from the identifier, extracted from the post link: the two sources are treated the same way.
+/ `00b`  integration: Adds the posts UCSB does not have, taken from CNN's public archive. Here too the time comes from the identifier, extracted from the post link: the two sources are treated the same way. After 31 July 2026 CNN is the only source: it is updated within hours, while UCSB publishes with days of delay, and it contains all the UCSB posts that pass the rule.
 
 / `01`  selection: Discards what has no text content, applies the rule that defines an oil event, groups close posts into episodes and measures how long the observation windows can be. The episode is the unit of analysis.
 
@@ -69,6 +69,8 @@ The work is split into numbered scripts, each reading the output of the previous
 / `03`  prices: Downloads the one-minute price series. On hold, pending a decision on which series to use.
 
 / `04`  features: Measures each episode: time, length, emphasis, novelty with respect to recent episodes, and the variables that require reading: the direction of the conflicts affecting supply, intensity, specificity. These are annotated by hand.
+
+/ `update`  update: Runs `00b`, `01` and `04` in sequence and adds the new episodes to the manual annotation file. It is meant to be run daily, because the situation keeps changing.
 
 Two support folders: `annotations/` keeps every version of the rule together with the annotated sample used to evaluate it; `query/` holds read-only scripts to query the data.
 
@@ -283,7 +285,9 @@ The double annotation of 50 gold episodes by a second person is postponed: witho
 
 #sub[Manual annotation]
 
-`data/features/manual_annotations.csv` holds all #n.manual.episodes episodes: the gold standard ones, already annotated, followed by the others in random order. #n.manual.annotated are annotated so far.
+`data/features/manual_annotations.csv` holds all #n.manual.episodes episodes: the gold standard ones, then the others in random order, then those added by the updates in chronological order. #n.manual.annotated are annotated so far.
+
+The file is not matched to the episodes through `episode_id`, which is a running number: a post inserted before the end of the corpus would shift every later number, and the judgements would end up on the wrong episodes without any error. The key is `first_post`, the identifier of the first post of the episode, which does not change. When an update adds a post to an episode already annotated (a post within 30 minutes of the last one), the text is updated, the judgements are kept and the `text_changed` column marks the episode for review.
 
 = Automatic annotation: tests on Kaggle <kaggle>
 
@@ -321,6 +325,7 @@ Automatic annotation is on hold: the remaining episodes are annotated by hand. T
 + *The price series* (section 8). Until it is decided, the dependent variable does not exist.
 + *Rule or rule plus classifier.* The semantic second stage improves precision, but the definition of event becomes what the model learned from 482 examples, and it must be frozen and declared like a prompt.
 + *The boundary of the topic.* Pump prices, market comments, Greenland: today they are excluded by the annotation criterion. To be confirmed.
++ *The corpus cutoff date.* Every update changes the counts in this report. Before writing the results, the corpus must be closed at a fixed date.
 + *The Eastern-time week.* Declared exception in the validator or documented anomaly.
 
 = Planned work
@@ -335,6 +340,8 @@ Automatic annotation is on hold: the remaining episodes are annotated by hand. T
 = Change log
 
 #let entry(date, text) = [/ #date: #text]
+
+#entry[12/10/2026][Script `update.py` for daily updates: new posts from CNN, rule, features, new episodes added to the manual annotation file. The annotations are matched to the episodes through the first post instead of `episode_id`. The cache of the text embeddings is now tied to the texts, not to the number of episodes; `most_similar_episode` holds an `episode_id` instead of a row number. Corpus updated to 12 October 2026: 7 new episodes to annotate.]
 
 #entry[11/10/2026][Automatic annotation on hold. Three runs of local language models on Kaggle (Qwen2.5 14B and 32B) did not reach sufficient agreement with the manually annotated gold standard: the best reached a weighted kappa of 0.51 on direction, but reversed its sign in about one directional episode out of five (@kaggle). The remaining episodes will be annotated manually.]
 

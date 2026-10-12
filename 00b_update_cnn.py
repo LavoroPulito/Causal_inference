@@ -8,7 +8,6 @@ missing from the corpus. The timestamp is derived from the ID as in 00.
 
 import html
 import json
-from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -30,7 +29,7 @@ def repair(text):
 
 
 CACHE_DIR.mkdir(exist_ok=True)
-raw = CACHE_DIR / f"truth_archive_{date.today().isoformat()}.json"
+raw = CACHE_DIR / "truth_archive_latest.json"
 r = requests.get(URL, headers={"User-Agent": USER_AGENT}, timeout=120)
 r.raise_for_status()
 raw.write_bytes(r.content)

@@ -26,6 +26,7 @@ scipy, requests; Ollama for step D.
 
 import re
 import json
+import hashlib
 import argparse
 from pathlib import Path
 
@@ -165,15 +166,20 @@ def novelty(df, outdir):
     from sentence_transformers import SentenceTransformer
     from sklearn.metrics.pairwise import cosine_similarity
 
+    # the cache is valid only for the same texts: an update can lengthen the
+    # last episode without changing the number of episodes
     cache = outdir / "episode_embeddings.npy"
-    emb_model = SentenceTransformer(EMBEDDING_MODEL)
+    stamp = outdir / "episode_embeddings.sha256"
+    texts = df["joined_text"].tolist()
+    digest = hashlib.sha256("\0".join(texts).encode("utf-8")).hexdigest()
 
-    if cache.exists() and len(np.load(cache)) == len(df):
+    if cache.exists() and stamp.exists() and stamp.read_text().strip() == digest:
         emb = np.load(cache)
         print("Embeddings reused from the cache.")
     else:
-        emb = emb_model.encode(df["joined_text"].tolist(), show_progress_bar=True)
+        emb = SentenceTransformer(EMBEDDING_MODEL).encode(texts, show_progress_bar=True)
         np.save(cache, emb)
+        stamp.write_text(digest)
 
     window = pd.Timedelta(days=NOVELTY_WINDOW_DAYS)
     values, similar = [], []
@@ -187,7 +193,7 @@ def novelty(df, outdir):
             continue
         sim = cosine_similarity(emb[i:i + 1], emb[prev])[0]
         values.append(float(1 - sim.max()))
-        similar.append(int(prev[int(sim.argmax())]))
+        similar.append(int(df.loc[prev[int(sim.argmax())], "episode_id"]))
 
     df = df.copy()
     df["novelty"] = values

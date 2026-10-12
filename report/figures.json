@@ -1,22 +1,22 @@
 {
-  "date": "11/10/2026",
-  "posts": 13014,
+  "date": "12/10/2026",
+  "posts": 13238,
   "posts_ucsb": 8619,
-  "posts_cnn": 4395,
-  "period_end": "01/10/2026",
+  "posts_cnn": 4619,
+  "period_end": "12/10/2026",
   "verified_ucsb": 0.981,
   "cleaning": {
-    "placeholders": 4311,
-    "doubles": 563,
-    "boilerplate": 975,
-    "short": 1215
+    "placeholders": 4388,
+    "doubles": 578,
+    "boilerplate": 987,
+    "short": 1231
   },
-  "clean_corpus": 5950,
-  "with_actor": 782,
-  "with_mechanism": 892,
-  "events": 368,
-  "weak": 141,
-  "boundary": 938,
+  "clean_corpus": 6054,
+  "with_actor": 796,
+  "with_mechanism": 905,
+  "events": 375,
+  "weak": 145,
+  "boundary": 951,
   "recall": 0.81,
   "audit": {
     "corpus": 5950,
@@ -64,25 +64,25 @@
     ],
     "false_negatives": 95
   },
-  "episodes": 323,
+  "episodes": 330,
   "episodes_multipost": 41,
-  "contaminated_60": 0.056,
-  "contaminated_120": 0.137,
-  "us_market": 0.303,
-  "weekend": 0.272,
+  "contaminated_60": 0.055,
+  "contaminated_120": 0.134,
+  "us_market": 0.312,
+  "weekend": 0.27,
   "wti_coverage": 0.681,
-  "mde": 0.156,
+  "mde": 0.154,
   "novelty": {
     "p10": 0.175,
     "median": 0.381,
-    "p90": 0.637
+    "p90": 0.638
   },
   "novelty_low": 30,
   "novelty_low_rt": 22,
   "gold": 145,
   "manual": {
-    "episodes": 323,
-    "annotated": 145
+    "episodes": 330,
+    "annotated": 323
   },
   "feature_columns": 20,
   "versions": [

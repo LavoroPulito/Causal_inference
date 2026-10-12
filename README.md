@@ -11,11 +11,23 @@ Each step reads the output of the previous one.
 | | | |
 |---|---|---|
 | `00_scrape_ucsb.py` | corpus | downloads the posts and derives the timestamp from the identifier |
-| `00b_update_cnn.py` | integration | same as 00, but takes the posts from the CNN archive |
+| `00b_update_cnn.py` | integration | same as 00, but takes the posts from the CNN archive; the only source after July 2026 |
 | `01_oil_rule.py` | selection | cleaning, actor × mechanism rule, episodes, windows |
 | `02_bertopic_audit.py` | audit | tests the rule with topic modeling and semantic search |
 | `03_download_prices.py` | prices | one-minute series from Dukascopy — on hold, see the report |
 | `04_features.py` | measurement | features per episode: time, emphasis, novelty, direction |
+| `update.py` | update | runs 00b, 01, 04 and adds the new episodes to the manual annotation file |
+
+To bring the dataset up to date with the latest posts:
+
+```bash
+python update.py
+```
+
+New episodes are appended to `data/features/manual_annotations.csv` with empty
+judgements. Annotations are matched to episodes through `first_post`, so they
+survive any renumbering; an annotated episode whose text changed is marked in
+`text_changed`.
 
 Outputs go to `data/`. Downloaded HTML pages are cached in `cache_ucsb/`, so a
 rerun does not hit the server again. `annotations/` keeps every version of the
