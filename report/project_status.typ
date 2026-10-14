@@ -72,6 +72,8 @@ The work is split into numbered scripts, each reading the output of the previous
 
 / `update`  update: Runs `00b`, `01` and `04` in sequence and adds the new episodes to the manual annotation file. It is meant to be run daily, because the situation keeps changing.
 
+/ `update`  update: Brings the dataset up to date with the latest posts. It runs `00b`, `01` and `04` in sequence and appends the new episodes to the manual annotation file, with the judgements empty. Annotations are matched to the episodes through the identifier of their first post, so they stay attached to the right episode even if the numbering changes; an annotated episode whose text has changed is marked for review.
+
 Two support folders: `annotations/` keeps every version of the rule together with the annotated sample used to evaluate it; `query/` holds read-only scripts to query the data.
 
 The features must be frozen before looking at prices: tuning them on returns would mean building the result instead of measuring it.
@@ -342,6 +344,8 @@ Automatic annotation is on hold: the remaining episodes are annotated by hand. T
 #let entry(date, text) = [/ #date: #text]
 
 #entry[12/10/2026][Script `update.py` for daily updates: new posts from CNN, rule, features, new episodes added to the manual annotation file. The annotations are matched to the episodes through the first post instead of `episode_id`. The cache of the text embeddings is now tied to the texts, not to the number of episodes; `most_similar_episode` holds an `episode_id` instead of a row number. Corpus updated to 12 October 2026: 7 new episodes to annotate.]
+
+#entry[12/10/2026][Script `update.py` to update the dataset with the latest posts.]
 
 #entry[11/10/2026][Automatic annotation on hold. Three runs of local language models on Kaggle (Qwen2.5 14B and 32B) did not reach sufficient agreement with the manually annotated gold standard: the best reached a weighted kappa of 0.51 on direction, but reversed its sign in about one directional episode out of five (@kaggle). The remaining episodes will be annotated manually.]
 
