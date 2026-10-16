@@ -142,5 +142,74 @@ figures = {
     "versions": versions,
 }
 
+# --- prices and first runs -----------------------------------------------------
+# The Databento series are licensed and not versioned: without them in
+# data/prices/databento/ the "databento" block is left empty.
+SERIES = ["wti", "brent", "gold", "sp500", "eurusd"]
+databento = {}
+for name in SERIES:
+    f = ROOT / "data" / "prices" / "databento" / f"{name}.parquet"
+    if f.exists():
+        d = pd.read_parquet(f)
+        databento[name] = {
+            "bars": len(d),
+            "start": f"{d['t'].min():%d/%m/%Y}",
+            "end": f"{d['t'].max():%d/%m/%Y}",
+            "rolls": int((d["instrument_id"].diff() != 0).sum()) - 1,
+        }
+
+
+def direction_coefficients(label):
+    """Direction coefficient of the simple specification, per horizon."""
+    f = ROOT / "data" / "event_study" / label / "regressions.csv"
+    if not f.exists():
+        return []
+    r = pd.read_csv(f)
+    r = r[(r["variable"] == "direction") & (r["spec"] == "simple")]
+    out = []
+    for h, g in r.groupby("horizon"):
+        row = {"horizon": int(h)}
+        for y, gy in g.groupby("y"):
+            row[y] = {"coef": round(float(gy["coef"].iloc[0]), 3),
+                      "se": round(float(gy["se"].iloc[0]), 3),
+                      "p": round(float(gy["p"].iloc[0]), 3),
+                      "n": int(gy["n"].iloc[0])}
+        out.append(row)
+    return out
+
+
+def pcmci_post_links(label):
+    f = ROOT / "data" / "causal_discovery" / label / "pcmci_links.csv"
+    if not f.exists():
+        return []
+    r = pd.read_csv(f)
+    r = r[(r["cause"] == "post") | (r["effect"] == "post")]
+    return [{"cause": x.cause, "effect": x.effect, "lag": int(x.lag_min),
+             "link": x.link, "val": round(float(x.val), 3), "p": round(float(x.p), 4)}
+            for x in r.itertuples()]
+
+
+def cdnod_edges(label):
+    f = ROOT / "data" / "causal_discovery" / label / "cdnod_edges_fisherz.txt"
+    return f.read_text().split("\n")[:-1] if f.exists() else []
+
+
+truth = json.loads((ROOT / "data" / "prices" / "synthetic" / "truth.json").read_text())
+power = pd.read_csv(ROOT / "data" / "event_study" / "power" / "power.csv")
+
+figures["prices"] = {"databento": databento}
+figures["tests"] = {
+    "truth": {"wti": truth["wti_car_per_direction_point_pct"],
+              "gold": truth["gold_car_per_direction_point_pct"],
+              "crisis_multiplier": truth["crisis_multiplier"]},
+    "power": [{"effect": float(x.effect_pct_at_2), "true": round(float(x.true_coef), 3),
+               "estimated": round(float(x.mean_coef), 3), "power": float(x.power)}
+              for x in power.itertuples()],
+    "event_study": {label: direction_coefficients(label)
+                    for label in ["synthetic_wti", "synthetic_gold"] + SERIES},
+    "pcmci": {label: pcmci_post_links(label) for label in ["synthetic", "databento"]},
+    "cdnod": {label: cdnod_edges(label) for label in ["synthetic", "databento"]},
+}
+
 (HERE / "figures.json").write_text(json.dumps(figures, indent=2, ensure_ascii=False))
 print(f"written {HERE / 'figures.json'}")

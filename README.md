@@ -14,8 +14,13 @@ Each step reads the output of the previous one.
 | `00b_update_cnn.py` | integration | same as 00, but takes the posts from the CNN archive; the only source after July 2026 |
 | `01_oil_rule.py` | selection | cleaning, actor × mechanism rule, episodes, windows |
 | `02_bertopic_audit.py` | audit | tests the rule with topic modeling and semantic search |
-| `03_download_prices.py` | prices | one-minute series from Dukascopy — on hold, see the report |
+| `03_download_prices.py` | prices | one-minute quotes from Dukascopy: test on March 2025, full download refused by the server |
+| `03c_download_databento.py` | prices | one-minute futures from Databento: WTI, Brent, gold, S&P 500, EUR/USD (licensed, not versioned) |
+| `03b_synthetic_prices.py` | test prices | synthetic WTI, gold and EUR/USD with a known effect of the episodes, to test 06 and 07 |
 | `04_features.py` | measurement | features per episode: time, emphasis, novelty, direction |
+| `05_episode_table.py` | table | one row per episode: features and manual judgements, dated |
+| `06_event_study.py` | event study | abnormal returns after each episode; synthetic series and power test until the price series is chosen |
+| `07_causal_discovery.py` | causal discovery | PCMCI+ on a 5-minute grid, CD-NOD on the episodes |
 | `update.py` | update | runs 00b, 01, 04 and adds the new episodes to the manual annotation file |
 
 To bring the dataset up to date with the latest posts:
@@ -27,7 +32,8 @@ python update.py
 New episodes are appended to `data/features/manual_annotations.csv` with empty
 judgements. Annotations are matched to episodes through `first_post`, so they
 survive any renumbering; an annotated episode whose text changed is marked in
-`text_changed`.
+`text_changed`.\
+The posts were manually annotated following the guidelines in [`gold_guidelines.md`](annotations/gold_guidelines.md)
 
 Outputs go to `data/`. Downloaded HTML pages are cached in `cache_ucsb/`, so a
 rerun does not hit the server again. `annotations/` keeps every version of the
@@ -46,7 +52,8 @@ and timestamp format inference is stricter than in pandas 2.
 python3.14 -m venv env_tigramite
 source env_tigramite/bin/activate
 pip install pandas numpy pyarrow requests beautifulsoup4 lxml \
-            bertopic sentence-transformers scikit-learn umap-learn hdbscan scipy
+            bertopic sentence-transformers scikit-learn umap-learn hdbscan scipy \
+            tigramite causal-learn
 ```
 
 Reference versions: pandas 3.0.5, numpy 2.5.1, pyarrow 25.0.1,
@@ -61,5 +68,6 @@ Two dependencies outside Python:
   manual annotation was not sufficient: the variables are annotated by hand in
   `data/features/manual_annotations.csv`. See the report for the results.
 
-For the causal discovery part the project uses
-[Tigramite](https://github.com/jakobrunge/tigramite), not included here.
+For the causal discovery part (`07`) the project uses
+[Tigramite](https://github.com/jakobrunge/tigramite) for PCMCI+ and
+[causal-learn](https://github.com/py-why/causal-learn) for CD-NOD.

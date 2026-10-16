@@ -18,6 +18,7 @@ Dependencies: pandas, numpy, pyarrow; Node.js for npx dukascopy-node.
 """
 
 import sys
+import time
 import shutil
 import argparse
 import subprocess
@@ -33,7 +34,7 @@ import pandas as pd
 # ==============================================================================
 
 START_DATE = date(2024, 12, 1)
-END_DATE = date(2026, 8, 1)       # exclusive
+END_DATE = date.today()           # exclusive
 
 TIMEFRAME = "m1"
 PRICE = "bid"
@@ -51,7 +52,13 @@ INSTRUMENTS = {
 }
 
 GAP_MINUTES = 15
-PAUSE_BETWEEN_CALLS = 1.0
+PAUSE_BETWEEN_CALLS = 30.0             # seconds between months
+
+# The server answers 429 to fast requests: small batches, long pauses
+BATCH_SIZE = 5
+BATCH_PAUSE_MS = 3000
+RETRIES = 5
+RETRY_PAUSE_MS = 20000
 
 
 # ==============================================================================
@@ -84,6 +91,11 @@ def command(instrument_id, frm, to, outdir):
         "-f", "csv",
         "-dir", str(outdir),
         "-v", "true",
+        "-bs", str(BATCH_SIZE),
+        "-bp", str(BATCH_PAUSE_MS),
+        "-r", str(RETRIES),
+        "-rp", str(RETRY_PAUSE_MS),
+        "-re",
     ]
 
 
@@ -92,7 +104,8 @@ def command(instrument_id, frm, to, outdir):
 # ==============================================================================
 
 def download(name, instrument_id, dry_run=False):
-    """One month at a time; blocks already present are skipped."""
+    """One month at a time; blocks already present are skipped, except the
+    current month, which is still incomplete and is downloaded again."""
     outdir = RAW_DIR / name
     outdir.mkdir(parents=True, exist_ok=True)
 
@@ -100,7 +113,15 @@ def download(name, instrument_id, dry_run=False):
     failed = []
 
     for frm, to in months(START_DATE, END_DATE):
-        present = list(outdir.glob(f"*{frm.isoformat()}*"))
+        # the start date sits between dashes: the previous month's file ends
+        # with the same date
+        present = list(outdir.glob(f"*-{frm.isoformat()}-*.csv"))
+        incomplete = to == END_DATE and END_DATE.day != 1
+        if not dry_run:
+            for f in present:
+                if f.stat().st_size == 0 or incomplete:
+                    f.unlink()
+            present = [f for f in present if f.exists()]
         if present and not dry_run:
             print(f"  {frm:%Y-%m}  already present, skipping")
             continue
@@ -112,18 +133,27 @@ def download(name, instrument_id, dry_run=False):
             continue
 
         try:
-            r = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
-            if r.returncode != 0:
-                print(f"  {frm:%Y-%m}  ERROR\n    {r.stderr.strip()[:300]}")
-                failed.append(str(frm))
-            else:
-                print(f"  {frm:%Y-%m}  ok")
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
         except subprocess.TimeoutExpired:
             print(f"  {frm:%Y-%m}  timeout")
             failed.append(str(frm))
+            continue
         except FileNotFoundError:
             print("\nnpx not found: install Node.js.")
             sys.exit(1)
+
+        # when the server refuses (HTTP 429) dukascopy-node may still exit
+        # with 0 and write an empty file
+        saved = [f for f in outdir.glob(f"*-{frm.isoformat()}-*.csv")
+                 if f.stat().st_size > 0]
+        if r.returncode != 0 or not saved:
+            for f in outdir.glob(f"*-{frm.isoformat()}-*.csv"):
+                f.unlink()
+            print(f"  {frm:%Y-%m}  FAILED\n    {(r.stderr or r.stdout).strip()[-300:]}")
+            failed.append(str(frm))
+        else:
+            print(f"  {frm:%Y-%m}  ok  ({saved[0].stat().st_size / 1e6:.1f} MB)")
+        time.sleep(PAUSE_BETWEEN_CALLS)
 
     return failed
 

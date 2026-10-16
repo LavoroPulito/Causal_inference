@@ -1,0 +1,4 @@
+car_gold --> car_wti
+direction --> car_wti
+intensity --- specificity
+time --> novelty

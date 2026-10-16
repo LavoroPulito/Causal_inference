@@ -1,0 +1,31 @@
+{
+  "episode_table": "data/features/episode_table_2026-10-14.parquet",
+  "seed": 42,
+  "sigma_per_minute": {
+    "wti": 0.00043,
+    "gold": 0.00025,
+    "eurusd": 0.00012
+  },
+  "dollar_beta": 0.5,
+  "effect_minutes": 15,
+  "wti_car_per_direction_point_pct": -0.1,
+  "gold_car_per_direction_point_pct": -0.05,
+  "crisis_periods": [
+    [
+      "2025-06-01",
+      "2025-06-30"
+    ],
+    [
+      "2026-03-01",
+      "2026-06-30"
+    ]
+  ],
+  "crisis_multiplier": 2.0,
+  "volatility_minutes": 60,
+  "volatility_multiplier": 2.0,
+  "variables_without_effect": [
+    "intensity",
+    "specificity",
+    "novelty"
+  ]
+}

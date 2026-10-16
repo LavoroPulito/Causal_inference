@@ -7,7 +7,7 @@
 
 ## Principles
 
-- The whole episode is annotated (`joined_text`).
+- The whole episode is annotated.
 - Judge with what was public at that moment. No prices, no later facts.
 - Guiding question: does the episode signal that the conflicts affecting crude supply are moving toward resolution or toward escalation?
 - The conflicts that matter are those involving oil producers and routes: Iran and the Strait of Hormuz, Venezuela, Russia and Ukraine, the Houthis and the Red Sea.
@@ -15,7 +15,7 @@
 
 ## direction (−2 … +2)
 
-Where the conflict is heading. Positive = toward resolution: the war ending or won, an agreement, routes and oil flows reopened. Negative = toward escalation.
+Positive = toward resolution: the war ending or won, an agreement, routes and oil flows reopened. Negative = toward escalation.
 
 1. Does it say anything about where these conflicts are heading? No → **0**.
 2. Sign:

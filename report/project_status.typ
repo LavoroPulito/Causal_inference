@@ -66,13 +66,21 @@ The work is split into numbered scripts, each reading the output of the previous
 
 / `02`  audit: Tests the rule with two unsupervised methods that do not know the term lists. It measures how much the rule misses; it does not define anything.
 
-/ `03`  prices: Downloads the one-minute price series. On hold, pending a decision on which series to use.
+/ `03`  prices: Downloads one-minute quotes from Dukascopy. Used for a test on March 2025; the full download was refused by the server (@prices).
+
+/ `03b`  synthetic prices: Generates synthetic WTI, gold and EUR/USD series with a known effect of the episodes, to test the analyses.
+
+/ `03c`  prices: Downloads one-minute futures prices from Databento: WTI, Brent, gold, S&P 500, euro/dollar.
 
 / `04`  features: Measures each episode: time, length, emphasis, novelty with respect to recent episodes, and the variables that require reading: the direction of the conflicts affecting supply, intensity, specificity. These are annotated by hand.
 
-/ `update`  update: Runs `00b`, `01` and `04` in sequence and adds the new episodes to the manual annotation file. It is meant to be run daily, because the situation keeps changing.
-
 / `update`  update: Brings the dataset up to date with the latest posts. It runs `00b`, `01` and `04` in sequence and appends the new episodes to the manual annotation file, with the judgements empty. Annotations are matched to the episodes through the identifier of their first post, so they stay attached to the right episode even if the numbering changes; an annotated episode whose text has changed is marked for review.
+
+/ `05`  episode table: Joins the features with the manual annotations, one row per episode, in a dated file.
+
+/ `06`  event study: Price returns before and after each episode, regressed on the annotated variables.
+
+/ `07`  causal discovery: PCMCI+ on a regular 5-minute grid, CD-NOD on the episodes.
 
 Two support folders: `annotations/` keeps every version of the rule together with the annotated sample used to evaluate it; `query/` holds read-only scripts to query the data.
 
@@ -89,8 +97,11 @@ The features must be frozen before looking at prices: tuning them on returns wou
   [00–00b corpus], [done], [#thou(n.posts) posts up to #n.period_end],
   [01 selection], [done, rule #n.versions.last().version], [#thou(n.events) events, #thou(n.episodes) episodes],
   [02 audit], [done], [#n.audit.topics clusters, #n.audit.false_negatives candidate false negatives],
-  [03 prices], [on hold], [test on March 2025],
+  [03–03c prices], [done], [5 Databento series, synthetic series],
   [04 features], [A, B, C done; D on hold], [#n.feature_columns columns; #n.manual.annotated of #n.manual.episodes episodes annotated],
+  [05 episode table], [done], [one row per episode],
+  [06 event study], [first runs], [@runs],
+  [07 causal discovery], [first runs], [@runs],
   bottomrule,
 )
 
@@ -251,20 +262,60 @@ Minimum detectable effect, two-sided test, $alpha = 0.05$, power 0.8:
 $ "MDE" = (z_(1-alpha\/2) + z_(1-beta)) / sqrt(n) sigma = 2.802 / sqrt(n) sigma. $
 With $n = #n.episodes$: #n.mde standard deviations. On episodes with a WTI price (#pct(n.wti_coverage)): #calc.round(2.8016 / calc.sqrt(n.episodes * n.wti_coverage), digits: 3).
 
-= Price data
+= Price data <prices>
 
-On hold. Test on March 2025, files in `download/`. A bar counts as real if it is not inside a constant-price stretch of at least one hour: Dukascopy fills closed-market periods by repeating the last price.
+#sub[Dukascopy test]
 
-- *Brent*: unusable. Every Tuesday and Thursday of the month is missing, and the days present stop at 21 UTC.
-- *WTI*: covers from Sunday 22 UTC to Friday 21, with a daily break between 21 and 22. The Sunday bars before 22 are filler.
+A first test was made on March 2025 with Dukascopy, a broker that publishes its one-minute quotes for free (files in `download/`). Dukascopy fills closed-market periods by repeating the last price, so a bar counts as real only if it is not inside a constant-price stretch of at least one hour.
+
+- *Brent*: every Tuesday and Thursday of the month is missing, and the days present stop at 21 UTC.
+- *WTI*: covers from Sunday 22 UTC to Friday 21, with a daily break between 21 and 22.
 - *Gold*: same structure, downloaded for one week only.
 
-#pct(n.wti_coverage) of episodes fall at hours when WTI has a price (`query/post_coverage.py`). The `us_market_open` variable (#pct(n.us_market) of episodes) measures the equity session, not the oil one, and does not indicate how many episodes are lost.
+The download of the whole WTI series, on 14 October 2026, failed. The server answered HTTP 429 ("too many requests") and `dukascopy-node` saved empty files without reporting an error. `03` now treats an empty file as a failure and spaces out its requests. The server was still refusing requests the following day.
 
-Open questions:
-+ *WTI coverage* beyond March 2025, not verified.
-+ *Nature of the data*: these are a broker's CFD quotes, not exchange prices. Over windows of minutes the difference should be negligible, but it needs to be endorsed.
-+ *Episodes without a price*: about a third. Accept the loss, look for a more continuous instrument, or change the design for that slot?
+#sub[Databento]
+
+The series used now are futures prices from the exchanges, bought from Databento on 16 October 2026 for 21.64 \$ and downloaded with `03c`. They are one-minute bars (open, high, low, close, volume) from 24 November 2024: the week before the corpus serves for the windows of the first episodes.
+
+#let db = n.prices.databento
+#let db-row(name, label, exchange, symbol) = if name in db {
+  let s = db.at(name)
+  ([#label], [#exchange], [`#symbol`], [#thou(s.bars)], [#s.start – #s.end], [#s.rolls])
+} else { ([#label], [#exchange], [`#symbol`], [–], [–], [–]) }
+
+#grid-table(
+  columns: 6,
+  align: (left, left, left, right, left, right),
+  toprule,
+  [Series], [Exchange], [Symbol], [Bars], [Period], [Rolls],
+  midrule,
+  ..db-row("wti", [WTI crude oil], [CME (NYMEX)], "CL.v.0"),
+  ..db-row("brent", [Brent crude oil], [ICE Futures Europe], "BRN.v.0"),
+  ..db-row("gold", [Gold], [CME (COMEX)], "GC.v.0"),
+  ..db-row("sp500", [S&P 500 E-mini], [CME], "ES.v.0"),
+  ..db-row("eurusd", [Euro / dollar], [CME], "6E.v.0"),
+  bottomrule,
+)
+
+A future expires every month, so a series over two years has to pass from one contract to the next. The symbols ending in `.v.0` follow, at any moment, the contract with the highest volume. Databento does not adjust prices at the change of contract (the _roll_): the price jumps by the difference between the two contracts. Every bar keeps the identifier of its contract, and `06` excludes the returns that span a roll.
+
+Other properties of the data:
+- A bar exists only in minutes with at least one trade. There are no filler bars.
+- The Brent series changes contract 60 times instead of about 23: near expiry the volume alternates between two maturities, and the series follows it back and forth. It also has 8,209 bars without a closing price, which `03c` drops.
+- Databento marks some days as "degraded", with partly incomplete data: 10 days for the CME and 17 for ICE. Days with episodes among them: 15, 16 and 21 March, 10 April, 24 May 2026 (CME); 5 February and 8 May 2025, 10 and 23 March, 14 May 2026 (ICE).
+
+The data are licensed and are not versioned. `figures.py` reads them from `data/prices/databento/`.
+
+#sub[Synthetic series]
+
+To test the analyses before the real series were available, `03b` generates three one-minute series with the trading hours of WTI, written to `data/prices/synthetic/`:
+
+- *EUR/USD*: pure noise.
+- *WTI*: noise, plus half of the EUR/USD return, plus the effect of the episodes. An episode with direction +2 lowers the price by 0.2% over the 15 minutes after the first post, −2 raises it by as much, ±1 by half. During June 2025 and March–June 2026 the effect is #n.tests.truth.crisis_multiplier times larger.
+- *Gold*: noise, plus an effect of the episodes of the same sign and half the size, which does not change over time.
+
+After every episode volatility doubles for an hour. Intensity, specificity and novelty have no effect. The true values are written to `truth.json`.
 
 = Features
 
@@ -322,9 +373,137 @@ Two caveats on the numbers. Version 2 of the guidelines was written after annota
 
 Automatic annotation is on hold: the remaining episodes are annotated by hand. The output of run 1 is in `data/features/`, the logs of runs 2 and 3 in `notebooks/logs/`, and `notebooks/llm_scoring_kaggle.ipynb` reproduces them.
 
+= First runs <runs>
+
+The chain from the episode table to the price reaction was run on the synthetic series, to check that it returns the effects put in, and on the Databento series. Horizons, return measure, controls and the treatment of weekend episodes have not been fixed yet: the numbers below are first runs.
+
+#sub[Episode table]
+
+`05` joins the features of `04` with the manual annotations, through the identifier of the first post, and writes `data/features/episode_table_<date>.parquet`. It stops if an episode lacks judgements, is marked `text_changed` or breaks the conventions of the guidelines. It adds the sign of direction, direction × intensity, an indicator for direction ±2 and the number of reposts in the episode.
+
+#sub[Event study]
+
+`06` takes as time zero the first post of the episode and as base price the close of the last bar ending before it. For each horizon it computes:
+- the raw return (`ret`), the log change of the price from the base, in percent;
+- the abnormal return (`car`), the raw return minus the mean one-minute return of the hour before the post times the horizon;
+- the pre-trend: the raw return from 60, 30, 15 and 5 minutes before the post up to the post (negative horizons).
+
+An episode is left out of a horizon when a price is missing within two minutes of the required time, when the hour before has fewer than 30 one-minute returns, when the window spans a roll, or when another episode starts in the window or in the hour before it. Each return is then regressed on direction (OLS, heteroskedasticity-robust standard errors).
+
+*Synthetic series.* Direction coefficient at 15 minutes, raw return:
+
+#let es = n.tests.event_study
+#let at-h(label, h) = es.at(label).find(r => r.horizon == h)
+#let fixed(x, d: 3) = {
+  let parts = str(calc.round(calc.abs(x), digits: d)).split(".")
+  let dec = if parts.len() > 1 { parts.at(1) } else { "" }
+  while dec.len() < d { dec += "0" }
+  (if x < 0 { "−" } else { "" }) + parts.at(0) + "." + dec
+}
+#let pval(p) = if p < 0.001 { "<0.001" } else { fixed(p) }
+#let fmt(x) = [#fixed(x.coef) (#fixed(x.se))]
+
+#grid-table(
+  columns: 3,
+  align: (left, right, right),
+  toprule,
+  [Series], [True value], [Estimated (s.e.)],
+  midrule,
+  [WTI], [#n.tests.truth.wti, #(n.tests.truth.wti * n.tests.truth.crisis_multiplier) in crisis], fmt(at-h("synthetic_wti", 15).ret),
+  [Gold], [#n.tests.truth.gold], fmt(at-h("synthetic_gold", 15).ret),
+  bottomrule,
+)
+
+*Power.* 200 synthetic series for each effect size, without crisis periods; share of runs in which the coefficient at 15 minutes is significant at 5%:
+
+#grid-table(
+  columns: 4,
+  align: (right, right, right, right),
+  toprule,
+  [Effect of a +2 episode], [True coefficient], [Mean estimate], [Power],
+  midrule,
+  ..n.tests.power.map(r => ([#r.effect%], [#r.true], [#r.estimated], [#pct(r.power)])).flatten(),
+  bottomrule,
+)
+
+*Databento series.* Direction coefficient on the raw return, with the p-value below in brackets; `n` is the number of episodes used for WTI. Negative minutes are the pre-trend:
+
+#let series = ("wti", "brent", "gold", "sp500", "eurusd")
+#let p-cell(label, h) = {
+  let r = at-h(label, h)
+  if r == none { [–] } else { [#fixed(r.ret.coef) \ #text(size: 9pt)[(#pval(r.ret.p))]] }
+}
+#grid-table(
+  columns: 7,
+  align: (right, right, right, right, right, right, right),
+  toprule,
+  [Minutes], [WTI], [Brent], [Gold], [S&P 500], [EUR/USD], [`n`],
+  midrule,
+  ..es.wti.map(r => (
+    [#r.horizon],
+    ..series.map(s => p-cell(s, r.horizon)),
+    [#r.ret.n],
+  )).flatten(),
+  bottomrule,
+)
+
+The same coefficient for WTI on the abnormal return, after the post:
+
+#grid-table(
+  columns: 3,
+  align: (right, right, right),
+  toprule,
+  [Minutes], [Raw return], [Abnormal return],
+  midrule,
+  ..es.wti.filter(r => r.horizon > 0).map(r => ([#r.horizon], fmt(r.ret), fmt(r.car))).flatten(),
+  bottomrule,
+)
+
+#sub[PCMCI+]
+
+`07` builds a regular grid of 5-minute bins with four variables: the post signal (the sum of the directions of the episodes starting in the bin, 0 elsewhere) and the returns of WTI, gold and EUR/USD. Bins without a price are missing. PCMCI+ (Tigramite) is run with partial correlation, lags up to 20 minutes and $alpha = 0.01$. In the same bin a link between the post and a price can only go from the post to the price; lagged links are free.
+
+Links involving the post signal (lag in minutes, partial correlation):
+
+#let pc = n.tests.pcmci
+#grid-table(
+  columns: 6,
+  align: (left, left, center, left, right, right),
+  toprule,
+  [Series], [Cause], [], [Effect], [Lag], [Value],
+  midrule,
+  ..pc.synthetic.map(r => ([synthetic], [#r.cause], raw(r.link), [#r.effect], [#r.lag], [#fixed(r.val)])).flatten(),
+  midrule,
+  ..pc.databento.map(r => ([Databento], [#r.cause], raw(r.link), [#r.effect], [#r.lag], [#fixed(r.val)])).flatten(),
+  bottomrule,
+)
+
+In the generating model of the synthetic series the post affects WTI and gold only; prices do not affect the post.
+
+#sub[CD-NOD]
+
+CD-NOD (causal-learn) is run on one row per episode: direction, intensity, specificity, novelty and the 15-minute abnormal returns of WTI and gold, with time (days since the first episode) as context variable. An edge from time to a variable means that its mechanism changes over the period. The test is Fisher-z, $alpha = 0.01$; a return cannot cause the annotated variables.
+
+- Synthetic: #n.tests.cdnod.synthetic.map(e => raw(e)).join(", ").
+- Databento: #n.tests.cdnod.databento.map(e => raw(e)).join(", ").
+
+With the kernel test (KCI) on the same synthetic episodes, the dependence between the WTI and gold returns is not detected (p = 0.41, against 0.004 with Fisher-z). The change of the WTI effect in the crisis periods, varying its size in the synthetic series:
+
+#grid-table(
+  columns: 3,
+  align: (left, left, left),
+  toprule,
+  [Effect in crisis], [Fisher-z], [KCI],
+  midrule,
+  [×2], [no time edge], [no time edge],
+  [×4], [no time edge], [no time edge],
+  [×8], [no time edge], [time → WTI],
+  bottomrule,
+)
+
 = Decisions to take together <decisions>
 
-+ *The price series* (section 8). Until it is decided, the dependent variable does not exist.
++ *The dependent variable and its measure* (@prices, @runs). Five series are downloaded. To decide: WTI or Brent, the horizons, raw or abnormal return and the window for the expected return, the controls, the treatment of weekend episodes.
 + *Rule or rule plus classifier.* The semantic second stage improves precision, but the definition of event becomes what the model learned from 482 examples, and it must be frozen and declared like a prompt.
 + *The boundary of the topic.* Pump prices, market comments, Greenland: today they are excluded by the annotation criterion. To be confirmed.
 + *The corpus cutoff date.* Every update changes the counts in this report. Before writing the results, the corpus must be closed at a fixed date.
@@ -335,7 +514,6 @@ Automatic annotation is on hold: the remaining episodes are annotated by hand. T
 + Remove reposts of his own posts during cleaning; add a column distinguishing reposts of other accounts.
 + Make the double-post filter conditional on the presence of text.
 + Extend the term lists for Russia/Ukraine and Venezuela, the two gaps found by the audit.
-+ Annotate by hand the remaining episodes in `data/features/manual_annotations.csv`, then bring the manual variables into `episode_features.parquet`.
 + Have a second person annotate the 50 double episodes of the gold standard, before the final version.
 + Freeze the features and record the date.
 
@@ -343,9 +521,13 @@ Automatic annotation is on hold: the remaining episodes are annotated by hand. T
 
 #let entry(date, text) = [/ #date: #text]
 
-#entry[12/10/2026][Script `update.py` for daily updates: new posts from CNN, rule, features, new episodes added to the manual annotation file. The annotations are matched to the episodes through the first post instead of `episode_id`. The cache of the text embeddings is now tied to the texts, not to the number of episodes; `most_similar_episode` holds an `episode_id` instead of a row number. Corpus updated to 12 October 2026: 7 new episodes to annotate.]
+#entry[16/10/2026][Futures prices bought from Databento and downloaded with `03c`: WTI, Brent, gold, S&P 500, euro/dollar, one-minute bars from 24 November 2024. `06` excludes returns spanning a change of contract, adds the pre-trend (returns in the hour before the post) and runs the regressions on both raw and abnormal returns; an episode is also left out of the pre-trend if another episode started in the hour before the window. Bars without a price are dropped. In `07` a price cannot cause a post in the same bin. Sections on price data and first runs (@prices, @runs). Guidelines also in Typst (`annotations/gold_guidelines.typ`).]
 
-#entry[12/10/2026][Script `update.py` to update the dataset with the latest posts.]
+#entry[15/10/2026][Script `03b` for synthetic prices with a known effect of the episodes; `07` with PCMCI+ (Tigramite) and CD-NOD (causal-learn, new dependency). In CD-NOD the test is Fisher-z and returns cannot cause the annotated variables. `query/plot_series.py` plots the price series with the episodes marked by direction.]
+
+#entry[14/10/2026][Script `05` for the episode table and `06` for the event study, with a power test on synthetic series. In `03` the end of the period is the current day, the current month is downloaded again at each run, an empty file counts as a failure, the requests are spaced out, and a month is no longer skipped because its start date appears in the name of the previous month's file. The full Dukascopy download was refused by the server (HTTP 429).]
+
+#entry[12/10/2026][Script `update.py` for daily updates: new posts from CNN, rule, features, new episodes added to the manual annotation file. The annotations are matched to the episodes through the first post instead of `episode_id`. The cache of the text embeddings is now tied to the texts, not to the number of episodes; `most_similar_episode` holds an `episode_id` instead of a row number. Corpus updated to 12 October 2026: 7 new episodes to annotate.]
 
 #entry[11/10/2026][Automatic annotation on hold. Three runs of local language models on Kaggle (Qwen2.5 14B and 32B) did not reach sufficient agreement with the manually annotated gold standard: the best reached a weighted kappa of 0.51 on direction, but reversed its sign in about one directional episode out of five (@kaggle). The remaining episodes will be annotated manually.]
 
